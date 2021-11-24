@@ -126,11 +126,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Machine.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Program.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Command.h" />
+    <ClInclude Include="Machine.h" />
     <ClInclude Include="Parameter.h" />
     <ClInclude Include="ParameterType.h" />
     <ClInclude Include="Program.h" />

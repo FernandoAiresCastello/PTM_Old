@@ -2,6 +2,7 @@
 #include <CppUtils.h>
 #include <TileGameLib.h>
 #include "Program.h"
+#include "Machine.h"
 using namespace CppUtils;
 using namespace TileGameLib;
 
@@ -31,6 +32,10 @@ int main(int argc, char* argv[]) {
 
 		return 1;
 	}
+
+	InitMachine(prog);
+	RunMachine();
+	DestroyMachine();
 
 	return 0;
 }

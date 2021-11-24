@@ -5,6 +5,9 @@
     <ClCompile Include="Program.cpp">
       <Filter>Program</Filter>
     </ClCompile>
+    <ClCompile Include="Machine.cpp">
+      <Filter>Machine</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ProgramLine.h">
@@ -22,10 +25,16 @@
     <ClInclude Include="Program.h">
       <Filter>Program</Filter>
     </ClInclude>
+    <ClInclude Include="Machine.h">
+      <Filter>Machine</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Program">
       <UniqueIdentifier>{78f70235-7d6f-4197-ac93-341a3d7aa784}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Machine">
+      <UniqueIdentifier>{5016d9ca-f1b6-45e9-93a8-1e77ed62f133}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

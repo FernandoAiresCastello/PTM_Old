@@ -34,9 +34,9 @@ ProgramLine Program::Parse(int srcLineNr, std::string& srcLine)
 	line.SrcCode = srcLine;
 	std::string err = "";
 
-	int ixFirstSpace = srcLine.find(' ');
+	int ixFirstSpace = srcLine.find_first_of(" \t");
 	if (ixFirstSpace > 0) {
-		line.Cmd.Name = String::Trim(srcLine.substr(0, ixFirstSpace));
+		line.Cmd.Operation = String::Trim(srcLine.substr(0, ixFirstSpace));
 		std::string args = String::Trim(srcLine.substr(ixFirstSpace));
 		bool paramsOk = ParseParams(args, line.Cmd.Params);
 		if (!paramsOk) {
@@ -44,7 +44,7 @@ ProgramLine Program::Parse(int srcLineNr, std::string& srcLine)
 		}
 	}
 	else {
-		line.Cmd.Name = srcLine;
+		line.Cmd.Operation = srcLine;
 	}
 
 	if (err != "")
@@ -99,7 +99,7 @@ std::vector<std::string> Program::SplitArgs(std::string& args)
 			quote = !quote;
 			arg.push_back('"');
 		}
-		else if (ch == ' ' && !quote) {
+		else if ((ch == ' ' || ch == '\t') && !quote) {
 			arg = String::Trim(arg);
 			if (arg != "") {
 				arglist.push_back(arg);

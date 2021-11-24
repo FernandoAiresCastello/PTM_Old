@@ -6,6 +6,6 @@
 class Command
 {
 public:
-	std::string Name;
+	std::string Operation;
 	std::vector<Parameter> Params;
 };

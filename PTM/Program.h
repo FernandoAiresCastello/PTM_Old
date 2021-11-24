@@ -7,11 +7,11 @@
 class Program
 {
 public:
+	void Load(std::string path);
+
 	std::vector<ProgramLine> Lines;
 	std::map<std::string, int> Labels;
 	std::vector<std::string> Errors;
-
-	void Load(std::string path);
 
 private:
 	ProgramLine Parse(int srcLineNr, std::string& srcline);
