@@ -1,0 +1,16 @@
+.vs
+bin
+obj
+debug
+*.ini
+*.pro
+*.user
+*.vs
+*.log
+*.ilk
+*.pdb
+*.map
+*.exp
+*.lnk
+Debug
+Docs/Generated
