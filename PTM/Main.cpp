@@ -3,6 +3,7 @@
 #include <TileGameLib.h>
 #include "Program.h"
 #include "Machine.h"
+#include "System.h"
 using namespace CppUtils;
 using namespace TileGameLib;
 
@@ -19,23 +20,30 @@ int main(int argc, char* argv[]) {
 		return 1;
 	}
 
-	Program prog;
-	prog.Load(path);
+	InitCommands();
+
+	Program* prog = new Program();
+	prog->Load(path);
 	
-	if (!prog.Errors.empty()) {
+	if (prog->Lines.empty()) {
+		MsgBox::Error("PTM", "Program has no executable code");
+		delete prog;
+		return 1;
+	}
+	
+	if (!prog->Errors.empty()) {
 		std::string errors = "";
-		for (auto& err : prog.Errors) {
+		for (auto& err : prog->Errors) {
 			errors.append(err + "\n");
 		}
-		MsgBox::Error("PTM", String::Format(
-			"Program %s contains errors:\n\n%s", path.c_str(), errors.c_str()));
-
+		MsgBox::Error("PTM", errors);
 		return 1;
 	}
 
 	InitMachine(prog);
 	RunMachine();
 	DestroyMachine();
-
+	
+	delete prog;
 	return 0;
 }

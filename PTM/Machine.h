@@ -6,6 +6,15 @@
 using namespace CppUtils;
 using namespace TileGameLib;
 
-void InitMachine(Program& prog);
+extern bool Exit;
+extern std::string Error;
+extern std::map<std::string, void(*)()> Op;
+extern std::vector<Parameter>* Args;
+extern int IxArg;
+
+bool IsValidOpcode(std::string& opcode);
+void InitMachine(Program* prog);
 void DestroyMachine();
 void RunMachine();
+void Abort(std::string msg);
+Parameter* Arg();

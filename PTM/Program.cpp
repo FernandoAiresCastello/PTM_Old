@@ -1,5 +1,6 @@
 #include <CppUtils.h>
 #include "Program.h"
+#include "Machine.h"
 using namespace CppUtils;
 
 void Program::Load(std::string path)
@@ -47,6 +48,8 @@ ProgramLine Program::Parse(int srcLineNr, std::string& srcLine)
 		line.Cmd.Operation = srcLine;
 	}
 
+	if (!IsValidOpcode(line.Cmd.Operation))
+		err = "Invalid command";
 	if (err != "")
 		Errors.push_back(String::Format("%s at line %i: %s", err.c_str(), srcLineNr, srcLine.c_str()));
 
