@@ -34,6 +34,9 @@
     <ClInclude Include="System.h">
       <Filter>System</Filter>
     </ClInclude>
+    <ClInclude Include="SystemGlobal.h">
+      <Filter>System</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Program">
