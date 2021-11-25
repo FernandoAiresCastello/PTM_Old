@@ -21,4 +21,6 @@ bool Req(int count);
 Parameter* Arg(int index);
 void AssertPtrExists(std::string ident);
 void AssertMemAddr(int addr);
+void AssertArgType(Parameter* param, ParameterType type);
 void ResolveArg(Parameter* param, bool nullTermString = false);
+void ProcessGlobalEvents();

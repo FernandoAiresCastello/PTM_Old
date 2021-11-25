@@ -98,6 +98,13 @@ void AssertMemAddr(int addr)
 	}
 }
 
+void AssertArgType(Parameter* param, ParameterType type) {
+	if (param->Type != type) {
+		Abort("Invalid argument type");
+		return;
+	}
+}
+
 void ResolveArg(Parameter* param, bool nullTermString)
 {
 	if (nullTermString) {
@@ -129,5 +136,18 @@ void ResolveArg(Parameter* param, bool nullTermString)
 		AssertPtrExists(param->StringValue);
 		param->NumberValue = Memory[VarPtr[param->StringValue]];
 		param->StringValue = String::ToString(param->NumberValue);
+	}
+}
+
+void ProcessGlobalEvents()
+{
+	SDL_Event e;
+	SDL_PollEvent(&e);
+	if (e.type == SDL_QUIT) {
+		Exit = true;
+	}
+	else if (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_RETURN && TKey::Alt()) {
+		Wnd->ToggleFullscreen();
+		Wnd->Update();
 	}
 }
