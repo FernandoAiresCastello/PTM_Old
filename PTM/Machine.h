@@ -18,3 +18,4 @@ void DestroyMachine();
 void RunMachine();
 void Abort(std::string msg);
 Parameter* Arg();
+bool RequireArgCount(int count);

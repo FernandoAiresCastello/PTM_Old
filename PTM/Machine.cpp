@@ -77,3 +77,12 @@ Parameter* Arg()
 		return param;
 	}
 }
+
+bool RequireArgCount(int count)
+{
+	if (Args->size() >= count)
+		return true;
+
+	Abort("Missing arguments");
+	return false;
+}

@@ -5,4 +5,4 @@ void InitCommands();
 void NOP();
 void EXIT();
 void ABORT();
-void SET();
+void MSGBOX();
