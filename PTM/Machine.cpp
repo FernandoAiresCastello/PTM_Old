@@ -98,9 +98,29 @@ void AssertMemAddr(int addr)
 	}
 }
 
-void ResolveArg(Parameter* param)
+void ResolveArg(Parameter* param, bool nullTermString)
 {
-	if (param->Type == ParameterType::Identifier) {
+	if (nullTermString) {
+		if (param->Type == ParameterType::Identifier) {
+			AssertPtrExists(param->StringValue);
+			param->NumberValue = VarPtr[param->StringValue];
+			param->StringValue = "";
+			char ch = -1;
+			int addr = param->NumberValue;
+			while (true) {
+				ch = (char)Memory[addr];
+				if (ch == 0)
+					break;
+				param->StringValue.push_back(ch);
+				addr++;
+			}
+		}
+		else if (param->Type == ParameterType::PointerAccess) {
+			param->NumberValue = Memory[VarPtr[param->StringValue]];
+			param->StringValue = String::ToString(param->NumberValue);
+		}
+	}
+	else if (param->Type == ParameterType::Identifier) {
 		AssertPtrExists(param->StringValue);
 		param->NumberValue = VarPtr[param->StringValue];
 		param->StringValue = String::ToString(param->NumberValue);

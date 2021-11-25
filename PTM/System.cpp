@@ -12,6 +12,7 @@ void InitCommands()
 	OP(EXIT);
 	OP(ABORT);
 	OP(ALLOC);
+	OP(CSTR);
 	OP(SET);
 	OP(PTR);
 	OP(MSGBOX);
@@ -29,7 +30,7 @@ void EXIT()
 void ABORT()
 {
 	Req(1);
-	ResolveArg(Arg(0));
+	ResolveArg(Arg(0), true);
 	Abort(Arg(0)->StringValue);
 }
 void ALLOC()
@@ -41,6 +42,23 @@ void ALLOC()
 	Memory = new int[size];
 	for (int i = 0; i < size; i++) {
 		Memory[i] = 0;
+	}
+}
+void CSTR()
+{
+	Req(2);
+	if (Arg(1)->Type != ParameterType::StringLiteral) {
+		Abort("String literal expected");
+		return;
+	}
+	ResolveArg(Arg(0));
+	int addr = Arg(0)->NumberValue;
+	AssertMemAddr(addr);
+	ResolveArg(Arg(1));
+	for (int i = 0; i < Arg(1)->StringValue.length(); i++) {
+		char ch = Arg(1)->StringValue[i];
+		Memory[addr] = ch;
+		addr++;
 	}
 }
 void SET()
@@ -63,13 +81,13 @@ void PTR()
 void MSGBOX()
 {
 	Req(1);
-	ResolveArg(Arg(0));
-	std::string& message = Arg(0)->StringValue;
-	MsgBox::Info(Title, message);
+	std::string arg = Arg(0)->StringValue;
+	ResolveArg(Arg(0), true);
+	MsgBox::Info(Title, Arg(0)->StringValue);
 }
 void TITLE()
 {
 	Req(1);
-	ResolveArg(Arg(0));
+	ResolveArg(Arg(0), true);
 	Title = Arg(0)->StringValue;
 }

@@ -14,6 +14,7 @@ void NOP();
 void EXIT();
 void ABORT();
 void ALLOC();
+void CSTR();
 void SET();
 void PTR();
 void MSGBOX();
