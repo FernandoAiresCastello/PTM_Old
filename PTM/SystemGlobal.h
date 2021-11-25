@@ -1,5 +1,4 @@
 #pragma once
-
 #include <map>
 #include <string>
 #include <vector>
@@ -13,6 +12,5 @@ using namespace CppUtils;
 using namespace TileGameLib;
 
 #define OP(x)	Op[#x] = &x
-#define ARG		Arg()
+#define REQ(x)	if (!RequireArgCount(x)) return;
 #define ARGC	Args->size()
-#define REQ(x)	RequireArgCount(x);

@@ -51,7 +51,7 @@ ProgramLine Program::Parse(int srcLineNr, std::string& srcLine)
 	if (!IsValidOpcode(line.Cmd.Operation))
 		err = "Invalid command";
 	if (err != "")
-		Errors.push_back(String::Format("%s at line %i: %s", err.c_str(), srcLineNr, srcLine.c_str()));
+		Errors.push_back(String::Format("%s at line %i:\n\n%s", err.c_str(), srcLineNr, srcLine.c_str()));
 
 	return line;
 }

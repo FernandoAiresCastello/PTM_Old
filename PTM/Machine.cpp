@@ -52,37 +52,62 @@ void RunMachine()
 			if (IxCurLine >= Prog->Lines.size())
 				Abort("Program ended without EXIT");
 		}
-		if (!Error.empty()) {
-			MsgBox::Error("PTM", String::Format("%s at line %i: %s",
-				Error.c_str(), CurLine->SrcLineNr, CurLine->SrcCode.c_str()));
-		}
 	}
 }
 
 void Abort(std::string msg)
 {
+	MsgBox::Error(Title, String::Format("%s at line %i:\n\n%s",
+		msg.c_str(), CurLine->SrcLineNr, CurLine->SrcCode.c_str()));
+
 	Exit = true;
-	Error = msg;
+	exit(1);
 }
 
-Parameter* Arg()
+bool Req(int count)
 {
-	if (IxArg >= Args->size()) {
+	if (Args->size() == count)
+		return true;
+	
+	Abort(String::Format("Illegal argument count (expected %i, got %i)", count, Args->size()));
+	return false;
+}
+
+Parameter* Arg(int index)
+{
+	if (index >= Args->size()) {
 		Abort("Missing arguments");
 		return nullptr;
 	}
 	else {
-		Parameter* param = &(*Args)[IxArg];
-		IxArg++;
-		return param;
+		return &(*Args)[index];
 	}
 }
 
-bool RequireArgCount(int count)
+void AssertPtrExists(std::string ident)
 {
-	if (Args->size() >= count)
-		return true;
+	if (VarPtr.find(ident) == VarPtr.end()) {
+		Abort(String::Format("Undefined identifier \"%s\"", ident.c_str()));
+	}
+}
 
-	Abort("Missing arguments");
-	return false;
+void AssertMemAddr(int addr)
+{
+	if (addr < 0 || addr >= MemSize) {
+		Abort("Memory address out of range");
+	}
+}
+
+void ResolveArg(Parameter* param)
+{
+	if (param->Type == ParameterType::Identifier) {
+		AssertPtrExists(param->StringValue);
+		param->NumberValue = VarPtr[param->StringValue];
+		param->StringValue = String::ToString(param->NumberValue);
+	}
+	else if (param->Type == ParameterType::PointerAccess) {
+		AssertPtrExists(param->StringValue);
+		param->NumberValue = Memory[VarPtr[param->StringValue]];
+		param->StringValue = String::ToString(param->NumberValue);
+	}
 }

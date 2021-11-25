@@ -5,7 +5,7 @@
 class Parameter
 {
 public:
-	ParameterType Type;
-	std::string StringValue;
-	int NumberValue;
+	ParameterType Type = ParameterType::Invalid;
+	std::string StringValue = "";
+	int NumberValue = 0;
 };
