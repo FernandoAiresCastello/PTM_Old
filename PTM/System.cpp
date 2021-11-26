@@ -1,11 +1,23 @@
+#include <map>
+#include <string>
+#include <vector>
+#include <CppUtils.h>
+#include <TileGameLib.h>
 #include "System.h"
-#include "SystemGlobal.h"
+#include "Parameter.h"
+#include "System.h"
+#include "Interpreter.h"
+#include "ErrorMessages.h"
+using namespace CppUtils;
+using namespace TileGameLib;
 
 std::string Title = "";
 int* Memory = nullptr;
 int MemSize = 0;
 std::map<std::string, int> VarPtr;
 TWindow* Wnd = nullptr;
+
+#define OP(x)	Op[#x] = &x
 
 void InitCommands()
 {
@@ -46,7 +58,7 @@ void ASSRT()
 	std::string ident = ArgIdentifier();
 	int value = ArgNumber();
 	if (Memory[VarPtr[ident]] != value) {
-		Abort(String::Format("Assertion failed\n\nExpected %i, got %i", value, Memory[VarPtr[ident]]));
+		Abort(String::Format(Error.AssertionFailed, value, Memory[VarPtr[ident]]));
 	}
 }
 void ALLOC()
@@ -108,12 +120,13 @@ void HALT()
 }
 void WINDOW()
 {
-	Argc(3);
-	int width = ArgNumber();
-	int height = ArgNumber();
-	int zoom = ArgNumber();
+	Argc(4);
+	int wBuf = ArgNumber();
+	int hBuf = ArgNumber();
+	int wWnd = ArgNumber();
+	int hWnd = ArgNumber();
 
-	Wnd = new TWindow(width, height, zoom, false);
+	Wnd = new TWindow(wBuf, hBuf, wWnd, hWnd, false);
 	Wnd->SetTitle(Title);
 }
 void OUT()

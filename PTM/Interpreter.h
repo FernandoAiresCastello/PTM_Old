@@ -3,14 +3,13 @@
 #include <CppUtils.h>
 #include <TileGameLib.h>
 #include "Program.h"
+#include "ErrorMessages.h"
 using namespace CppUtils;
 using namespace TileGameLib;
 
 extern bool Exit;
-extern std::string Error;
 extern std::map<std::string, void(*)()> Op;
-extern std::vector<Parameter>* Args;
-extern int IxArg;
+extern ErrorMessages Error;
 
 void InitMachine(Program* prog);
 void DestroyMachine();
@@ -25,5 +24,5 @@ int ArgNumberLiteral();
 int ArgNumber();
 std::string ArgIdentifier();
 std::string ArgString();
-int Peek(std::string ptr);
-int GetAddress(std::string ptr);
+int Peek(std::string& identifier);
+int GetAddress(std::string& identifier);

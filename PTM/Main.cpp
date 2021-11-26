@@ -2,7 +2,7 @@
 #include <CppUtils.h>
 #include <TileGameLib.h>
 #include "Program.h"
-#include "Machine.h"
+#include "Interpreter.h"
 #include "System.h"
 using namespace CppUtils;
 using namespace TileGameLib;

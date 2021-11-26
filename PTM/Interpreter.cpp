@@ -1,7 +1,8 @@
 #include <CppUtils.h>
 #include <TileGameLib.h>
-#include "Machine.h"
+#include "Interpreter.h"
 #include "System.h"
+#include "ErrorMessages.h"
 using namespace CppUtils;
 using namespace TileGameLib;
 
@@ -9,10 +10,11 @@ Program* Prog;
 ProgramLine* CurLine;
 int IxCurLine;
 bool Exit;
-std::string Error;
 std::map<std::string, void(*)()> Op;
+ErrorMessages Error;
 std::vector<Parameter>* Args;
 int IxArg;
+SDL_Event Event;
 
 void InitMachine(Program* prog)
 {
@@ -35,21 +37,23 @@ void DestroyMachine()
 void RunMachine()
 {
 	while (!Exit) {
-		ProcessGlobalEvents();
 		CurLine = &Prog->Lines[IxCurLine];
 		Args = &CurLine->Cmd.Params;
 		IxArg = 0;
 
 		if (Op.find(CurLine->Cmd.Operation) != Op.end()) {
+			ProcessGlobalEvents();
 			Op[CurLine->Cmd.Operation]();
+			ProcessGlobalEvents();
 		}
 		else {
-			Abort("Invalid command");
+			Abort(Error.UnknownCommand);
 		}
+
 		if (!Exit) {
 			IxCurLine++;
 			if (IxCurLine >= Prog->Lines.size())
-				Abort("Program ended without EXIT");
+				Abort(Error.ProgEndWithoutExit);
 		}
 	}
 }
@@ -75,13 +79,12 @@ void Abort(std::string msg, bool printInfo)
 
 void ProcessGlobalEvents()
 {
-	SDL_Event e;
-	SDL_PollEvent(&e);
+	SDL_PollEvent(&Event);
 
-	if (e.type == SDL_QUIT) {
+	if (Event.type == SDL_QUIT) {
 		Exit = true;
 	}
-	else if (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_RETURN && TKey::Alt()) {
+	else if (Event.type == SDL_KEYDOWN && Event.key.keysym.sym == SDLK_RETURN && TKey::Alt()) {
 		Wnd->ToggleFullscreen();
 	}
 
@@ -93,7 +96,7 @@ void ProcessGlobalEvents()
 void Argc(int expectedArgCount)
 {
 	if (Args->size() != expectedArgCount) {
-		Abort(String::Format("Expected %i arguments but got %i", expectedArgCount, Args->size()));
+		Abort(String::Format(Error.InvalidArgCount, expectedArgCount, Args->size()));
 		return;
 	}
 }
@@ -106,7 +109,7 @@ Parameter* Arg()
 		return arg;
 	}
 
-	Abort("Argument index out of range");
+	Abort(Error.ArgIndexOutOfRange);
 	return nullptr;
 }
 
@@ -114,7 +117,7 @@ std::string ArgStringLiteral()
 {
 	Parameter* arg = Arg();
 	if (arg->Type != ParameterType::StringLiteral) {
-		Abort("Expected a string literal");
+		Abort(Error.StringLiteralExpected);
 		return 0;
 	}
 	return arg->StringValue;
@@ -124,7 +127,7 @@ int ArgNumberLiteral()
 {
 	Parameter* arg = Arg();
 	if (arg->Type != ParameterType::NumberLiteral) {
-		Abort("Expected a number literal");
+		Abort(Error.NumberLiteralExpected);
 		return 0;
 	}
 	return arg->NumberValue;
@@ -144,7 +147,7 @@ int ArgNumber()
 		return GetAddress(arg->StringValue);
 	}
 	else {
-		Abort("Syntax error");
+		Abort(Error.SyntaxError);
 	}
 	return 0;
 }
@@ -153,7 +156,7 @@ std::string ArgIdentifier()
 {
 	Parameter* arg = Arg();
 	if (arg->Type != ParameterType::Identifier) {
-		Abort("Expected an identifier");
+		Abort(Error.IdentifierExpected);
 		return 0;
 	}
 	return arg->StringValue;
@@ -181,7 +184,7 @@ std::string ArgString()
 		int ch = -1;
 		while (ch != 0) {
 			if (addr >= MemSize) {
-				Abort("Memory address out of bounds");
+				Abort(Error.MemoryAddrOutOfBounds);
 				return "";
 			}
 			ch = Memory[addr++];
@@ -192,27 +195,27 @@ std::string ArgString()
 		return str;
 	}
 	else {
-		Abort("Syntax error");
+		Abort(Error.SyntaxError);
 	}
 	return "";
 }
 
-int Peek(std::string ptr)
+int Peek(std::string& identifier)
 {
-	if (VarPtr.find(ptr) == VarPtr.end()) {
-		Abort("Undefined identifier " + ptr);
+	if (VarPtr.find(identifier) == VarPtr.end()) {
+		Abort(String::Format(Error.IdentifierNotFound, identifier.c_str()));
 		return 0;
 	}
 
-	return Memory[VarPtr[ptr]];
+	return Memory[VarPtr[identifier]];
 }
 
-int GetAddress(std::string ptr)
+int GetAddress(std::string& identifier)
 {
-	if (VarPtr.find(ptr) == VarPtr.end()) {
-		Abort("Undefined identifier " + ptr);
+	if (VarPtr.find(identifier) == VarPtr.end()) {
+		Abort(String::Format(Error.IdentifierNotFound, identifier.c_str()));
 		return 0;
 	}
 
-	return VarPtr[ptr];
+	return VarPtr[identifier];
 }

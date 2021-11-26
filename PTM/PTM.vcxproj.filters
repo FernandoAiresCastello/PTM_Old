@@ -3,47 +3,45 @@
   <ItemGroup>
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Program.cpp">
-      <Filter>Program</Filter>
-    </ClCompile>
-    <ClCompile Include="Machine.cpp">
-      <Filter>System</Filter>
+      <Filter>Compiler</Filter>
     </ClCompile>
     <ClCompile Include="System.cpp">
-      <Filter>System</Filter>
+      <Filter>Runtime</Filter>
+    </ClCompile>
+    <ClCompile Include="Interpreter.cpp">
+      <Filter>Runtime</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ProgramLine.h">
-      <Filter>Program</Filter>
+      <Filter>Compiler</Filter>
     </ClInclude>
     <ClInclude Include="ParameterType.h">
-      <Filter>Program</Filter>
+      <Filter>Compiler</Filter>
     </ClInclude>
     <ClInclude Include="Parameter.h">
-      <Filter>Program</Filter>
+      <Filter>Compiler</Filter>
     </ClInclude>
     <ClInclude Include="Command.h">
-      <Filter>Program</Filter>
+      <Filter>Compiler</Filter>
     </ClInclude>
     <ClInclude Include="Program.h">
-      <Filter>Program</Filter>
-    </ClInclude>
-    <ClInclude Include="Machine.h">
-      <Filter>System</Filter>
+      <Filter>Compiler</Filter>
     </ClInclude>
     <ClInclude Include="System.h">
-      <Filter>System</Filter>
+      <Filter>Runtime</Filter>
     </ClInclude>
-    <ClInclude Include="SystemGlobal.h">
-      <Filter>System</Filter>
+    <ClInclude Include="Interpreter.h">
+      <Filter>Runtime</Filter>
     </ClInclude>
+    <ClInclude Include="ErrorMessages.h" />
   </ItemGroup>
   <ItemGroup>
-    <Filter Include="Program">
-      <UniqueIdentifier>{78f70235-7d6f-4197-ac93-341a3d7aa784}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="System">
+    <Filter Include="Runtime">
       <UniqueIdentifier>{5016d9ca-f1b6-45e9-93a8-1e77ed62f133}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Compiler">
+      <UniqueIdentifier>{78f70235-7d6f-4197-ac93-341a3d7aa784}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
