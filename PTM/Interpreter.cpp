@@ -119,6 +119,7 @@ void Return()
 	}
 	IxCurLine = CallStack.top();
 	CallStack.pop();
+	Branch = true;
 }
 
 void Argc(int expectedArgCount)

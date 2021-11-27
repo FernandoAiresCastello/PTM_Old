@@ -37,7 +37,10 @@ void PTR()
 	Argc(2);
 	std::string id = ArgIdentifier();
 	int addr = ArgNumber();
-	Ptr[id] = addr;
+	if (MemSize && addr >= 0 && addr < MemSize)
+		Ptr[id] = addr;
+	else
+		Abort(Error.MemoryAddrOutOfBounds);
 }
 void SET()
 {
@@ -175,26 +178,26 @@ void RET()
 	Argc(0);
 	Return();
 }
+void CLS()
+{
+	Argc(1);
+	Wnd->SetBackColor(ArgNumber());
+	Wnd->Clear();
+}
 
 #define OP(x)	Op[#x] = &x
 
 void InitCommands()
 {
-	OP(NOP);	// No operation
-	OP(EXIT);	// Exit program normally
-	OP(ABORT);	// Exit program with error
+	//=== MEMORY ===
 	OP(ALLOC);	// Set memory size
 	OP(PTR);	// Define named pointer to memory address
 	OP(SET);	// Set value into memory address
 	OP(CSTR);	// Insert string literal starting at specified address
-	OP(MSGBOX);	// Show message box
-	OP(TITLE);	// Set program title
-	OP(HALT);	// Stop program execution until window is closed
-	OP(WINDOW); // Open window
-	OP(REFR);	// Refresh screen
-	OP(OUT);	// Output tile to screen
-	OP(ADD);	// Add to memory value
-	OP(CMP);	// Compare with memory value
+
+	//=== PROGRAM FLOW ===
+	OP(EXIT);	// Exit program normally
+	OP(HALT);	// Stop program execution
 	OP(JMP);	// Jump
 	OP(JE);		// Jump if equal
 	OP(JNE);	// Jump if not equal
@@ -204,4 +207,24 @@ void InitCommands()
 	OP(JLE);	// Jump if less or equal
 	OP(CALL);	// Call
 	OP(RET);	// Return
+
+	//=== MATH ===
+	OP(ADD);	// Add to memory value
+	
+	//=== COMPARE ===
+	OP(CMP);	// Compare with memory value
+	
+	//=== DEBUG ===
+	OP(MSGBOX);	// Show message box
+	OP(ABORT);	// Exit program with error
+
+	//=== GRAPHICS ===
+	OP(WINDOW); // Open window
+	OP(REFR);	// Refresh screen
+	OP(CLS);	// Clear screen
+	OP(OUT);	// Output tile to screen
+
+	//=== MISC ===
+	OP(NOP);	// No operation
+	OP(TITLE);	// Set program title
 }
