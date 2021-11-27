@@ -1,11 +1,14 @@
 #include "System.h"
 
+#define OP(x)	Op[#x] = &x
+
 std::string Title = "";
 int* Memory = nullptr;
 int MemSize = 0;
 std::map<std::string, int> Ptr;
 TWindow* Wnd = nullptr;
 int CmpResult = 0;
+int DataPtr = 0;
 
 void NOP()
 {
@@ -184,8 +187,88 @@ void CLS()
 	Wnd->SetBackColor(ArgNumber());
 	Wnd->Clear();
 }
+void PAL()
+{
+	Argc(2);
+	int ix = ArgNumber();
+	int rgb = ArgNumber();
+	Wnd->GetPalette()->Set(ix, rgb);
+}
+void CHR()
+{
+	Argc(9);
+	int ix = ArgNumber();
+	int r1 = ArgNumber();
+	int r2 = ArgNumber();
+	int r3 = ArgNumber();
+	int r4 = ArgNumber();
+	int r5 = ArgNumber();
+	int r6 = ArgNumber();
+	int r7 = ArgNumber();
+	int r8 = ArgNumber();
+	Wnd->GetCharset()->Set(ix, r1, r2, r3, r4, r5, r6, r7, r8);
+}
+void VMEM()
+{
+	Argc(3);
+	int first = ArgNumber();
+	int last = ArgNumber();
+	int mode = ArgNumber();
+	std::string dump;
 
-#define OP(x)	Op[#x] = &x
+	for (int addr = first; addr <= last; addr++) {
+		std::string line;
+
+		if (mode == 0) {
+			line = String::Format("0x%x = %i", addr, Memory[addr]);
+		}
+		else if (mode == 1) {
+			int ch = Memory[addr];
+			if (ch >= 32 && ch < 256)
+				line = String::Format("0x%x = %c", addr, ch);
+			else
+				line = String::Format("0x%x =", addr);
+		}
+		else if (mode == 2) {
+			int ch = Memory[addr];
+			if (ch >= 32 && ch < 256)
+				line = String::Format("0x%x = %i = %c", addr, ch, ch);
+			else
+				line = String::Format("0x%x = %i =", addr, ch);
+		}
+
+		line.append("\n");
+		dump.append(line);
+	}
+
+	MsgBox::Info(dump);
+}
+void DATA()
+{
+	Argc(8);
+	int v1 = ArgNumber();
+	int v2 = ArgNumber();
+	int v3 = ArgNumber();
+	int v4 = ArgNumber();
+	int v5 = ArgNumber();
+	int v6 = ArgNumber();
+	int v7 = ArgNumber();
+	int v8 = ArgNumber();
+
+	Memory[DataPtr++] = v1;
+	Memory[DataPtr++] = v2;
+	Memory[DataPtr++] = v3;
+	Memory[DataPtr++] = v4;
+	Memory[DataPtr++] = v5;
+	Memory[DataPtr++] = v6;
+	Memory[DataPtr++] = v7;
+	Memory[DataPtr++] = v8;
+}
+void DATP()
+{
+	Argc(1);
+	DataPtr = ArgNumber();
+}
 
 void InitCommands()
 {
@@ -194,6 +277,8 @@ void InitCommands()
 	OP(PTR);	// Define named pointer to memory address
 	OP(SET);	// Set value into memory address
 	OP(CSTR);	// Insert string literal starting at specified address
+	OP(DATA);	// Insert values starting at the data pointer
+	OP(DATP);	// Set data pointer
 
 	//=== PROGRAM FLOW ===
 	OP(EXIT);	// Exit program normally
@@ -217,12 +302,15 @@ void InitCommands()
 	//=== DEBUG ===
 	OP(MSGBOX);	// Show message box
 	OP(ABORT);	// Exit program with error
+	OP(VMEM);	// View values in memory range
 
 	//=== GRAPHICS ===
 	OP(WINDOW); // Open window
 	OP(REFR);	// Refresh screen
 	OP(CLS);	// Clear screen
 	OP(OUT);	// Output tile to screen
+	OP(PAL);	// Set palette color
+	OP(CHR);	// Set charset data
 
 	//=== MISC ===
 	OP(NOP);	// No operation

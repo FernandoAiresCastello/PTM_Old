@@ -166,18 +166,17 @@ int ArgNumber()
 {
 	Parameter* arg = Arg();
 	
-	if (arg->Type == ParameterType::NumberLiteral) {
+	if (arg->Type == ParameterType::NumberLiteral)
 		return arg->NumberValue;
-	}
-	else if (arg->Type == ParameterType::Identifier) {
+	if (arg->Type == ParameterType::CharLiteral)
+		return arg->NumberValue;
+	else if (arg->Type == ParameterType::Identifier)
 		return Peek(arg->StringValue);
-	}
-	else if (arg->Type == ParameterType::Address) {
+	else if (arg->Type == ParameterType::Address)
 		return GetAddress(arg->StringValue);
-	}
-	else {
+	else
 		Abort(Error.SyntaxError);
-	}
+	
 	return 0;
 }
 

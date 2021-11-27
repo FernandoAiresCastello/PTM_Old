@@ -77,6 +77,10 @@ bool Program::ParseParams(std::string& args, std::vector<Parameter>& params)
 			param.Type = ParameterType::StringLiteral;
 			arg = String::RemoveFirstAndLast(arg);
 		}
+		if (String::StartsAndEndsWith(arg, '\'')) {
+			param.Type = ParameterType::CharLiteral;
+			arg = String::RemoveFirstAndLast(arg);
+		}
 		else if (String::StartsWith(arg, '$')) {
 			param.Type = ParameterType::StringPointer;
 			arg = String::RemoveFirst(arg);
@@ -96,8 +100,14 @@ bool Program::ParseParams(std::string& args, std::vector<Parameter>& params)
 			ok = false;
 		}
 
-		param.StringValue = arg;
-		param.NumberValue = String::ToInt(arg);
+		if (param.Type == ParameterType::CharLiteral) {
+			param.StringValue = String::ToString(arg[0]);
+			param.NumberValue = arg[0];
+		}
+		else {
+			param.StringValue = arg;
+			param.NumberValue = String::ToInt(arg);
+		}
 		params.push_back(param);
 	}
 

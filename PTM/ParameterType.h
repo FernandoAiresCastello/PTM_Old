@@ -6,6 +6,7 @@ enum class ParameterType
 	Identifier,
 	Address,
 	NumberLiteral,
+	CharLiteral,
 	StringLiteral,
 	StringPointer
 };
