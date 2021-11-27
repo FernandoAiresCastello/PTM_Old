@@ -9,6 +9,8 @@ std::map<std::string, int> Ptr;
 TWindow* Wnd = nullptr;
 int CmpResult = 0;
 int DataPtr = 0;
+enum class OutputMode { Free, Tiled };
+OutputMode OutMode = OutputMode::Free;
 
 void NOP()
 {
@@ -96,15 +98,21 @@ void WINDOW()
 }
 void REFR()
 {
+	Argc(0);
 	if (Wnd)
 		Wnd->Update();
+}
+void OUTM()
+{
+	Argc(1);
+	OutMode = (OutputMode)ArgNumber();
 }
 void OUT()
 {
 	Argc(6);
-	int x = ArgNumber();
-	int y = ArgNumber();
 	int tile = ArgNumber();
+	int x = OutMode == OutputMode::Free ? ArgNumber() : ArgNumber() * 8;
+	int y = OutMode == OutputMode::Free ? ArgNumber() : ArgNumber() * 8;
 	int fgc = ArgNumber();
 	int bgc = ArgNumber();
 	bool transparent = ArgNumber() <= 0;
@@ -113,6 +121,27 @@ void OUT()
 		Wnd->DrawTileTransparent(tile, fgc, bgc, x, y);
 	else
 		Wnd->DrawTile(tile, fgc, bgc, x, y);
+}
+void OUTS()
+{
+	Argc(6);
+	std::string str = ArgString();
+	int x = OutMode == OutputMode::Free ? ArgNumber() : ArgNumber() * TChar::Width;
+	int y = OutMode == OutputMode::Free ? ArgNumber() : ArgNumber() * TChar::Width;
+	int fgc = ArgNumber();
+	int bgc = ArgNumber();
+	bool transparent = ArgNumber() <= 0;
+
+	int tile = 0;
+	for (int i = 0; i < str.length(); i++) {
+		tile = str[i];
+		if (transparent)
+			Wnd->DrawTileTransparent(tile, fgc, bgc, x, y);
+		else
+			Wnd->DrawTile(tile, fgc, bgc, x, y);
+
+		x += TChar::Width;
+	}
 }
 void ADD()
 {
@@ -269,6 +298,22 @@ void DATP()
 	Argc(1);
 	DataPtr = ArgNumber();
 }
+void RND()
+{
+	Argc(3);
+	std::string id = ArgIdentifier();
+	int min = ArgNumber();
+	int max = ArgNumber();
+	int rnd = Util::Random(min, max);
+	Memory[Ptr[id]] = rnd;
+}
+void KEY()
+{
+	Argc(1);
+	std::string id = ArgIdentifier();
+	Memory[Ptr[id]] = KeyPressed;
+	KeyPressed = 0;
+}
 
 void InitCommands()
 {
@@ -279,6 +324,7 @@ void InitCommands()
 	OP(CSTR);	// Insert string literal starting at specified address
 	OP(DATA);	// Insert values starting at the data pointer
 	OP(DATP);	// Set data pointer
+	OP(RND);	// Set random value into memory address
 
 	//=== PROGRAM FLOW ===
 	OP(EXIT);	// Exit program normally
@@ -308,9 +354,14 @@ void InitCommands()
 	OP(WINDOW); // Open window
 	OP(REFR);	// Refresh screen
 	OP(CLS);	// Clear screen
+	OP(OUTM);	// Select output mode
 	OP(OUT);	// Output tile to screen
+	OP(OUTS);	// Output tile string to screen
 	OP(PAL);	// Set palette color
 	OP(CHR);	// Set charset data
+
+	//=== INPUT ===
+	OP(KEY);	// Get key pressed
 
 	//=== MISC ===
 	OP(NOP);	// No operation

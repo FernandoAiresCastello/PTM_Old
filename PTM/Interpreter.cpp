@@ -18,9 +18,12 @@ int IxArg;
 bool Branch;
 SDL_Event Event;
 std::stack<int> CallStack;
+int KeyPressed;
 
 void InitMachine(Program* prog)
 {
+	Util::Randomize();
+
 	Exit = false;
 	Prog = prog;
 	CurLine = nullptr;
@@ -28,6 +31,7 @@ void InitMachine(Program* prog)
 	Branch = false;
 	Args = nullptr;
 	IxArg = 0;
+	KeyPressed = 0;
 }
 
 void DestroyMachine()
@@ -87,6 +91,7 @@ void Abort(std::string msg, bool printInfo)
 
 void ProcessGlobalEvents()
 {
+	Event = { 0 };
 	SDL_PollEvent(&Event);
 
 	if (Event.type == SDL_QUIT) {
@@ -95,6 +100,9 @@ void ProcessGlobalEvents()
 	else if (Event.type == SDL_KEYDOWN && Event.key.keysym.sym == SDLK_RETURN && TKey::Alt()) {
 		Wnd->ToggleFullscreen();
 		Wnd->Update();
+	}
+	else if (Event.type == SDL_KEYDOWN) {
+		KeyPressed = Event.key.keysym.sym;
 	}
 }
 

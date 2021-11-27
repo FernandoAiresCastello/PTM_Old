@@ -29,7 +29,10 @@ void Program::Load(std::string& path)
 		if (srcLine != "") {
 			if (String::EndsWith(srcLine, ':')) {
 				std::string label = String::GetFirstChars(srcLine, srcLine.length() - 1);
-				Labels[label] = Lines.size();
+				if (Labels.find(label) == Labels.end())
+					Labels[label] = Lines.size();
+				else
+					Errors.push_back(String::Format(Error.DuplicateLabel, label.c_str()));
 			}
 			else {
 				Lines.push_back(Parse(srcLineNr + 1, srcLine));
@@ -57,7 +60,7 @@ ProgramLine Program::Parse(int srcLineNr, std::string& srcLine)
 	else {
 		line.Cmd.Operation = srcLine;
 	}
-
+	
 	if (!IsValidOpcode(line.Cmd.Operation))
 		err = Error.UnknownCommand;
 	if (err != "")
@@ -77,7 +80,7 @@ bool Program::ParseParams(std::string& args, std::vector<Parameter>& params)
 			param.Type = ParameterType::StringLiteral;
 			arg = String::RemoveFirstAndLast(arg);
 		}
-		if (String::StartsAndEndsWith(arg, '\'')) {
+		else if (String::StartsAndEndsWith(arg, '\'')) {
 			param.Type = ParameterType::CharLiteral;
 			arg = String::RemoveFirstAndLast(arg);
 		}

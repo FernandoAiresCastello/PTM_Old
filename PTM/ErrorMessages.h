@@ -3,7 +3,6 @@
 typedef const char* cstr;
 
 struct ErrorMessages {
-
 	cstr UnknownCommand = "Unknown command";
 	cstr ProgEndWithoutExit = "Program ended without EXIT";
 	cstr InvalidArgCount = "Expected %i arguments, got %i";
@@ -17,5 +16,5 @@ struct ErrorMessages {
 	cstr LabelExpected = "Label name expected";
 	cstr LabelNotFound = "Label %s not found";
 	cstr CallStackEmpty = "Call stack empty";
-
+	cstr DuplicateLabel = "Duplicate label: %s";
 };
