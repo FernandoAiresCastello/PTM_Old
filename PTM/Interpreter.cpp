@@ -1,3 +1,4 @@
+#include <stack>
 #include <CppUtils.h>
 #include <TileGameLib.h>
 #include "Interpreter.h"
@@ -16,6 +17,7 @@ std::vector<Parameter>* Args;
 int IxArg;
 bool Branch;
 SDL_Event Event;
+std::stack<int> CallStack;
 
 void InitMachine(Program* prog)
 {
@@ -100,6 +102,23 @@ void Jump(int ixProgLine)
 {
 	IxCurLine = ixProgLine;
 	Branch = true;
+}
+
+void Call(int ixProgLine)
+{
+	CallStack.push(IxCurLine + 1);
+	IxCurLine = ixProgLine;
+	Branch = true;
+}
+
+void Return()
+{
+	if (CallStack.empty()) {
+		Abort(Error.CallStackEmpty);
+		return;
+	}
+	IxCurLine = CallStack.top();
+	CallStack.pop();
 }
 
 void Argc(int expectedArgCount)

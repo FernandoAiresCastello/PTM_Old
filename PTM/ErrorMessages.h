@@ -16,6 +16,6 @@ struct ErrorMessages {
 	cstr IdentifierNotFound = "Identifier %s not found";
 	cstr LabelExpected = "Label name expected";
 	cstr LabelNotFound = "Label %s not found";
-	cstr AssertionFailed = "Assertion failed!\n\nExpected %i, got %i";
+	cstr CallStackEmpty = "Call stack empty";
 
 };

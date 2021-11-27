@@ -1,15 +1,4 @@
-#include <map>
-#include <string>
-#include <vector>
-#include <CppUtils.h>
-#include <TileGameLib.h>
 #include "System.h"
-#include "Parameter.h"
-#include "System.h"
-#include "Interpreter.h"
-#include "ErrorMessages.h"
-using namespace CppUtils;
-using namespace TileGameLib;
 
 std::string Title = "";
 int* Memory = nullptr;
@@ -17,34 +6,6 @@ int MemSize = 0;
 std::map<std::string, int> Ptr;
 TWindow* Wnd = nullptr;
 int CmpResult = 0;
-
-#define OP(x)	Op[#x] = &x
-
-void InitCommands()
-{
-	OP(NOP);	// No operation
-	OP(EXIT);	// Exit program normally
-	OP(ABORT);	// Exit program with error
-	OP(ALLOC);	// Set memory size
-	OP(PTR);	// Define named pointer to memory address
-	OP(SET);	// Set value into memory address
-	OP(CSTR);	// Insert string literal starting at specified address
-	OP(MSGBOX);	// Show message box
-	OP(TITLE);	// Set program title
-	OP(HALT);	// Stop program execution until window is closed
-	OP(WINDOW); // Open window
-	OP(REFR);	// Refresh screen
-	OP(OUT);	// Output tile to screen
-	OP(ADD);	// Add to memory value
-	OP(CMP);	// Compare with memory value
-	OP(JMP);	// Jump
-	OP(JE);		// Jump if equal
-	OP(JNE);	// Jump if not equal
-	OP(JG);		// Jump if greater
-	OP(JGE);	// Jump if greater or equal
-	OP(JL);		// Jump if less
-	OP(JLE);	// Jump if less or equal
-}
 
 void NOP()
 {
@@ -203,4 +164,44 @@ void JLE()
 	Argc(1);
 	if (CmpResult <= 0)
 		Jump(ArgLabel());
+}
+void CALL()
+{
+	Argc(1);
+	Call(ArgLabel());
+}
+void RET()
+{
+	Argc(0);
+	Return();
+}
+
+#define OP(x)	Op[#x] = &x
+
+void InitCommands()
+{
+	OP(NOP);	// No operation
+	OP(EXIT);	// Exit program normally
+	OP(ABORT);	// Exit program with error
+	OP(ALLOC);	// Set memory size
+	OP(PTR);	// Define named pointer to memory address
+	OP(SET);	// Set value into memory address
+	OP(CSTR);	// Insert string literal starting at specified address
+	OP(MSGBOX);	// Show message box
+	OP(TITLE);	// Set program title
+	OP(HALT);	// Stop program execution until window is closed
+	OP(WINDOW); // Open window
+	OP(REFR);	// Refresh screen
+	OP(OUT);	// Output tile to screen
+	OP(ADD);	// Add to memory value
+	OP(CMP);	// Compare with memory value
+	OP(JMP);	// Jump
+	OP(JE);		// Jump if equal
+	OP(JNE);	// Jump if not equal
+	OP(JG);		// Jump if greater
+	OP(JGE);	// Jump if greater or equal
+	OP(JL);		// Jump if less
+	OP(JLE);	// Jump if less or equal
+	OP(CALL);	// Call
+	OP(RET);	// Return
 }
