@@ -3,7 +3,7 @@
 #include "Interpreter.h"
 using namespace CppUtils;
 
-void Program::Load(std::string path)
+void Program::Load(std::string& path)
 {
 	auto file = File::ReadLines(path);
 	
@@ -13,11 +13,21 @@ void Program::Load(std::string path)
 
 	for (int srcLineNr = 0; srcLineNr < file.size(); srcLineNr++) {
 		std::string srcLine = String::Trim(file[srcLineNr]);
-		if (srcLine != "") {
-			if (String::StartsWith(srcLine, ';')) {
-				continue;
+
+		bool quote = false;
+		for (int i = 0; i < srcLine.length(); i++) {
+			char ch = srcLine[i];
+			if (ch == '"') {
+				quote = !quote;
 			}
-			else if (String::EndsWith(srcLine, ':')) {
+			else if (ch == ';' && !quote) {
+				srcLine = String::Trim(srcLine.substr(0, i));
+				break;
+			}
+		}
+
+		if (srcLine != "") {
+			if (String::EndsWith(srcLine, ':')) {
 				std::string label = String::GetFirstChars(srcLine, srcLine.length() - 1);
 				Labels[label] = Lines.size();
 			}

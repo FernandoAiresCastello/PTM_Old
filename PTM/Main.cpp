@@ -32,11 +32,7 @@ int main(int argc, char* argv[]) {
 	}
 	
 	if (!prog->Errors.empty()) {
-		std::string errors = "";
-		for (auto& err : prog->Errors) {
-			errors.append(err + "\n");
-		}
-		MsgBox::Error("PTM", errors);
+		MsgBox::Error("PTM", prog->Errors[0]);
 		return 1;
 	}
 

@@ -7,7 +7,7 @@
 class Program
 {
 public:
-	void Load(std::string path);
+	void Load(std::string& path);
 
 	std::vector<ProgramLine> Lines;
 	std::map<std::string, int> Labels;
