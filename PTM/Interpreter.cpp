@@ -14,6 +14,7 @@ std::map<std::string, void(*)()> Op;
 ErrorMessages Error;
 std::vector<Parameter>* Args;
 int IxArg;
+bool Branch;
 SDL_Event Event;
 
 void InitMachine(Program* prog)
@@ -22,6 +23,7 @@ void InitMachine(Program* prog)
 	Prog = prog;
 	CurLine = nullptr;
 	IxCurLine = 0;
+	Branch = false;
 	Args = nullptr;
 	IxArg = 0;
 }
@@ -51,7 +53,11 @@ void RunMachine()
 		}
 
 		if (!Exit) {
-			IxCurLine++;
+			if (Branch)
+				Branch = false;
+			else
+				IxCurLine++;
+
 			if (IxCurLine >= Prog->Lines.size())
 				Abort(Error.ProgEndWithoutExit);
 		}
@@ -86,11 +92,14 @@ void ProcessGlobalEvents()
 	}
 	else if (Event.type == SDL_KEYDOWN && Event.key.keysym.sym == SDLK_RETURN && TKey::Alt()) {
 		Wnd->ToggleFullscreen();
-	}
-
-	if (Wnd) {
 		Wnd->Update();
 	}
+}
+
+void Jump(int ixProgLine)
+{
+	IxCurLine = ixProgLine;
+	Branch = true;
 }
 
 void Argc(int expectedArgCount)
@@ -202,20 +211,33 @@ std::string ArgString()
 
 int Peek(std::string& identifier)
 {
-	if (VarPtr.find(identifier) == VarPtr.end()) {
+	if (Ptr.find(identifier) == Ptr.end()) {
 		Abort(String::Format(Error.IdentifierNotFound, identifier.c_str()));
 		return 0;
 	}
-
-	return Memory[VarPtr[identifier]];
+	return Memory[Ptr[identifier]];
 }
 
 int GetAddress(std::string& identifier)
 {
-	if (VarPtr.find(identifier) == VarPtr.end()) {
+	if (Ptr.find(identifier) == Ptr.end()) {
 		Abort(String::Format(Error.IdentifierNotFound, identifier.c_str()));
-		return 0;
+		return -1;
 	}
+	return Ptr[identifier];
+}
 
-	return VarPtr[identifier];
+int ArgLabel()
+{
+	Parameter* arg = Arg();
+	if (arg->Type != ParameterType::Identifier) {
+		Abort(Error.LabelExpected);
+		return -1;
+	}
+	std::string& label = arg->StringValue;
+	if (Prog->Labels.find(label) == Prog->Labels.end()) {
+		Abort(String::Format(Error.LabelNotFound, label.c_str()));
+		return -1;
+	}
+	return Prog->Labels[label];
 }

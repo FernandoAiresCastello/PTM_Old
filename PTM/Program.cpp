@@ -75,7 +75,7 @@ bool Program::ParseParams(std::string& args, std::vector<Parameter>& params)
 			param.Type = ParameterType::Address;
 			arg = String::RemoveFirst(arg);
 		}
-		else if (String::StartsWithNumber(arg)) {
+		else if (String::StartsWithNumber(arg) || arg[0] == '-' || arg[0] == '+') {
 			param.Type = ParameterType::NumberLiteral;
 		}
 		else if (isalpha(arg[0])) {
