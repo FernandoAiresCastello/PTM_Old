@@ -9,6 +9,7 @@ std::map<std::string, int> Ptr;
 TWindow* Wnd = nullptr;
 int CmpResult = 0;
 int DataPtr = 0;
+int NextMemAddr = 0;
 enum class OutputMode { Free, Tiled };
 OutputMode OutMode = OutputMode::Free;
 
@@ -37,36 +38,39 @@ void ALLOC()
 	for (int i = 0; i < size; i++)
 		Memory[i] = 0;
 }
-void PTR()
-{
-	Argc(2);
-	std::string id = ArgIdentifier();
-	int addr = ArgNumber();
-	if (MemSize && addr >= 0 && addr < MemSize)
-		Ptr[id] = addr;
-	else
-		Abort(Error.MemoryAddrOutOfBounds);
-}
 void SET()
 {
 	Argc(2);
 	std::string id = ArgIdentifier();
 	int value = ArgNumber();
+	if (Ptr.find(id) == Ptr.end())
+		Ptr[id] = NextMemAddr;
+
 	Memory[Ptr[id]] = value;
+	NextMemAddr++;
 }
 void CSTR()
 {
-	Argc(2);
+	Argc(3);
 	std::string id = ArgIdentifier();
+	int length = ArgNumber();
 	std::string str = ArgString();
-	int addr = Ptr[id];
 
-	for (int i = 0; i < str.length(); i++) {
-		Memory[addr] = str[i];
-		addr++;
-	}
+	if (Ptr.find(id) == Ptr.end())
+		Ptr[id] = NextMemAddr;
+
+	int addr = NextMemAddr;
+	for (int i = 0; i < length; i++)
+		Memory[addr++] = 0;
+
+	addr = NextMemAddr;
+	for (int i = 0; i < str.length() && i < length; i++)
+		Memory[addr++] = str[i];
+
+	Memory[addr++] = 0;
+	NextMemAddr += length + 1;
 }
-void MSGBOX()
+void MSGB()
 {
 	Argc(1);
 	std::string msg = ArgString();
@@ -111,8 +115,8 @@ void OUT()
 {
 	Argc(6);
 	int tile = ArgNumber();
-	int x = OutMode == OutputMode::Free ? ArgNumber() : ArgNumber() * 8;
-	int y = OutMode == OutputMode::Free ? ArgNumber() : ArgNumber() * 8;
+	int x = OutMode == OutputMode::Free ? ArgNumber() : ArgNumber() * TChar::Width;
+	int y = OutMode == OutputMode::Free ? ArgNumber() : ArgNumber() * TChar::Width;
 	int fgc = ArgNumber();
 	int bgc = ArgNumber();
 	bool transparent = ArgNumber() <= 0;
@@ -319,7 +323,6 @@ void InitCommands()
 {
 	//=== MEMORY ===
 	OP(ALLOC);	// Set memory size
-	OP(PTR);	// Define named pointer to memory address
 	OP(SET);	// Set value into memory address
 	OP(CSTR);	// Insert string literal starting at specified address
 	OP(DATA);	// Insert values starting at the data pointer
@@ -346,7 +349,7 @@ void InitCommands()
 	OP(CMP);	// Compare with memory value
 	
 	//=== DEBUG ===
-	OP(MSGBOX);	// Show message box
+	OP(MSGB);	// Show message box
 	OP(ABORT);	// Exit program with error
 	OP(VMEM);	// View values in memory range
 
