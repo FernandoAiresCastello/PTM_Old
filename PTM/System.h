@@ -17,5 +17,10 @@ extern int* Memory;
 extern int MemSize;
 extern std::map<std::string, int> Ptr;
 extern TWindow* Wnd;
+extern bool WindowCreationRequested;
+extern int RequestedWindowWBuf;
+extern int RequestedWindowHBuf;
+extern int RequestedWindowWWnd;
+extern int RequestedWindowHWnd;
 
 void InitCommands();

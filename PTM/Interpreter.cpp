@@ -44,19 +44,32 @@ void DestroyMachine()
 
 void RunMachine()
 {
+	SDL_CreateThread(RunMachineThread, "RunMachineThread", nullptr);
+
+	while (!Exit) {
+		ProcessGlobalEvents();
+		if (WindowCreationRequested) {
+			WindowCreationRequested = false;
+			Wnd = new TWindow(RequestedWindowWBuf, RequestedWindowHBuf, RequestedWindowWWnd, RequestedWindowHWnd, false);
+		}
+		if (Wnd) {
+			Wnd->Update();
+			Wnd->SetTitle(Title);
+		}
+	}
+}
+
+int RunMachineThread(void* dummy)
+{
 	while (!Exit) {
 		CurLine = &Prog->Lines[IxCurLine];
 		Args = &CurLine->Cmd.Params;
 		IxArg = 0;
 
-		if (Op.find(CurLine->Cmd.Operation) != Op.end()) {
-			ProcessGlobalEvents();
+		if (Op.find(CurLine->Cmd.Operation) != Op.end())
 			Op[CurLine->Cmd.Operation]();
-			ProcessGlobalEvents();
-		}
-		else {
+		else
 			Abort(Error.UnknownCommand);
-		}
 
 		if (!Exit) {
 			if (Branch)
@@ -68,6 +81,8 @@ void RunMachine()
 				Abort(Error.ProgEndWithoutExit);
 		}
 	}
+
+	return 0;
 }
 
 bool IsValidOpcode(std::string& opcode)
@@ -97,9 +112,8 @@ void ProcessGlobalEvents()
 	if (Event.type == SDL_QUIT) {
 		Exit = true;
 	}
-	else if (Event.type == SDL_KEYDOWN && Event.key.keysym.sym == SDLK_RETURN && TKey::Alt()) {
+	else if (Event.type == SDL_KEYDOWN && Event.key.keysym.sym == SDLK_RETURN && TKey::Alt() && Wnd) {
 		Wnd->ToggleFullscreen();
-		Wnd->Update();
 	}
 	else if (Event.type == SDL_KEYDOWN) {
 		KeyPressed = Event.key.keysym.sym;
@@ -188,13 +202,16 @@ int ArgNumber()
 	return 0;
 }
 
-std::string ArgIdentifier()
+std::string ArgIdentifier(bool assertExists)
 {
 	Parameter* arg = Arg();
 	if (arg->Type != ParameterType::Identifier) {
 		Abort(Error.IdentifierExpected);
 		return 0;
 	}
+	if (assertExists)
+		AssertIdentifier(arg->StringValue);
+
 	return arg->StringValue;
 }
 
@@ -252,6 +269,12 @@ int GetAddress(std::string& identifier)
 		return -1;
 	}
 	return Ptr[identifier];
+}
+
+void AssertIdentifier(std::string& identifier)
+{
+	if (Ptr.find(identifier) == Ptr.end())
+		Abort(String::Format(Error.IdentifierNotFound, identifier.c_str()));
 }
 
 int ArgLabel()

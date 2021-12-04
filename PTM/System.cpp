@@ -12,6 +12,11 @@ int DataPtr = 0;
 int NextMemAddr = 0;
 enum class OutputMode { Free, Tiled };
 OutputMode OutMode = OutputMode::Free;
+bool WindowCreationRequested;
+int RequestedWindowWBuf;
+int RequestedWindowHBuf;
+int RequestedWindowWWnd;
+int RequestedWindowHWnd;
 
 void NOP()
 {
@@ -41,7 +46,7 @@ void ALLOC()
 void SET()
 {
 	Argc(2);
-	std::string id = ArgIdentifier();
+	std::string id = ArgIdentifier(false);
 	int value = ArgNumber();
 	if (Ptr.find(id) == Ptr.end())
 		Ptr[id] = NextMemAddr;
@@ -52,7 +57,7 @@ void SET()
 void CSTR()
 {
 	Argc(3);
-	std::string id = ArgIdentifier();
+	std::string id = ArgIdentifier(false);
 	int length = ArgNumber();
 	std::string str = ArgString();
 
@@ -80,31 +85,23 @@ void TITLE()
 {
 	Argc(1);
 	Title = ArgString();
-	if (Wnd)
-		Wnd->SetTitle(Title);
 }
 void HALT()
 {
 	Argc(0);
-	while (!Exit)
-		ProcessGlobalEvents();
+	while (!Exit);
 }
 void WINDOW()
 {
 	Argc(4);
-	int wBuf = ArgNumber();
-	int hBuf = ArgNumber();
-	int wWnd = ArgNumber();
-	int hWnd = ArgNumber();
+	RequestedWindowWBuf = ArgNumber();
+	RequestedWindowHBuf = ArgNumber();
+	RequestedWindowWWnd = ArgNumber();
+	RequestedWindowHWnd = ArgNumber();
+	WindowCreationRequested = true;
 
-	Wnd = new TWindow(wBuf, hBuf, wWnd, hWnd, false);
-	Wnd->SetTitle(Title);
-}
-void REFR()
-{
-	Argc(0);
-	if (Wnd)
-		Wnd->Update();
+	while (!Wnd)
+		SDL_Delay(1);
 }
 void OUTM()
 {
@@ -150,7 +147,7 @@ void OUTS()
 void ADD()
 {
 	Argc(2);
-	std::string id = ArgIdentifier();
+	std::string id = ArgIdentifier(true);
 	int value = ArgNumber();
 	int curValue = Memory[Ptr[id]];
 	Memory[Ptr[id]] = curValue + value;
@@ -158,7 +155,7 @@ void ADD()
 void CMP()
 {
 	Argc(2);
-	std::string id = ArgIdentifier();
+	std::string id = ArgIdentifier(true);
 	int value = ArgNumber();
 	int curValue = Memory[Ptr[id]];
 	CmpResult = curValue - value;
@@ -305,7 +302,7 @@ void DATP()
 void RND()
 {
 	Argc(3);
-	std::string id = ArgIdentifier();
+	std::string id = ArgIdentifier(true);
 	int min = ArgNumber();
 	int max = ArgNumber();
 	int rnd = Util::Random(min, max);
@@ -314,7 +311,7 @@ void RND()
 void KEY()
 {
 	Argc(1);
-	std::string id = ArgIdentifier();
+	std::string id = ArgIdentifier(true);
 	Memory[Ptr[id]] = KeyPressed;
 	KeyPressed = 0;
 }
@@ -355,7 +352,6 @@ void InitCommands()
 
 	//=== GRAPHICS ===
 	OP(WINDOW); // Open window
-	OP(REFR);	// Refresh screen
 	OP(CLS);	// Clear screen
 	OP(OUTM);	// Select output mode
 	OP(OUT);	// Output tile to screen
