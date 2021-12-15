@@ -13,9 +13,12 @@ struct ErrorMessages {
 	cstr SyntaxError = "Syntax error";
 	cstr MemoryAddrOutOfBounds = "Memory address out of bounds";
 	cstr IdentifierNotFound = "Identifier %s not found";
+	cstr DuplicateVariableName = "Duplicate variable name: %s";
 	cstr LabelExpected = "Label name expected";
 	cstr LabelNotFound = "Label %s not found";
 	cstr CallStackEmpty = "Call stack empty";
 	cstr DuplicateLabel = "Duplicate label: %s";
 	cstr WindowAlreadyOpen = "Window already open";
+	cstr TypeMismatch = "Type mismatch";
+	cstr ArrayIndexOutOfBounds = "Array index (%i) out of bounds (%i)";
 };

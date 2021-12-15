@@ -4,9 +4,9 @@ enum class ParameterType
 {
 	Invalid,
 	Identifier,
-	Address,
 	NumberLiteral,
 	CharLiteral,
 	StringLiteral,
-	StringPointer
+	ArrayIndexLiteral,
+	ArrayIndexVariable
 };

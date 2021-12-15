@@ -6,6 +6,7 @@ std::string Title = "";
 int* Memory = nullptr;
 int MemSize = 0;
 std::map<std::string, int> Addr;
+std::map<std::string, Variable> Vars;
 TWindow* Wnd = nullptr;
 int CmpResult = 0;
 int DataPtr = 0;
@@ -34,53 +35,85 @@ void ABORT()
 	std::string error = ArgStringLiteral();
 	Abort(error, false);
 }
-void ALLOC()
+void NUM()
+{
+	Argc(2);
+	std::string id = ArgVariableName(false);
+	Variable var;
+	var.Type = VariableType::Number;
+	var.Number = ArgNumber();
+	Vars[id] = var;
+}
+void STR()
+{
+	Argc(2);
+	std::string id = ArgVariableName(false);
+	Variable var;
+	var.Type = VariableType::String;
+	var.String = ArgString();
+	Vars[id] = var;
+}
+void NUM_ARRAY()
 {
 	Argc(1);
-	int size = ArgNumberLiteral();
-	MemSize = size;
-	Memory = new int[size];
-	for (int i = 0; i < size; i++)
-		Memory[i] = 0;
+	std::string id = ArgVariableName(false);
+	Variable var;
+	var.Type = VariableType::NumberArray;
+	Vars[id] = var;
+}
+void STR_ARRAY()
+{
+	Argc(1);
+	std::string id = ArgVariableName(false);
+	Variable var;
+	var.Type = VariableType::StringArray;
+	Vars[id] = var;
 }
 void SET()
 {
 	Argc(2);
-	std::string id = ArgIdentifier(false);
-	int value = ArgNumber();
-	if (Addr.find(id) == Addr.end())
-		Addr[id] = NextMemAddr;
-
-	Memory[Addr[id]] = value;
-	NextMemAddr++;
+	std::string id = ArgVariableName(true);
+	Variable& var = Vars[id];
+	if (var.Type == VariableType::Number)
+		var.Number = ArgNumber();
+	else if (var.Type == VariableType::String)
+		var.String = ArgString();
+	else
+		Abort(Error.TypeMismatch);
 }
-void SETP()
+void PUSH()
 {
 	Argc(2);
-	std::string id = ArgIdentifier(true);
-	int value = ArgNumber();
-	Memory[Memory[Addr[id]]] = value;
+	std::string id = ArgVariableName(true);
+	Variable& var = Vars[id];
+	if (var.Type == VariableType::NumberArray)
+		var.NumberArray.push_back(ArgNumber());
+	else if (var.Type == VariableType::StringArray)
+		var.StringArray.push_back(ArgString());
+	else
+		Abort(Error.TypeMismatch);
 }
-void CSTR()
+void COUNT()
 {
-	Argc(3);
-	std::string id = ArgIdentifier(false);
-	int length = ArgNumber();
-	std::string str = ArgString();
+	Argc(2);
+	std::string idResult = ArgVariableName(true);
+	std::string idArray = ArgVariableName(true);
 
-	if (Addr.find(id) == Addr.end())
-		Addr[id] = NextMemAddr;
+	if (Vars[idResult].Type != VariableType::Number) {
+		Abort(Error.TypeMismatch);
+		return;
+	}
 
-	int addr = NextMemAddr;
-	for (int i = 0; i < length; i++)
-		Memory[addr++] = 0;
-
-	addr = NextMemAddr;
-	for (int i = 0; i < str.length() && i < length; i++)
-		Memory[addr++] = str[i];
-
-	Memory[addr++] = 0;
-	NextMemAddr += length + 1;
+	if (Vars[idArray].Type == VariableType::StringArray) {
+		Vars[idResult].Number = Vars[idArray].StringArray.size();
+	}
+	else if (Vars[idArray].Type == VariableType::NumberArray) {
+		Vars[idResult].Number = Vars[idArray].NumberArray.size();
+	}
+	else {
+		Abort(Error.TypeMismatch);
+		return;
+	}
 }
 void MSGB()
 {
@@ -154,18 +187,28 @@ void OUTS()
 void ADD()
 {
 	Argc(2);
-	std::string id = ArgIdentifier(true);
+	std::string id = ArgVariableName(true);
 	int value = ArgNumber();
-	int curValue = Memory[Addr[id]];
-	Memory[Addr[id]] = curValue + value;
+
+	if (Vars[id].Type != VariableType::Number) {
+		Abort(Error.TypeMismatch);
+		return;
+	}
+
+	Vars[id].Number = Vars[id].Number + value;
 }
 void CMP()
 {
 	Argc(2);
-	std::string id = ArgIdentifier(true);
+	std::string id = ArgVariableName(true);
 	int value = ArgNumber();
-	int curValue = Memory[Addr[id]];
-	CmpResult = curValue - value;
+
+	if (Vars[id].Type != VariableType::Number) {
+		Abort(Error.TypeMismatch);
+		return;
+	}
+
+	CmpResult = Vars[id].Number - value;
 }
 void JMP()
 {
@@ -245,49 +288,30 @@ void CHR()
 	int r8 = ArgNumber();
 	Wnd->GetCharset()->Set(ix, r1, r2, r3, r4, r5, r6, r7, r8);
 }
-void DATA()
-{
-	Argc(8);
-	int v1 = ArgNumber();
-	int v2 = ArgNumber();
-	int v3 = ArgNumber();
-	int v4 = ArgNumber();
-	int v5 = ArgNumber();
-	int v6 = ArgNumber();
-	int v7 = ArgNumber();
-	int v8 = ArgNumber();
-
-	Memory[DataPtr++] = v1;
-	Memory[DataPtr++] = v2;
-	Memory[DataPtr++] = v3;
-	Memory[DataPtr++] = v4;
-	Memory[DataPtr++] = v5;
-	Memory[DataPtr++] = v6;
-	Memory[DataPtr++] = v7;
-	Memory[DataPtr++] = v8;
-}
-void DATP()
-{
-	Argc(1);
-	DataPtr = ArgNumber();
-}
 void RND()
 {
 	Argc(3);
-	std::string id = ArgIdentifier(true);
+	std::string id = ArgVariableName(true);
 	int min = ArgNumber();
 	int max = ArgNumber();
 	int rnd = Util::Random(min, max);
-	Memory[Addr[id]] = rnd;
+	if (Vars[id].Type != VariableType::Number) {
+		Abort(Error.TypeMismatch);
+		return;
+	}
+	Vars[id].Number = rnd;
 }
 void IN()
 {
 	Argc(1);
-	std::string id = ArgIdentifier(true);
-	Memory[Addr[id]] = KeyPressed;
+	std::string id = ArgVariableName(true);
+	if (Vars[id].Type != VariableType::Number) {
+		Abort(Error.TypeMismatch);
+		return;
+	}
+	Vars[id].Number = KeyPressed;
 	KeyPressed = 0;
 }
-
 void PAUSE()
 {
 	Argc(1);
@@ -297,14 +321,15 @@ void PAUSE()
 
 void InitCommands()
 {
-	//=== MEMORY ===
-	OP(ALLOC);	// Set memory size
-	OP(SET);	// Set value into memory address
-	OP(SETP);	// Set value into memory address through pointer
-	OP(CSTR);	// Insert string literal into memory
-	OP(DATP);	// Set data pointer
-	OP(DATA);	// Insert values starting at the data pointer
-	OP(RND);	// Set random value into memory address
+	//=== VARIABLES ===
+	OP(NUM);	// Declare variable as number
+	OP(STR);	// Declare variable as string
+	Op["NUM[]"] = &NUM_ARRAY;	// Declare variable as number array
+	Op["STR[]"] = &STR_ARRAY;	// Declare variable as string array
+	OP(SET);	// Set value to variable
+	OP(PUSH);	// Push value into array
+	OP(COUNT);	// Get number of items in array
+	OP(RND);	// Set random number value variable
 
 	//=== PROGRAM FLOW ===
 	OP(EXIT);	// Exit program normally

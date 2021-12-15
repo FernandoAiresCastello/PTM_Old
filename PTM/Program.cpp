@@ -84,13 +84,20 @@ bool Program::ParseParams(std::string& args, std::vector<Parameter>& params)
 			param.Type = ParameterType::CharLiteral;
 			arg = String::RemoveFirstAndLast(arg);
 		}
-		else if (String::StartsWith(arg, '$')) {
-			param.Type = ParameterType::StringPointer;
-			arg = String::RemoveFirst(arg);
-		}
-		else if (String::StartsWith(arg, '&')) {
-			param.Type = ParameterType::Address;
-			arg = String::RemoveFirst(arg);
+		else if (String::IsEnclosedBy(arg, '[', ']')) {
+			arg = String::RemoveFirstAndLast(arg);
+			auto arrayAccess = String::Split(arg, ' ');
+
+			if (String::StartsWithNumber(arrayAccess[1]) || arrayAccess[1][0] == '-' || arrayAccess[1][0] == '+') {
+				param.Type = ParameterType::ArrayIndexLiteral;
+				param.ArrayIndex = String::ToInt(arrayAccess[1]);
+			}
+			else if (isalpha(arrayAccess[1][0])) {
+				param.Type = ParameterType::ArrayIndexVariable;
+				param.VariableArrayIndex = arrayAccess[1];
+			}
+
+			arg = arrayAccess[0];
 		}
 		else if (String::StartsWithNumber(arg) || arg[0] == '-' || arg[0] == '+') {
 			param.Type = ParameterType::NumberLiteral;
@@ -127,7 +134,15 @@ std::vector<std::string> Program::SplitArgs(std::string& args)
 		char ch = args[i];
 		if (ch == '"') {
 			quote = !quote;
-			arg.push_back('"');
+			arg.push_back(ch);
+		}
+		else if (ch == '[') {
+			quote = true;
+			arg.push_back(ch);
+		}
+		else if (ch == ']') {
+			quote = false;
+			arg.push_back(ch);
 		}
 		else if ((ch == ' ' || ch == '\t') && !quote) {
 			arg = String::Trim(arg);

@@ -4,6 +4,7 @@
 #include "Interpreter.h"
 #include "System.h"
 #include "ErrorMessages.h"
+#include "Variable.h"
 using namespace CppUtils;
 using namespace TileGameLib;
 
@@ -194,97 +195,268 @@ int ArgNumberLiteral()
 	return arg->NumberValue;
 }
 
-int ArgNumber()
-{
-	Parameter* arg = Arg();
-	
-	if (arg->Type == ParameterType::NumberLiteral)
-		return arg->NumberValue;
-	if (arg->Type == ParameterType::CharLiteral)
-		return arg->NumberValue;
-	else if (arg->Type == ParameterType::Identifier)
-		return Peek(arg->StringValue);
-	else if (arg->Type == ParameterType::Address)
-		return GetAddress(arg->StringValue);
-	else
-		Abort(Error.SyntaxError);
-	
-	return 0;
-}
-
-std::string ArgIdentifier(bool assertExists)
+std::string ArgVariableName(bool assertExists)
 {
 	Parameter* arg = Arg();
 	if (arg->Type != ParameterType::Identifier) {
 		Abort(Error.IdentifierExpected);
 		return 0;
 	}
-	if (assertExists)
-		AssertIdentifier(arg->StringValue);
+	AssertVariable(arg->StringValue, assertExists);
 
 	return arg->StringValue;
+}
+
+int ArgNumber()
+{
+	Parameter* arg = Arg();
+	
+	if (arg->Type == ParameterType::NumberLiteral)
+		return arg->NumberValue;
+	if (arg->Type == ParameterType::StringLiteral)
+		return arg->NumberValue;
+	if (arg->Type == ParameterType::CharLiteral)
+		return arg->NumberValue;
+	else if (arg->Type == ParameterType::Identifier)
+		return GetNumberFromVariable(arg->StringValue);
+	else if (arg->Type == ParameterType::ArrayIndexLiteral)
+		return GetNumberFromArrayAtIndex(arg->StringValue, arg->ArrayIndex);
+	else if (arg->Type == ParameterType::ArrayIndexVariable)
+		return GetNumberFromArrayAtVarIndex(arg->StringValue, arg->VariableArrayIndex);
+	else
+		Abort(Error.TypeMismatch);
+	
+	return 0;
 }
 
 std::string ArgString()
 {
 	Parameter* arg = Arg();
 
-	if (arg->Type == ParameterType::StringLiteral) {
+	if (arg->Type == ParameterType::StringLiteral)
 		return arg->StringValue;
-	}
-	else if (arg->Type == ParameterType::NumberLiteral) {
+	else if (arg->Type == ParameterType::NumberLiteral)
 		return arg->StringValue;
-	}
-	else if (arg->Type == ParameterType::Identifier) {
-		return String::ToString(Peek(arg->StringValue));
-	}
-	else if (arg->Type == ParameterType::Address) {
-		return String::ToString(GetAddress(arg->StringValue));
-	}
-	else if (arg->Type == ParameterType::StringPointer) {
-		std::string str = "";
-		int addr = GetAddress(arg->StringValue);
-		int ch = -1;
-		while (ch != 0) {
-			if (addr >= MemSize) {
-				Abort(Error.MemoryAddrOutOfBounds);
-				return "";
-			}
-			ch = Memory[addr++];
-			if (ch != 0) {
-				str.push_back(ch);
-			}
-		}
-		return str;
-	}
-	else {
-		Abort(Error.SyntaxError);
-	}
+	else if (arg->Type == ParameterType::CharLiteral)
+		return arg->StringValue;
+	else if (arg->Type == ParameterType::Identifier)
+		return GetStringFromVariable(arg->StringValue);
+	else if (arg->Type == ParameterType::ArrayIndexLiteral)
+		return GetStringFromArrayAtIndex(arg->StringValue, arg->ArrayIndex);
+	else if (arg->Type == ParameterType::ArrayIndexVariable)
+		return GetStringFromArrayAtVarIndex(arg->StringValue, arg->VariableArrayIndex);
+	else
+		Abort(Error.TypeMismatch);
+	
 	return "";
 }
 
-int Peek(std::string& identifier)
+int GetNumberFromVariable(std::string& identifier)
 {
-	if (Addr.find(identifier) == Addr.end()) {
+	if (Vars.find(identifier) == Vars.end()) {
 		Abort(String::Format(Error.IdentifierNotFound, identifier.c_str()));
 		return 0;
 	}
-	return Memory[Addr[identifier]];
-}
 
-int GetAddress(std::string& identifier)
-{
-	if (Addr.find(identifier) == Addr.end()) {
-		Abort(String::Format(Error.IdentifierNotFound, identifier.c_str()));
-		return -1;
+	if (Vars[identifier].Type == VariableType::Number) {
+		return Vars[identifier].Number;
 	}
-	return Addr[identifier];
+	else if (Vars[identifier].Type == VariableType::String) {
+		return String::ToInt(Vars[identifier].String);
+	}
+
+	Abort(Error.TypeMismatch);
+	return 0;
 }
 
-void AssertIdentifier(std::string& identifier)
+int GetNumberFromArrayAtIndex(std::string& identifier, int index)
 {
-	if (Addr.find(identifier) == Addr.end())
+	if (Vars.find(identifier) == Vars.end()) {
 		Abort(String::Format(Error.IdentifierNotFound, identifier.c_str()));
+		return 0;
+	}
+
+	if (Vars[identifier].Type == VariableType::StringArray) {
+		size_t length = Vars[identifier].StringArray.size();
+		if (index < Vars[identifier].StringArray.size())
+			return String::ToInt(Vars[identifier].StringArray[index]);
+
+		Abort(String::Format(Error.ArrayIndexOutOfBounds, index, length));
+		return 0;
+	}
+	if (Vars[identifier].Type == VariableType::NumberArray) {
+		size_t length = Vars[identifier].NumberArray.size();
+		if (index < Vars[identifier].NumberArray.size())
+			return Vars[identifier].NumberArray[index];
+
+		Abort(String::Format(Error.ArrayIndexOutOfBounds, index, length));
+		return 0;
+	}
+
+	Abort(Error.TypeMismatch);
+	return 0;
+}
+
+int GetNumberFromArrayAtVarIndex(std::string& idVariable, std::string& idIndex)
+{
+	if (Vars.find(idVariable) == Vars.end()) {
+		Abort(String::Format(Error.IdentifierNotFound, idVariable.c_str()));
+		return 0;
+	}
+	if (Vars.find(idIndex) == Vars.end()) {
+		Abort(String::Format(Error.IdentifierNotFound, idIndex.c_str()));
+		return 0;
+	}
+	if (Vars[idIndex].Type != VariableType::Number) {
+		Abort(Error.TypeMismatch);
+		return 0;
+	}
+
+	int index = Vars[idIndex].Number;
+
+	if (Vars[idVariable].Type == VariableType::StringArray) {
+		size_t length = Vars[idVariable].StringArray.size();
+		if (index < length)
+			return String::ToInt(Vars[idVariable].StringArray[index]);
+
+		Abort(String::Format(Error.ArrayIndexOutOfBounds, index, length));
+		return 0;
+	}
+	if (Vars[idVariable].Type == VariableType::NumberArray) {
+		size_t length = Vars[idVariable].NumberArray.size();
+		if (index < length)
+			return Vars[idVariable].NumberArray[index];
+
+		Abort(String::Format(Error.ArrayIndexOutOfBounds, index, length));
+		return 0;
+	}
+
+	Abort(Error.TypeMismatch);
+	return 0;
+}
+
+std::string GetStringFromVariable(std::string& identifier)
+{
+	if (Vars.find(identifier) == Vars.end()) {
+		Abort(String::Format(Error.IdentifierNotFound, identifier.c_str()));
+		return 0;
+	}
+
+	if (Vars[identifier].Type == VariableType::String) {
+		return Vars[identifier].String;
+	}
+	else if (Vars[identifier].Type == VariableType::Number) {
+		return String::ToString(Vars[identifier].Number);
+	}
+	else if (Vars[identifier].Type == VariableType::NumberArray) {
+		std::string str = "[";
+		int i = 0;
+		auto arr = Vars[identifier].NumberArray;
+		for (auto& num : arr) {
+			str.append(String::ToString(num));
+			i++;
+			if (i < arr.size())
+				str.append(", ");
+		}
+		str.append("]");
+		return str;
+	}
+	else if (Vars[identifier].Type == VariableType::StringArray) {
+		std::string str = "[";
+		int i = 0;
+		auto arr = Vars[identifier].StringArray;
+		for (auto& item : arr) {
+			str.append("\"");
+			str.append(item);
+			str.append("\"");
+			i++;
+			if (i < arr.size())
+				str.append(", ");
+		}
+		str.append("]");
+		return str;
+	}
+
+	Abort(Error.TypeMismatch);
+	return "";
+}
+
+std::string GetStringFromArrayAtIndex(std::string& identifier, int index)
+{
+	if (Vars.find(identifier) == Vars.end()) {
+		Abort(String::Format(Error.IdentifierNotFound, identifier.c_str()));
+		return "";
+	}
+
+	if (Vars[identifier].Type == VariableType::StringArray) {
+		size_t length = Vars[identifier].StringArray.size();
+		if (index < length)
+			return Vars[identifier].StringArray[index];
+		
+		Abort(String::Format(Error.ArrayIndexOutOfBounds, index, length));
+		return "";
+	}
+	if (Vars[identifier].Type == VariableType::NumberArray) {
+		size_t length = Vars[identifier].NumberArray.size();
+		if (index < length)
+			return String::ToString(Vars[identifier].NumberArray[index]);
+
+		Abort(String::Format(Error.ArrayIndexOutOfBounds, index, length));
+		return "";
+	}
+
+	Abort(Error.TypeMismatch);
+	return "";
+}
+
+std::string GetStringFromArrayAtVarIndex(std::string& idVariable, std::string& idIndex)
+{
+	if (Vars.find(idVariable) == Vars.end()) {
+		Abort(String::Format(Error.IdentifierNotFound, idVariable.c_str()));
+		return "";
+	}
+	if (Vars.find(idIndex) == Vars.end()) {
+		Abort(String::Format(Error.IdentifierNotFound, idIndex.c_str()));
+		return "";
+	}
+	if (Vars[idIndex].Type != VariableType::Number) {
+		Abort(Error.TypeMismatch);
+		return "";
+	}
+
+	int index = Vars[idIndex].Number;
+
+	if (Vars[idVariable].Type == VariableType::StringArray) {
+		size_t length = Vars[idVariable].StringArray.size();
+		if (index < length)
+			return Vars[idVariable].StringArray[index];
+
+		Abort(String::Format(Error.ArrayIndexOutOfBounds, index, length));
+		return "";
+	}
+	if (Vars[idVariable].Type == VariableType::NumberArray) {
+		size_t length = Vars[idVariable].NumberArray.size();
+		if (index < length)
+			return String::ToString(Vars[idVariable].NumberArray[index]);
+
+		Abort(String::Format(Error.ArrayIndexOutOfBounds, index, length));
+		return "";
+	}
+
+	Abort(Error.TypeMismatch);
+	return "";
+}
+
+void AssertVariable(std::string& identifier, bool exists)
+{
+	if (exists) {
+		if (Vars.find(identifier) == Vars.end())
+			Abort(String::Format(Error.IdentifierNotFound, identifier.c_str()));
+	}
+	else {
+		if (Vars.find(identifier) != Vars.end())
+			Abort(String::Format(Error.DuplicateVariableName, identifier.c_str()));
+	}
 }
 
 int ArgLabel()

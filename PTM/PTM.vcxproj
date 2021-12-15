@@ -103,7 +103,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>false</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-	  <AdditionalIncludeDirectories>C:\Fernando\Proj\CppUtils\CppUtils;C:\Fernando\Proj\TileGameToolkit\TileGameLib\TileGameLib;C:\Fernando\Lib\SDL2-2.0.8\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Fernando\Proj\CppUtils\CppUtils;C:\Fernando\Proj\TileGameToolkit\TileGameLib\TileGameLib;C:\Fernando\Lib\SDL2-2.0.8\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -133,6 +133,7 @@
     <ClCompile Include="Interpreter.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Program.cpp" />
+    <ClCompile Include="Variable.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Command.h" />
@@ -143,6 +144,8 @@
     <ClInclude Include="ParameterType.h" />
     <ClInclude Include="Program.h" />
     <ClInclude Include="ProgramLine.h" />
+    <ClInclude Include="Variable.h" />
+    <ClInclude Include="VariableType.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

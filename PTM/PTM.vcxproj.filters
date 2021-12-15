@@ -11,6 +11,9 @@
     <ClCompile Include="Interpreter.cpp">
       <Filter>Runtime</Filter>
     </ClCompile>
+    <ClCompile Include="Variable.cpp">
+      <Filter>Runtime</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ProgramLine.h">
@@ -35,6 +38,12 @@
       <Filter>Runtime</Filter>
     </ClInclude>
     <ClInclude Include="ErrorMessages.h" />
+    <ClInclude Include="Variable.h">
+      <Filter>Runtime</Filter>
+    </ClInclude>
+    <ClInclude Include="VariableType.h">
+      <Filter>Runtime</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Runtime">

@@ -9,6 +9,7 @@
 #include "System.h"
 #include "Interpreter.h"
 #include "ErrorMessages.h"
+#include "Variable.h"
 using namespace CppUtils;
 using namespace TileGameLib;
 
@@ -16,6 +17,7 @@ extern std::string Title;
 extern int* Memory;
 extern int MemSize;
 extern std::map<std::string, int> Addr;
+extern std::map<std::string, Variable> Vars;
 extern TWindow* Wnd;
 extern bool WindowCreationRequested;
 extern int RequestedWindowWBuf;
