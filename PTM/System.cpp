@@ -5,7 +5,7 @@
 std::string Title = "";
 int* Memory = nullptr;
 int MemSize = 0;
-std::map<std::string, int> Ptr;
+std::map<std::string, int> Addr;
 TWindow* Wnd = nullptr;
 int CmpResult = 0;
 int DataPtr = 0;
@@ -48,11 +48,18 @@ void SET()
 	Argc(2);
 	std::string id = ArgIdentifier(false);
 	int value = ArgNumber();
-	if (Ptr.find(id) == Ptr.end())
-		Ptr[id] = NextMemAddr;
+	if (Addr.find(id) == Addr.end())
+		Addr[id] = NextMemAddr;
 
-	Memory[Ptr[id]] = value;
+	Memory[Addr[id]] = value;
 	NextMemAddr++;
+}
+void SETP()
+{
+	Argc(2);
+	std::string id = ArgIdentifier(true);
+	int value = ArgNumber();
+	Memory[Memory[Addr[id]]] = value;
 }
 void CSTR()
 {
@@ -61,8 +68,8 @@ void CSTR()
 	int length = ArgNumber();
 	std::string str = ArgString();
 
-	if (Ptr.find(id) == Ptr.end())
-		Ptr[id] = NextMemAddr;
+	if (Addr.find(id) == Addr.end())
+		Addr[id] = NextMemAddr;
 
 	int addr = NextMemAddr;
 	for (int i = 0; i < length; i++)
@@ -149,15 +156,15 @@ void ADD()
 	Argc(2);
 	std::string id = ArgIdentifier(true);
 	int value = ArgNumber();
-	int curValue = Memory[Ptr[id]];
-	Memory[Ptr[id]] = curValue + value;
+	int curValue = Memory[Addr[id]];
+	Memory[Addr[id]] = curValue + value;
 }
 void CMP()
 {
 	Argc(2);
 	std::string id = ArgIdentifier(true);
 	int value = ArgNumber();
-	int curValue = Memory[Ptr[id]];
+	int curValue = Memory[Addr[id]];
 	CmpResult = curValue - value;
 }
 void JMP()
@@ -238,41 +245,6 @@ void CHR()
 	int r8 = ArgNumber();
 	Wnd->GetCharset()->Set(ix, r1, r2, r3, r4, r5, r6, r7, r8);
 }
-void VMEM()
-{
-	Argc(3);
-	int first = ArgNumber();
-	int last = ArgNumber();
-	int mode = ArgNumber();
-	std::string dump;
-
-	for (int addr = first; addr <= last; addr++) {
-		std::string line;
-
-		if (mode == 0) {
-			line = String::Format("0x%x = %i", addr, Memory[addr]);
-		}
-		else if (mode == 1) {
-			int ch = Memory[addr];
-			if (ch >= 32 && ch < 256)
-				line = String::Format("0x%x = %c", addr, ch);
-			else
-				line = String::Format("0x%x =", addr);
-		}
-		else if (mode == 2) {
-			int ch = Memory[addr];
-			if (ch >= 32 && ch < 256)
-				line = String::Format("0x%x = %i = %c", addr, ch, ch);
-			else
-				line = String::Format("0x%x = %i =", addr, ch);
-		}
-
-		line.append("\n");
-		dump.append(line);
-	}
-
-	MsgBox::Info(dump);
-}
 void DATA()
 {
 	Argc(8);
@@ -306,14 +278,21 @@ void RND()
 	int min = ArgNumber();
 	int max = ArgNumber();
 	int rnd = Util::Random(min, max);
-	Memory[Ptr[id]] = rnd;
+	Memory[Addr[id]] = rnd;
 }
-void KEY()
+void IN()
 {
 	Argc(1);
 	std::string id = ArgIdentifier(true);
-	Memory[Ptr[id]] = KeyPressed;
+	Memory[Addr[id]] = KeyPressed;
 	KeyPressed = 0;
+}
+
+void PAUSE()
+{
+	Argc(1);
+	int ms = ArgNumber();
+	SDL_Delay(ms);
 }
 
 void InitCommands()
@@ -321,9 +300,10 @@ void InitCommands()
 	//=== MEMORY ===
 	OP(ALLOC);	// Set memory size
 	OP(SET);	// Set value into memory address
-	OP(CSTR);	// Insert string literal starting at specified address
-	OP(DATA);	// Insert values starting at the data pointer
+	OP(SETP);	// Set value into memory address through pointer
+	OP(CSTR);	// Insert string literal into memory
 	OP(DATP);	// Set data pointer
+	OP(DATA);	// Insert values starting at the data pointer
 	OP(RND);	// Set random value into memory address
 
 	//=== PROGRAM FLOW ===
@@ -338,6 +318,7 @@ void InitCommands()
 	OP(JLE);	// Jump if less or equal
 	OP(CALL);	// Call
 	OP(RET);	// Return
+	OP(PAUSE);	// Pause program execution
 
 	//=== MATH ===
 	OP(ADD);	// Add to memory value
@@ -348,10 +329,10 @@ void InitCommands()
 	//=== DEBUG ===
 	OP(MSGB);	// Show message box
 	OP(ABORT);	// Exit program with error
-	OP(VMEM);	// View values in memory range
 
-	//=== GRAPHICS ===
+	//=== GRAPHICS / WINDOW ===
 	OP(WINDOW); // Open window
+	OP(TITLE);	// Set window title
 	OP(CLS);	// Clear screen
 	OP(OUTM);	// Select output mode
 	OP(OUT);	// Output tile to screen
@@ -360,9 +341,8 @@ void InitCommands()
 	OP(CHR);	// Set charset data
 
 	//=== INPUT ===
-	OP(KEY);	// Get key pressed
+	OP(IN);	// Get key pressed
 
 	//=== MISC ===
 	OP(NOP);	// No operation
-	OP(TITLE);	// Set program title
 }

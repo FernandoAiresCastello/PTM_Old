@@ -49,12 +49,16 @@ void RunMachine()
 	while (!Exit) {
 		ProcessGlobalEvents();
 		if (WindowCreationRequested) {
-			WindowCreationRequested = false;
-			Wnd = new TWindow(RequestedWindowWBuf, RequestedWindowHBuf, RequestedWindowWWnd, RequestedWindowHWnd, false);
+			if (Wnd) {
+				Abort(Error.WindowAlreadyOpen);
+			}
+			else {
+				WindowCreationRequested = false;
+				Wnd = new TWindow(RequestedWindowWBuf, RequestedWindowHBuf, RequestedWindowWWnd, RequestedWindowHWnd, false);
+			}
 		}
 		if (Wnd) {
-			Wnd->Update();
-			Wnd->SetTitle(Title);
+			UpdateWindow();
 		}
 	}
 }
@@ -83,6 +87,12 @@ int RunMachineThread(void* dummy)
 	}
 
 	return 0;
+}
+
+void UpdateWindow()
+{
+	Wnd->Update();
+	Wnd->SetTitle(Title);
 }
 
 bool IsValidOpcode(std::string& opcode)
@@ -255,25 +265,25 @@ std::string ArgString()
 
 int Peek(std::string& identifier)
 {
-	if (Ptr.find(identifier) == Ptr.end()) {
+	if (Addr.find(identifier) == Addr.end()) {
 		Abort(String::Format(Error.IdentifierNotFound, identifier.c_str()));
 		return 0;
 	}
-	return Memory[Ptr[identifier]];
+	return Memory[Addr[identifier]];
 }
 
 int GetAddress(std::string& identifier)
 {
-	if (Ptr.find(identifier) == Ptr.end()) {
+	if (Addr.find(identifier) == Addr.end()) {
 		Abort(String::Format(Error.IdentifierNotFound, identifier.c_str()));
 		return -1;
 	}
-	return Ptr[identifier];
+	return Addr[identifier];
 }
 
 void AssertIdentifier(std::string& identifier)
 {
-	if (Ptr.find(identifier) == Ptr.end())
+	if (Addr.find(identifier) == Addr.end())
 		Abort(String::Format(Error.IdentifierNotFound, identifier.c_str()));
 }
 

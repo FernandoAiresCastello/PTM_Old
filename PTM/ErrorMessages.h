@@ -17,4 +17,5 @@ struct ErrorMessages {
 	cstr LabelNotFound = "Label %s not found";
 	cstr CallStackEmpty = "Call stack empty";
 	cstr DuplicateLabel = "Duplicate label: %s";
+	cstr WindowAlreadyOpen = "Window already open";
 };
