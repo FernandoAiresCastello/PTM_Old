@@ -3,14 +3,9 @@
 #define OP(x)	Op[#x] = &x
 
 std::string Title = "";
-int* Memory = nullptr;
-int MemSize = 0;
-std::map<std::string, int> Addr;
 std::map<std::string, Variable> Vars;
 TWindow* Wnd = nullptr;
 int CmpResult = 0;
-int DataPtr = 0;
-int NextMemAddr = 0;
 enum class OutputMode { Free, Tiled };
 OutputMode OutMode = OutputMode::Free;
 bool WindowCreationRequested;
@@ -72,14 +67,62 @@ void STR_ARRAY()
 void SET()
 {
 	Argc(2);
-	std::string id = ArgVariableName(true);
-	Variable& var = Vars[id];
-	if (var.Type == VariableType::Number)
-		var.Number = ArgNumber();
-	else if (var.Type == VariableType::String)
-		var.String = ArgString();
-	else
-		Abort(Error.TypeMismatch);
+	if (Arg(0)->Type == ParameterType::Identifier) {
+		std::string id = ArgVariableName(true);
+		Variable& var = Vars[id];
+		if (var.Type == VariableType::Number)
+			var.Number = ArgNumber();
+		else if (var.Type == VariableType::String)
+			var.String = ArgString();
+		else
+			Abort(Error.TypeMismatch);
+	}
+	else if (Arg(0)->Type == ParameterType::ArrayIndexLiteral) {
+		Parameter* arg = Arg();
+		std::string& id = arg->StringValue;
+		AssertVariable(id, true);
+		Variable& var = Vars[id];
+		int index = arg->ArrayIndex;
+		AssertArrayIndex(id, index);
+		if (var.Type == VariableType::NumberArray)
+			var.NumberArray[index] = ArgNumber();
+		else if (var.Type == VariableType::StringArray)
+			var.StringArray[index] = ArgString();
+		else
+			Abort(Error.TypeMismatch);
+	}
+	else if (Arg(0)->Type == ParameterType::ArrayIndexVariable) {
+		Parameter* arg0 = Arg(0);
+		Parameter* arg1 = Arg(1);
+		std::string& id = arg0->StringValue;
+		AssertVariable(id, true);
+		Variable& var = Vars[id];
+		std::string& arrIxId = arg1->StringValue;
+
+		if (Vars[arrIxId].Type != VariableType::NumberArray && Vars[arrIxId].Type != VariableType::StringArray) {
+			Abort(Error.TypeMismatch);
+			return;
+		}
+		if (Vars[arg0->VariableArrayIndex].Type != VariableType::Number) {
+			Abort(Error.TypeMismatch);
+			return;
+		}
+
+		int index0 = Vars[arg0->VariableArrayIndex].Number;
+		int index1 = Vars[arg1->VariableArrayIndex].Number;
+		AssertArrayIndex(id, index0);
+		AssertArrayIndex(id, index1);
+
+		if (var.Type == VariableType::NumberArray)
+			var.NumberArray[index0] = var.NumberArray[index1];
+		else if (var.Type == VariableType::StringArray)
+			var.StringArray[index0] = var.StringArray[index1];
+		else
+			Abort(Error.TypeMismatch);
+	}
+	else {
+		Abort(Error.SyntaxError);
+	}
 }
 void PUSH()
 {
@@ -355,9 +398,11 @@ void InitCommands()
 	OP(MSGB);	// Show message box
 	OP(ABORT);	// Exit program with error
 
-	//=== GRAPHICS / WINDOW ===
+	//=== WINDOW ===
 	OP(WINDOW); // Open window
 	OP(TITLE);	// Set window title
+
+	//=== GRAPHICS ===
 	OP(CLS);	// Clear screen
 	OP(OUTM);	// Select output mode
 	OP(OUT);	// Output tile to screen

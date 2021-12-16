@@ -39,8 +39,6 @@ void DestroyMachine()
 {
 	delete Wnd;
 	Wnd = nullptr;
-	delete[] Memory;
-	Memory = nullptr;
 }
 
 void RunMachine()
@@ -175,6 +173,15 @@ Parameter* Arg()
 	return nullptr;
 }
 
+Parameter* Arg(int index)
+{
+	if (index >= 0 && index < Args->size())
+		return &Args->at(index);
+
+	Abort(Error.ArgIndexOutOfRange);
+	return nullptr;
+}
+
 std::string ArgStringLiteral()
 {
 	Parameter* arg = Arg();
@@ -249,6 +256,21 @@ std::string ArgString()
 		Abort(Error.TypeMismatch);
 	
 	return "";
+}
+
+int ArgLabel()
+{
+	Parameter* arg = Arg();
+	if (arg->Type != ParameterType::Identifier) {
+		Abort(Error.LabelExpected);
+		return -1;
+	}
+	std::string& label = arg->StringValue;
+	if (Prog->Labels.find(label) == Prog->Labels.end()) {
+		Abort(String::Format(Error.LabelNotFound, label.c_str()));
+		return -1;
+	}
+	return Prog->Labels[label];
 }
 
 int GetNumberFromVariable(std::string& identifier)
@@ -459,17 +481,19 @@ void AssertVariable(std::string& identifier, bool exists)
 	}
 }
 
-int ArgLabel()
+void AssertArrayIndex(std::string& identifier, int index)
 {
-	Parameter* arg = Arg();
-	if (arg->Type != ParameterType::Identifier) {
-		Abort(Error.LabelExpected);
-		return -1;
+	if (Vars[identifier].Type == VariableType::StringArray) {
+		size_t length = Vars[identifier].StringArray.size();
+		if (index >= Vars[identifier].StringArray.size())
+			Abort(String::Format(Error.ArrayIndexOutOfBounds, index, length));
 	}
-	std::string& label = arg->StringValue;
-	if (Prog->Labels.find(label) == Prog->Labels.end()) {
-		Abort(String::Format(Error.LabelNotFound, label.c_str()));
-		return -1;
+	else if (Vars[identifier].Type == VariableType::NumberArray) {
+		size_t length = Vars[identifier].NumberArray.size();
+		if (index >= Vars[identifier].NumberArray.size())
+			Abort(String::Format(Error.ArrayIndexOutOfBounds, index, length));
 	}
-	return Prog->Labels[label];
+	else {
+		Abort(Error.TypeMismatch);
+	}
 }
