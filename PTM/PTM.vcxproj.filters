@@ -11,9 +11,6 @@
     <ClCompile Include="Interpreter.cpp">
       <Filter>Runtime</Filter>
     </ClCompile>
-    <ClCompile Include="Variable.cpp">
-      <Filter>Runtime</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ProgramLine.h">
