@@ -16,7 +16,6 @@ void InitMachine(Program* prog);
 void DestroyMachine();
 void RunMachine();
 int RunMachineThread(void* dummy);
-void UpdateWindow();
 bool IsValidOpcode(std::string& opcode);
 void Abort(std::string msg, bool printInfo = true);
 void ProcessGlobalEvents();

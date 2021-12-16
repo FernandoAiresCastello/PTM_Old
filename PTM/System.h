@@ -13,13 +13,22 @@
 using namespace CppUtils;
 using namespace TileGameLib;
 
-extern std::string Title;
 extern std::map<std::string, Variable> Vars;
-extern TWindow* Wnd;
-extern bool WindowCreationRequested;
-extern int RequestedWindowWBuf;
-extern int RequestedWindowHBuf;
-extern int RequestedWindowWWnd;
-extern int RequestedWindowHWnd;
+
+enum class OutputMode { Free, Tiled };
+
+struct SystemWindow {
+	std::string Title = "";
+	std::string OldTitle = "";
+	TWindow* Ptr = nullptr;
+	bool CreationRequested = false;
+	int BufWidth = 0;
+	int BufHeight = 0;
+	int WndWidth = 0;
+	int WndHeight = 0;
+	OutputMode OutMode = OutputMode::Free;
+	bool AutoUpdate = true;
+};
+extern SystemWindow Wnd;
 
 void InitCommands();

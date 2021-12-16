@@ -2,17 +2,9 @@
 
 #define OP(x)	Op[#x] = &x
 
-std::string Title = "";
 std::map<std::string, Variable> Vars;
-TWindow* Wnd = nullptr;
 int CmpResult = 0;
-enum class OutputMode { Free, Tiled };
-OutputMode OutMode = OutputMode::Free;
-bool WindowCreationRequested;
-int RequestedWindowWBuf;
-int RequestedWindowHBuf;
-int RequestedWindowWWnd;
-int RequestedWindowHWnd;
+SystemWindow Wnd;
 
 void NOP()
 {
@@ -162,12 +154,12 @@ void MSGB()
 {
 	Argc(1);
 	std::string msg = ArgString();
-	MsgBox::Info(Title, msg);
+	MsgBox::Info(Wnd.Title, msg);
 }
 void TITLE()
 {
 	Argc(1);
-	Title = ArgString();
+	Wnd.Title = ArgString();
 }
 void HALT()
 {
@@ -177,41 +169,41 @@ void HALT()
 void WINDOW()
 {
 	Argc(4);
-	RequestedWindowWBuf = ArgNumber();
-	RequestedWindowHBuf = ArgNumber();
-	RequestedWindowWWnd = ArgNumber();
-	RequestedWindowHWnd = ArgNumber();
-	WindowCreationRequested = true;
+	Wnd.BufWidth = ArgNumber();
+	Wnd.BufHeight = ArgNumber();
+	Wnd.WndWidth = ArgNumber();
+	Wnd.WndHeight = ArgNumber();
+	Wnd.CreationRequested = true;
 
-	while (!Wnd)
+	while (!Wnd.Ptr)
 		SDL_Delay(1);
 }
 void OUTM()
 {
 	Argc(1);
-	OutMode = (OutputMode)ArgNumber();
+	Wnd.OutMode = (OutputMode)ArgNumber();
 }
 void OUT()
 {
 	Argc(6);
 	int tile = ArgNumber();
-	int x = OutMode == OutputMode::Free ? ArgNumber() : ArgNumber() * TChar::Width;
-	int y = OutMode == OutputMode::Free ? ArgNumber() : ArgNumber() * TChar::Width;
+	int x = Wnd.OutMode == OutputMode::Free ? ArgNumber() : ArgNumber() * TChar::Width;
+	int y = Wnd.OutMode == OutputMode::Free ? ArgNumber() : ArgNumber() * TChar::Width;
 	int fgc = ArgNumber();
 	int bgc = ArgNumber();
 	bool transparent = ArgNumber() <= 0;
 
 	if (transparent)
-		Wnd->DrawTileTransparent(tile, fgc, bgc, x, y);
+		Wnd.Ptr->DrawTileTransparent(tile, fgc, bgc, x, y);
 	else
-		Wnd->DrawTile(tile, fgc, bgc, x, y);
+		Wnd.Ptr->DrawTile(tile, fgc, bgc, x, y);
 }
 void OUTS()
 {
 	Argc(6);
 	std::string str = ArgString();
-	int x = OutMode == OutputMode::Free ? ArgNumber() : ArgNumber() * TChar::Width;
-	int y = OutMode == OutputMode::Free ? ArgNumber() : ArgNumber() * TChar::Width;
+	int x = Wnd.OutMode == OutputMode::Free ? ArgNumber() : ArgNumber() * TChar::Width;
+	int y = Wnd.OutMode == OutputMode::Free ? ArgNumber() : ArgNumber() * TChar::Width;
 	int fgc = ArgNumber();
 	int bgc = ArgNumber();
 	bool transparent = ArgNumber() <= 0;
@@ -220,9 +212,9 @@ void OUTS()
 	for (int i = 0; i < str.length(); i++) {
 		tile = str[i];
 		if (transparent)
-			Wnd->DrawTileTransparent(tile, fgc, bgc, x, y);
+			Wnd.Ptr->DrawTileTransparent(tile, fgc, bgc, x, y);
 		else
-			Wnd->DrawTile(tile, fgc, bgc, x, y);
+			Wnd.Ptr->DrawTile(tile, fgc, bgc, x, y);
 
 		x += TChar::Width;
 	}
@@ -304,18 +296,23 @@ void RET()
 	Argc(0);
 	Return();
 }
+void DISP()
+{
+	Argc(1);
+	Wnd.AutoUpdate = ArgNumber() > 0;
+}
 void CLS()
 {
 	Argc(1);
-	Wnd->SetBackColor(ArgNumber());
-	Wnd->Clear();
+	Wnd.Ptr->SetBackColor(ArgNumber());
+	Wnd.Ptr->Clear();
 }
 void PAL()
 {
 	Argc(2);
 	int ix = ArgNumber();
 	int rgb = ArgNumber();
-	Wnd->GetPalette()->Set(ix, rgb);
+	Wnd.Ptr->GetPalette()->Set(ix, rgb);
 }
 void CHR()
 {
@@ -329,7 +326,7 @@ void CHR()
 	int r6 = ArgNumber();
 	int r7 = ArgNumber();
 	int r8 = ArgNumber();
-	Wnd->GetCharset()->Set(ix, r1, r2, r3, r4, r5, r6, r7, r8);
+	Wnd.Ptr->GetCharset()->Set(ix, r1, r2, r3, r4, r5, r6, r7, r8);
 }
 void RND()
 {
@@ -403,6 +400,7 @@ void InitCommands()
 	OP(TITLE);	// Set window title
 
 	//=== GRAPHICS ===
+	OP(DISP);	// Enable or disable screen
 	OP(CLS);	// Clear screen
 	OP(OUTM);	// Select output mode
 	OP(OUT);	// Output tile to screen

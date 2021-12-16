@@ -12,7 +12,7 @@ struct ErrorMessages {
 	cstr IdentifierExpected = "Identifier expected";
 	cstr SyntaxError = "Syntax error";
 	cstr MemoryAddrOutOfBounds = "Memory address out of bounds";
-	cstr IdentifierNotFound = "Identifier %s not found";
+	cstr VariableNotDeclared = "Variable %s is not declared";
 	cstr DuplicateVariableName = "Duplicate variable name: %s";
 	cstr LabelExpected = "Label name expected";
 	cstr LabelNotFound = "Label %s not found";

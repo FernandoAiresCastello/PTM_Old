@@ -37,8 +37,8 @@ void InitMachine(Program* prog)
 
 void DestroyMachine()
 {
-	delete Wnd;
-	Wnd = nullptr;
+	delete Wnd.Ptr;
+	Wnd.Ptr = nullptr;
 }
 
 void RunMachine()
@@ -47,17 +47,28 @@ void RunMachine()
 
 	while (!Exit) {
 		ProcessGlobalEvents();
-		if (WindowCreationRequested) {
-			if (Wnd) {
+		if (Wnd.CreationRequested) {
+			if (Wnd.Ptr) {
 				Abort(Error.WindowAlreadyOpen);
 			}
 			else {
-				WindowCreationRequested = false;
-				Wnd = new TWindow(RequestedWindowWBuf, RequestedWindowHBuf, RequestedWindowWWnd, RequestedWindowHWnd, false);
+				Wnd.CreationRequested = false;
+				Wnd.Ptr = new TWindow(
+					Wnd.BufWidth, Wnd.BufHeight, 
+					Wnd.WndWidth, Wnd.WndHeight, false);
 			}
 		}
-		if (Wnd) {
-			UpdateWindow();
+		if (Wnd.Ptr) {
+			if (Wnd.Title != Wnd.OldTitle) {
+				Wnd.OldTitle = Wnd.Title;
+				Wnd.Ptr->SetTitle(Wnd.Title);
+			}
+			if (Wnd.AutoUpdate) {
+				Wnd.Ptr->Update();
+			}
+			else {
+				SDL_Delay(1);
+			}
 		}
 	}
 }
@@ -88,12 +99,6 @@ int RunMachineThread(void* dummy)
 	return 0;
 }
 
-void UpdateWindow()
-{
-	Wnd->Update();
-	Wnd->SetTitle(Title);
-}
-
 bool IsValidOpcode(std::string& opcode)
 {
 	return Op.find(opcode) != Op.end();
@@ -102,11 +107,11 @@ bool IsValidOpcode(std::string& opcode)
 void Abort(std::string msg, bool printInfo)
 {
 	if (printInfo) {
-		MsgBox::Error(Title, String::Format("%s at line %i:\n\n%s",
+		MsgBox::Error(Wnd.Title, String::Format("%s at line %i:\n\n%s",
 			msg.c_str(), CurLine->SrcLineNr, CurLine->SrcCode.c_str()));
 	}
 	else {
-		MsgBox::Error(Title, msg);
+		MsgBox::Error(Wnd.Title, msg);
 	}
 
 	Exit = true;
@@ -121,8 +126,9 @@ void ProcessGlobalEvents()
 	if (Event.type == SDL_QUIT) {
 		Exit = true;
 	}
-	else if (Event.type == SDL_KEYDOWN && Event.key.keysym.sym == SDLK_RETURN && TKey::Alt() && Wnd) {
-		Wnd->ToggleFullscreen();
+	else if (Event.type == SDL_KEYDOWN && Event.key.keysym.sym == SDLK_RETURN && TKey::Alt() && Wnd.Ptr) {
+		Wnd.Ptr->ToggleFullscreen();
+		Wnd.Ptr->Update();
 	}
 	else if (Event.type == SDL_KEYDOWN) {
 		KeyPressed = Event.key.keysym.sym;
@@ -276,7 +282,7 @@ int ArgLabel()
 int GetNumberFromVariable(std::string& identifier)
 {
 	if (Vars.find(identifier) == Vars.end()) {
-		Abort(String::Format(Error.IdentifierNotFound, identifier.c_str()));
+		Abort(String::Format(Error.VariableNotDeclared, identifier.c_str()));
 		return 0;
 	}
 
@@ -294,7 +300,7 @@ int GetNumberFromVariable(std::string& identifier)
 int GetNumberFromArrayAtIndex(std::string& identifier, int index)
 {
 	if (Vars.find(identifier) == Vars.end()) {
-		Abort(String::Format(Error.IdentifierNotFound, identifier.c_str()));
+		Abort(String::Format(Error.VariableNotDeclared, identifier.c_str()));
 		return 0;
 	}
 
@@ -322,11 +328,11 @@ int GetNumberFromArrayAtIndex(std::string& identifier, int index)
 int GetNumberFromArrayAtVarIndex(std::string& idVariable, std::string& idIndex)
 {
 	if (Vars.find(idVariable) == Vars.end()) {
-		Abort(String::Format(Error.IdentifierNotFound, idVariable.c_str()));
+		Abort(String::Format(Error.VariableNotDeclared, idVariable.c_str()));
 		return 0;
 	}
 	if (Vars.find(idIndex) == Vars.end()) {
-		Abort(String::Format(Error.IdentifierNotFound, idIndex.c_str()));
+		Abort(String::Format(Error.VariableNotDeclared, idIndex.c_str()));
 		return 0;
 	}
 	if (Vars[idIndex].Type != VariableType::Number) {
@@ -360,7 +366,7 @@ int GetNumberFromArrayAtVarIndex(std::string& idVariable, std::string& idIndex)
 std::string GetStringFromVariable(std::string& identifier)
 {
 	if (Vars.find(identifier) == Vars.end()) {
-		Abort(String::Format(Error.IdentifierNotFound, identifier.c_str()));
+		Abort(String::Format(Error.VariableNotDeclared, identifier.c_str()));
 		return 0;
 	}
 
@@ -406,7 +412,7 @@ std::string GetStringFromVariable(std::string& identifier)
 std::string GetStringFromArrayAtIndex(std::string& identifier, int index)
 {
 	if (Vars.find(identifier) == Vars.end()) {
-		Abort(String::Format(Error.IdentifierNotFound, identifier.c_str()));
+		Abort(String::Format(Error.VariableNotDeclared, identifier.c_str()));
 		return "";
 	}
 
@@ -434,11 +440,11 @@ std::string GetStringFromArrayAtIndex(std::string& identifier, int index)
 std::string GetStringFromArrayAtVarIndex(std::string& idVariable, std::string& idIndex)
 {
 	if (Vars.find(idVariable) == Vars.end()) {
-		Abort(String::Format(Error.IdentifierNotFound, idVariable.c_str()));
+		Abort(String::Format(Error.VariableNotDeclared, idVariable.c_str()));
 		return "";
 	}
 	if (Vars.find(idIndex) == Vars.end()) {
-		Abort(String::Format(Error.IdentifierNotFound, idIndex.c_str()));
+		Abort(String::Format(Error.VariableNotDeclared, idIndex.c_str()));
 		return "";
 	}
 	if (Vars[idIndex].Type != VariableType::Number) {
@@ -473,7 +479,7 @@ void AssertVariable(std::string& identifier, bool exists)
 {
 	if (exists) {
 		if (Vars.find(identifier) == Vars.end())
-			Abort(String::Format(Error.IdentifierNotFound, identifier.c_str()));
+			Abort(String::Format(Error.VariableNotDeclared, identifier.c_str()));
 	}
 	else {
 		if (Vars.find(identifier) != Vars.end())
