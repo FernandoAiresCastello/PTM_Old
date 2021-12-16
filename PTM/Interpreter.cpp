@@ -63,6 +63,10 @@ void RunMachine()
 				Wnd.OldTitle = Wnd.Title;
 				Wnd.Ptr->SetTitle(Wnd.Title);
 			}
+			if (Wnd.FullScreenRequest >= 0) {
+				Wnd.Ptr->SetFullscreen(Wnd.FullScreenRequest);
+				Wnd.FullScreenRequest = -1;
+			}
 			if (Wnd.AutoUpdate) {
 				Wnd.Ptr->Update();
 			}

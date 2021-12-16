@@ -219,6 +219,23 @@ void OUTS()
 		x += TChar::Width;
 	}
 }
+void FLS()
+{
+	Argc(4);
+	int tile = ArgNumber();
+	int fgc = ArgNumber();
+	int bgc = ArgNumber();
+	bool transparent = ArgNumber() <= 0;
+
+	for (int y = 0; y < Wnd.Ptr->Rows; y++) {
+		for (int x = 0; x < Wnd.Ptr->Cols; x++) {
+			if (transparent)
+				Wnd.Ptr->DrawTileTransparent(tile, fgc, bgc, x * TChar::Width, y * TChar::Height);
+			else
+				Wnd.Ptr->DrawTile(tile, fgc, bgc, x * TChar::Width, y * TChar::Height);
+		}
+	}
+}
 void ADD()
 {
 	Argc(2);
@@ -296,7 +313,12 @@ void RET()
 	Argc(0);
 	Return();
 }
-void DISP()
+void FWND()
+{
+	Argc(1);
+	Wnd.FullScreenRequest = ArgNumber() > 0;
+}
+void UPDS()
 {
 	Argc(1);
 	Wnd.AutoUpdate = ArgNumber() > 0;
@@ -386,10 +408,10 @@ void InitCommands()
 	OP(PAUSE);	// Pause program execution
 
 	//=== MATH ===
-	OP(ADD);	// Add to memory value
+	OP(ADD);	// Add to number variable
 	
 	//=== COMPARE ===
-	OP(CMP);	// Compare with memory value
+	OP(CMP);	// Compare value with number variable
 	
 	//=== DEBUG ===
 	OP(MSGB);	// Show message box
@@ -400,11 +422,13 @@ void InitCommands()
 	OP(TITLE);	// Set window title
 
 	//=== GRAPHICS ===
-	OP(DISP);	// Enable or disable screen
+	OP(FWND);	// Enable/disable fullscreen mode
+	OP(UPDS);	// Enable/disable automatic screen update
 	OP(CLS);	// Clear screen
 	OP(OUTM);	// Select output mode
 	OP(OUT);	// Output tile to screen
-	OP(OUTS);	// Output tile string to screen
+	OP(OUTS);	// Output string of tiles to screen
+	OP(FLS);	// Fill screen with same tile
 	OP(PAL);	// Set palette color
 	OP(CHR);	// Set charset data
 

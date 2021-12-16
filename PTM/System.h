@@ -28,6 +28,7 @@ struct SystemWindow {
 	int WndHeight = 0;
 	OutputMode OutMode = OutputMode::Free;
 	bool AutoUpdate = true;
+	int FullScreenRequest = -1;
 };
 extern SystemWindow Wnd;
 
