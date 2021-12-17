@@ -13,7 +13,6 @@ ProgramLine* CurLine;
 int IxCurLine;
 bool Exit;
 std::map<std::string, void(*)()> Op;
-ErrorMessages Error;
 std::vector<Parameter>* Args;
 int IxArg;
 bool Branch;
@@ -37,12 +36,12 @@ void InitMachine(Program* prog)
 
 void DestroyMachine()
 {
-	delete Wnd.Ptr;
-	Wnd.Ptr = nullptr;
+	DestroySystem();
 }
 
 void RunMachine()
 {
+	InitSystem();
 	SDL_CreateThread(RunMachineThread, "RunMachineThread", nullptr);
 
 	while (!Exit) {

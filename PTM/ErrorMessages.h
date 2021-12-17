@@ -22,3 +22,5 @@ struct ErrorMessages {
 	cstr TypeMismatch = "Type mismatch";
 	cstr ArrayIndexOutOfBounds = "Array index (%i) out of bounds (%i)";
 };
+
+extern ErrorMessages Error;

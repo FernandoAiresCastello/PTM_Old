@@ -11,6 +11,9 @@
     <ClCompile Include="Interpreter.cpp">
       <Filter>Runtime</Filter>
     </ClCompile>
+    <ClCompile Include="ErrorMessages.cpp">
+      <Filter>Util</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ProgramLine.h">
@@ -34,12 +37,14 @@
     <ClInclude Include="Interpreter.h">
       <Filter>Runtime</Filter>
     </ClInclude>
-    <ClInclude Include="ErrorMessages.h" />
     <ClInclude Include="Variable.h">
       <Filter>Runtime</Filter>
     </ClInclude>
     <ClInclude Include="VariableType.h">
       <Filter>Runtime</Filter>
+    </ClInclude>
+    <ClInclude Include="ErrorMessages.h">
+      <Filter>Util</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -48,6 +53,9 @@
     </Filter>
     <Filter Include="Compiler">
       <UniqueIdentifier>{78f70235-7d6f-4197-ac93-341a3d7aa784}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Util">
+      <UniqueIdentifier>{7ca85f82-4a91-47e5-8ab5-32cc25026a8f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

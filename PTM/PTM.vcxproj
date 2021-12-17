@@ -129,6 +129,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="ErrorMessages.cpp" />
     <ClCompile Include="System.cpp" />
     <ClCompile Include="Interpreter.cpp" />
     <ClCompile Include="Main.cpp" />

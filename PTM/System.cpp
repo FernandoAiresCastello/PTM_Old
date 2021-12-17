@@ -5,6 +5,7 @@
 std::map<std::string, Variable> Vars;
 int CmpResult = 0;
 SystemWindow Wnd;
+TSound* Snd = nullptr;
 
 void NOP()
 {
@@ -379,6 +380,22 @@ void PAUSE()
 	Argc(1);
 	int ms = ArgNumber();
 	SDL_Delay(ms);
+}
+
+void InitSystem()
+{
+	Snd = new TSound();
+	Snd->Play(TSoundType::Sine, 440, 700, true);
+	Snd->Play(TSoundType::Sine, 540, 700, true);
+	Snd->Play(TSoundType::Sine, 640, 700, true);
+}
+
+void DestroySystem()
+{
+	delete Wnd.Ptr;
+	Wnd.Ptr = nullptr;
+	delete Snd;
+	Snd = nullptr;
 }
 
 void InitCommands()

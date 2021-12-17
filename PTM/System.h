@@ -32,4 +32,6 @@ struct SystemWindow {
 };
 extern SystemWindow Wnd;
 
+void InitSystem();
+void DestroySystem();
 void InitCommands();
