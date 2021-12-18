@@ -21,6 +21,7 @@ struct ErrorMessages {
 	cstr WindowAlreadyOpen = "Window already open";
 	cstr TypeMismatch = "Type mismatch";
 	cstr ArrayIndexOutOfBounds = "Array index (%i) out of bounds (%i)";
+	cstr IllegalArgumentValue = "Illegal argument value: %s";
 };
 
 extern ErrorMessages Error;

@@ -375,6 +375,24 @@ void IN()
 	Vars[id].Number = KeyPressed;
 	KeyPressed = 0;
 }
+void QUIET()
+{
+	Argc(1);
+	int value = ArgNumber();
+	if (value == 0) {
+		Snd->StopMainSound();
+		Snd->StopSubSound();
+	}
+	else if (value == 1) {
+		Snd->StopMainSound();
+	}
+	else if (value == 2) {
+		Snd->StopSubSound();
+	}
+	else {
+		Abort(String::Format(Error.IllegalArgumentValue, String::ToString(value).c_str()));
+	}
+}
 void SNDWT()
 {
 	Argc(1);
@@ -388,6 +406,16 @@ void BEEP()
 	int length = ArgNumber();
 	Snd->Beep(freq, length);
 }
+void PLAY()
+{
+	Argc(1);
+	Snd->PlaySubSound(ArgString());
+}
+void LPLAY()
+{
+	Argc(1);
+	Snd->PlayMainSound(ArgString());
+}
 void PAUSE()
 {
 	Argc(1);
@@ -398,7 +426,6 @@ void PAUSE()
 void InitSystem()
 {
 	Snd = new TSound();
-	Snd->PlayMainSound("C4 300 D4 300 E4 300 F4 300 G4 300 A4 300 B4 300");
 }
 
 void DestroySystem()
@@ -464,8 +491,11 @@ void InitCommands()
 	OP(IN);		// Get key pressed
 
 	//=== SOUND ===
+	OP(QUIET);	// Silence all currently playing sounds
 	OP(SNDWT);	// Set waveform type
 	OP(BEEP);	// Play a single beep
+	OP(PLAY);	// Play notes from a sound string (once)
+	OP(LPLAY);	// Play notes from a sound string (loop)
 
 	//=== MISC ===
 	OP(NOP);	// No operation
