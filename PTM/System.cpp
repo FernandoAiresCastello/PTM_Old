@@ -375,6 +375,13 @@ void IN()
 	Vars[id].Number = KeyPressed;
 	KeyPressed = 0;
 }
+void BEEP()
+{
+	Argc(2);
+	int freq = ArgNumber();
+	int length = ArgNumber();
+	Snd->Beep(freq, length);
+}
 void PAUSE()
 {
 	Argc(1);
@@ -385,9 +392,7 @@ void PAUSE()
 void InitSystem()
 {
 	Snd = new TSound();
-	Snd->Play(TSoundType::Sine, 440, 700, true);
-	Snd->Play(TSoundType::Sine, 540, 700, true);
-	Snd->Play(TSoundType::Sine, 640, 700, true);
+	Snd->PlayMainSound("440 300 450 300 460 300 470 300 480 300 490 300 500 300");
 }
 
 void DestroySystem()
@@ -450,7 +455,10 @@ void InitCommands()
 	OP(CHR);	// Set charset data
 
 	//=== INPUT ===
-	OP(IN);	// Get key pressed
+	OP(IN);		// Get key pressed
+
+	//=== SOUND ===
+	OP(BEEP);	// Play a single beep
 
 	//=== MISC ===
 	OP(NOP);	// No operation
