@@ -16,12 +16,10 @@ void EXIT()
 	Argc(0);
 	Exit = true;
 }
-void ABORT()
+void HALT()
 {
-	Argc(1);
-	Exit = true;
-	std::string error = ArgStringLiteral();
-	Abort(error, false);
+	Argc(0);
+	while (!Exit);
 }
 void NUM()
 {
@@ -162,11 +160,6 @@ void TITLE()
 	Argc(1);
 	Wnd.Title = ArgString();
 }
-void HALT()
-{
-	Argc(0);
-	while (!Exit);
-}
 void WINDOW()
 {
 	Argc(4);
@@ -263,7 +256,7 @@ void CMP()
 
 	CmpResult = Vars[id].Number - value;
 }
-void JMP()
+void JP()
 {
 	Argc(1);
 	Jump(ArgLabel());
@@ -446,6 +439,9 @@ void DestroySystem()
 
 void InitCommands()
 {
+	//=== MISC ===
+	OP(NOP);	// No operation
+
 	//=== VARIABLES ===
 	OP(NUM);	// Declare variable as number
 	OP(STR);	// Declare variable as string
@@ -459,7 +455,7 @@ void InitCommands()
 	//=== PROGRAM FLOW ===
 	OP(EXIT);	// Exit program normally
 	OP(HALT);	// Stop program execution
-	OP(JMP);	// Jump
+	OP(JP);		// Jump
 	OP(JE);		// Jump if equal
 	OP(JNE);	// Jump if not equal
 	OP(JG);		// Jump if greater
@@ -478,7 +474,6 @@ void InitCommands()
 	
 	//=== DEBUG ===
 	OP(MSGB);	// Show message box
-	OP(ABORT);	// Exit program with error
 
 	//=== WINDOW ===
 	OP(WINDOW); // Open window
@@ -505,7 +500,4 @@ void InitCommands()
 	OP(BEEP);	// Play a single beep
 	OP(PLAY);	// Play notes from a sound string (once)
 	OP(LPLAY);	// Play notes from a sound string (loop)
-
-	//=== MISC ===
-	OP(NOP);	// No operation
 }

@@ -1,0 +1,69 @@
+
+main:
+	TITLE "Test Program"
+	WINDOW 256 192 640 500
+	SNDTYP 0
+	SNDVOL 200
+	
+	STR[] songs
+	PUSH songs "C4 100 D4 100 E4 100 F4 100 G4 100 A4 100 B4 100"
+	PUSH songs "B3 100 A3 100 G3 100 F3 100 E3 100 D3 100 C3 100"
+	NUM[] ch
+	PUSH ch 0
+	NUM[] xy
+	PUSH xy 5
+	PUSH xy 3
+	STR[] colors
+	PUSH colors "15"
+	PUSH colors 50
+	CLS [colors 1]
+	FLS '.' 4 8 0
+	OUTM 0
+	OUTS "Hello World!" 1 1 0 [colors 1] 0
+	OUTS "Hello World!" 0 0 [colors 0] [colors 1] 0
+	OUTM 1
+
+	NUM key 0
+	NUM rnd 0
+	LPLAY [songs 0]
+	JP nextChar
+
+loop:
+	IN key
+	CMP key 27
+	JE exit
+
+	CMP key 32
+	JE beepThenNextChar
+	CMP key '1'
+	JE playSong1
+	CMP key '2'
+	JE playSong2
+	CMP key '3'
+	JE stopSong
+
+	JP loop
+
+playSong1:
+	LPLAY [songs 0]
+	JP loop
+
+playSong2:
+	PLAY [songs 1]
+	JP loop
+	
+stopSong:
+	SNDSTP 0
+	JP loop
+
+beepThenNextChar:
+	BEEP 770 100
+
+nextChar:
+	RND rnd 0 255
+	SET [ch 0] rnd
+	OUT [ch 0] [xy 0] [xy 1] [colors 0] [colors 1] 1
+	JP loop
+
+exit:
+	EXIT
