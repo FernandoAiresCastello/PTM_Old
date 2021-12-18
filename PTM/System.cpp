@@ -375,6 +375,12 @@ void IN()
 	Vars[id].Number = KeyPressed;
 	KeyPressed = 0;
 }
+void SNDWT()
+{
+	Argc(1);
+	int type = ArgNumber();
+	Snd->SetType((TSoundType)type);
+}
 void BEEP()
 {
 	Argc(2);
@@ -392,7 +398,7 @@ void PAUSE()
 void InitSystem()
 {
 	Snd = new TSound();
-	Snd->PlayMainSound("440 300 450 300 460 300 470 300 480 300 490 300 500 300");
+	Snd->PlayMainSound("C4 300 D4 300 E4 300 F4 300 G4 300 A4 300 B4 300");
 }
 
 void DestroySystem()
@@ -458,6 +464,7 @@ void InitCommands()
 	OP(IN);		// Get key pressed
 
 	//=== SOUND ===
+	OP(SNDWT);	// Set waveform type
 	OP(BEEP);	// Play a single beep
 
 	//=== MISC ===
