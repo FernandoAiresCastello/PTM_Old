@@ -57,5 +57,13 @@
     <Filter Include="Util">
       <UniqueIdentifier>{7ca85f82-4a91-47e5-8ab5-32cc25026a8f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Test">
+      <UniqueIdentifier>{40ddf4fe-ec42-4096-8b43-aeebf34d1945}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\Test\test.ptml">
+      <Filter>Test</Filter>
+    </None>
   </ItemGroup>
 </Project>

@@ -147,6 +147,9 @@
     <ClInclude Include="Variable.h" />
     <ClInclude Include="VariableType.h" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="..\Test\test.ptml" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
