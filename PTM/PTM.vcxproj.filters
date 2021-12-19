@@ -1,69 +1,80 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="Main.cpp" />
     <ClCompile Include="Program.cpp">
-      <Filter>Compiler</Filter>
+      <Filter>Sources\Compiler</Filter>
     </ClCompile>
     <ClCompile Include="System.cpp">
-      <Filter>Runtime</Filter>
+      <Filter>Sources\Runtime</Filter>
     </ClCompile>
     <ClCompile Include="Interpreter.cpp">
-      <Filter>Runtime</Filter>
+      <Filter>Sources\Runtime</Filter>
     </ClCompile>
     <ClCompile Include="ErrorMessages.cpp">
-      <Filter>Util</Filter>
+      <Filter>Sources\Shared</Filter>
+    </ClCompile>
+    <ClCompile Include="Main.cpp">
+      <Filter>Sources</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ProgramLine.h">
-      <Filter>Compiler</Filter>
+      <Filter>Sources\Compiler</Filter>
     </ClInclude>
     <ClInclude Include="ParameterType.h">
-      <Filter>Compiler</Filter>
+      <Filter>Sources\Compiler</Filter>
     </ClInclude>
     <ClInclude Include="Parameter.h">
-      <Filter>Compiler</Filter>
+      <Filter>Sources\Compiler</Filter>
     </ClInclude>
     <ClInclude Include="Command.h">
-      <Filter>Compiler</Filter>
+      <Filter>Sources\Compiler</Filter>
     </ClInclude>
     <ClInclude Include="Program.h">
-      <Filter>Compiler</Filter>
+      <Filter>Sources\Compiler</Filter>
     </ClInclude>
     <ClInclude Include="System.h">
-      <Filter>Runtime</Filter>
+      <Filter>Sources\Runtime</Filter>
     </ClInclude>
     <ClInclude Include="Interpreter.h">
-      <Filter>Runtime</Filter>
+      <Filter>Sources\Runtime</Filter>
     </ClInclude>
     <ClInclude Include="Variable.h">
-      <Filter>Runtime</Filter>
+      <Filter>Sources\Runtime</Filter>
     </ClInclude>
     <ClInclude Include="VariableType.h">
-      <Filter>Runtime</Filter>
+      <Filter>Sources\Runtime</Filter>
     </ClInclude>
     <ClInclude Include="ErrorMessages.h">
-      <Filter>Util</Filter>
+      <Filter>Sources\Shared</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <Filter Include="Runtime">
-      <UniqueIdentifier>{5016d9ca-f1b6-45e9-93a8-1e77ed62f133}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Compiler">
-      <UniqueIdentifier>{78f70235-7d6f-4197-ac93-341a3d7aa784}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Util">
-      <UniqueIdentifier>{7ca85f82-4a91-47e5-8ab5-32cc25026a8f}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Test">
       <UniqueIdentifier>{40ddf4fe-ec42-4096-8b43-aeebf34d1945}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Docs">
+      <UniqueIdentifier>{4a6cc3df-37db-4cf3-8eda-c0e0427bd211}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources">
+      <UniqueIdentifier>{4dcc03f9-8bfb-4aff-b470-72d4f4a83363}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Runtime">
+      <UniqueIdentifier>{5016d9ca-f1b6-45e9-93a8-1e77ed62f133}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Compiler">
+      <UniqueIdentifier>{78f70235-7d6f-4197-ac93-341a3d7aa784}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Shared">
+      <UniqueIdentifier>{7ca85f82-4a91-47e5-8ab5-32cc25026a8f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Test\test.ptml">
       <Filter>Test</Filter>
+    </None>
+    <None Include="..\README.md">
+      <Filter>Docs</Filter>
     </None>
   </ItemGroup>
 </Project>

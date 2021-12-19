@@ -83,6 +83,10 @@
       <AdditionalLibraryDirectories>C:\Fernando\Proj\TileGameToolkit\TileGameLib\Debug;C:\Fernando\Proj\CppUtils\Debug;C:\Fernando\Lib\SDL2-2.0.8\lib\x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>SDL2.lib;SDL2main.lib;CppUtils.lib;TileGameLib.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <PostBuildEvent>
+      <Command>del "$(SolutionDir)Binaries\$(TargetFileName)"
+copy "$(TargetPath)" "$(SolutionDir)Binaries\$(TargetFileName)"</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -148,6 +152,7 @@
     <ClInclude Include="VariableType.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\README.md" />
     <None Include="..\Test\test.ptml" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
