@@ -5,4 +5,12 @@ The PTM works by running a program written in PTML, which is a low-level interpr
 
 Since this project is in a very early stage, the machine internal workings as well as the commands and syntax of PTML are subject to very frequent changes, so if you intend to develop applications using PTML targeting the PTM at this moment, please be wary of the fact that your programs most likely will not be 100% compatible with future versions of the interpreter and may require extensive changes to the code or no longer work at all.
 
-For examples of PTM programs, please look inside the folder "Test" where you can find some PTML source code files.
+For examples of PTM programs, please look inside the folder "Test" where you can find some PTML source code files. If you just want the machine executable (PTM.exe) you can find the latest dev build in the folder "Binaries".
+
+Technologies used in this project:
+
+- [C/C++](https://en.wikipedia.org/wiki/C%2B%2B)
+- [Microsoft Visual Studio Community 2017](https://visualstudio.microsoft.com/vs/older-downloads/#visual-studio-2017-and-other-products) (Version 15.9.35)
+- [SDL 2.0.8](https://www.libsdl.org/) (x86 DLL)
+- [TileGameLib](https://github.com/FernandoAiresCastello/TileGameToolkit) (by [Fernando Aires Castello](https://github.com/FernandoAiresCastello))
+- [CppUtils](https://github.com/FernandoAiresCastello/CppUtils) (by [Fernando Aires Castello](https://github.com/FernandoAiresCastello))
