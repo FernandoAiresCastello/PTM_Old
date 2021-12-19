@@ -39,3 +39,4 @@ std::string GetStringFromArrayAtIndex(std::string& identifier, int index);
 std::string GetStringFromArrayAtVarIndex(std::string& idVariable, std::string& idIndex);
 void AssertVariable(std::string& identifier, bool exists);
 void AssertArrayIndex(std::string& identifier, int index);
+void AssertFileExists(std::string& path);

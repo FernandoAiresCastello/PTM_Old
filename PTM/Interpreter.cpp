@@ -506,3 +506,9 @@ void AssertArrayIndex(std::string& identifier, int index)
 		Abort(Error.TypeMismatch);
 	}
 }
+
+void AssertFileExists(std::string& path)
+{
+	if (!File::Exists(path))
+		Abort(String::Format(Error.FileNotFound, path.c_str()));
+}

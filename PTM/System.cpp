@@ -7,6 +7,19 @@ int CmpResult = 0;
 SystemWindow Wnd;
 TSound* Snd = nullptr;
 
+void InitSystem()
+{
+	Snd = new TSound();
+}
+
+void DestroySystem()
+{
+	delete Wnd.Ptr;
+	Wnd.Ptr = nullptr;
+	delete Snd;
+	Snd = nullptr;
+}
+
 void NOP()
 {
 	Argc(0);
@@ -423,20 +436,33 @@ void PAUSE()
 	int ms = ArgNumber();
 	SDL_Delay(ms);
 }
-
-void InitSystem()
+void READ()
 {
-	Snd = new TSound();
+	Argc(2);
+	std::string id = ArgVariableName(true);
+	if (Vars[id].Type != VariableType::String) {
+		Abort(Error.TypeMismatch);
+		return;
+	}
+	std::string path = ArgString();
+	AssertFileExists(path);
+	std::string data = File::ReadText(path);
+	Vars[id].String = data;
 }
-
-void DestroySystem()
+void WRITE()
 {
-	delete Wnd.Ptr;
-	Wnd.Ptr = nullptr;
-	delete Snd;
-	Snd = nullptr;
+	Argc(2);
+	std::string data = ArgString();
+	std::string filePath = ArgString();
+	File::WriteText(filePath, data);
 }
-
+void DEL()
+{
+	Argc(1);
+	std::string path = ArgString();
+	AssertFileExists(path);
+	File::Delete(path);
+}
 void InitCommands()
 {
 	//=== MISC ===
@@ -500,4 +526,9 @@ void InitCommands()
 	OP(BEEP);	// Play a single beep
 	OP(PLAY);	// Play notes from a sound string (once)
 	OP(LPLAY);	// Play notes from a sound string (loop)
+
+	//=== FILESYSTEM ===
+	OP(READ);	// Read file into string
+	OP(WRITE);	// Write string to file
+	OP(DEL);	// Delete file
 }

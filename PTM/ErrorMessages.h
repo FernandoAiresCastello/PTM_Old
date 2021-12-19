@@ -3,6 +3,11 @@
 typedef const char* cstr;
 
 struct ErrorMessages {
+	cstr BootFileNotFound = "Boot file not found";
+	cstr InvalidBootFile = "Invalid boot file";
+	cstr ProgramFileNotFound = "Program file not found: %s";
+	cstr InvalidProgramFile = "Invalid program file: %s";
+	cstr FileNotFound = "File not found: %s";
 	cstr UnknownCommand = "Unknown command";
 	cstr ProgEndWithoutExit = "Program ended without EXIT";
 	cstr InvalidArgCount = "Expected %i arguments, got %i";
