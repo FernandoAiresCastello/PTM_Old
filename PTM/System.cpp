@@ -381,7 +381,7 @@ void IN()
 	Vars[id].Number = KeyPressed;
 	KeyPressed = 0;
 }
-void SNDSTP()
+void SSND()
 {
 	Argc(1);
 	int value = ArgNumber();
@@ -399,7 +399,7 @@ void SNDSTP()
 		Abort(String::Format(Error.IllegalArgumentValue, String::ToString(value).c_str()));
 	}
 }
-void SNDTYP()
+void SWFT()
 {
 	Argc(1);
 	int type = ArgNumber();
@@ -408,7 +408,7 @@ void SNDTYP()
 	else
 		Snd->SetType((TSoundType)type);
 }
-void SNDVOL()
+void VOL()
 {
 	Argc(1);
 	Snd->SetVolume(ArgNumber());
@@ -520,9 +520,9 @@ void InitCommands()
 	OP(IN);		// Get key pressed
 
 	//=== SOUND ===
-	OP(SNDSTP);	// Stop all currently playing sounds
-	OP(SNDTYP);	// Set waveform type
-	OP(SNDVOL);	// Set sound volume
+	OP(SSND);	// Stop all currently playing sounds
+	OP(SWFT);	// Set waveform type
+	OP(VOL);	// Set sound volume
 	OP(BEEP);	// Play a single beep
 	OP(PLAY);	// Play notes from a sound string (once)
 	OP(LPLAY);	// Play notes from a sound string (loop)

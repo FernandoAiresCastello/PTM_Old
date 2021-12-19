@@ -2,8 +2,8 @@
 main:
 	TITLE "Test Program"
 	WINDOW 256 192 640 500
-	SNDTYP 0
-	SNDVOL 200
+	SWFT 0
+	VOL 200
 
 	STR[] songs
 	STR song1 ""
@@ -59,7 +59,7 @@ playSong2:
 	JP loop
 	
 stopSong:
-	SNDSTP 0
+	SSND 0
 	JP loop
 
 beepThenNextChar:
