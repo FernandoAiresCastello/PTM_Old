@@ -2,74 +2,10 @@
 main:
 	TITLE "Test Program"
 	WINDOW 256 192 640 500
-	SWFT 0
-	VOL 200
-
-	STR[] songs
-	STR song1 ""
-	READ song1 "song_1"
-	STR song2 ""
-	READ song2 "song_2"
-	PUSH songs song1
-	PUSH songs song2
-
-	STR hello "Hello World!"
-	NUM[] ch
-	PUSH ch 0
-	NUM[] xy
-	PUSH xy 5
-	PUSH xy 3
-	STR[] colors
-	PUSH colors "15"
-	PUSH colors 50
-	CLS [colors 1]
-	FLS '.' 4 8 0
-	OUTM 0
-	OUTS hello 1 1 0 [colors 1] 0
-	OUTS hello 0 0 [colors 0] [colors 1] 0
+	LDCHR "chars.bmp"
 	OUTM 1
 
-	NUM key 0
-	NUM rnd 0
-	LPLAY [songs 0]
-	JP nextChar
+	OUT 146 1 1 15 0 1
+	OUTS "Hello World!" 2 2 15 0 1
 
-loop:
-	IN key
-	CMP key 27
-	JE exit
-
-	CMP key 32
-	JE beepThenNextChar
-	CMP key '1'
-	JE playSong1
-	CMP key '2'
-	JE playSong2
-	CMP key '3'
-	JE stopSong
-
-	JP loop
-
-playSong1:
-	LPLAY [songs 0]
-	JP loop
-
-playSong2:
-	PLAY [songs 1]
-	JP loop
-	
-stopSong:
-	SSND 0
-	JP loop
-
-beepThenNextChar:
-	BEEP 770 40
-
-nextChar:
-	RND rnd 0 255
-	SET [ch 0] rnd
-	OUT [ch 0] [xy 0] [xy 1] [colors 0] [colors 1] 1
-	JP loop
-
-exit:
-	EXIT
+	HALT

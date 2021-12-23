@@ -27,6 +27,7 @@ struct ErrorMessages {
 	cstr TypeMismatch = "Type mismatch";
 	cstr ArrayIndexOutOfBounds = "Array index (%i) out of bounds (%i)";
 	cstr IllegalArgumentValue = "Illegal argument value: %s";
+	cstr InvalidTileIndex = "Invalid tile index: %i";
 };
 
 extern ErrorMessages Error;

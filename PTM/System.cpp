@@ -200,6 +200,10 @@ void OUT()
 	int bgc = ArgNumber();
 	bool transparent = ArgNumber() <= 0;
 
+	if (tile < 0 || tile >= Wnd.Ptr->GetCharset()->GetSize()) {
+		Abort(String::Format(Error.InvalidTileIndex, tile));
+		return;
+	}
 	if (transparent)
 		Wnd.Ptr->DrawTileTransparent(tile, fgc, bgc, x, y);
 	else
@@ -218,6 +222,10 @@ void OUTS()
 	int tile = 0;
 	for (int i = 0; i < str.length(); i++) {
 		tile = str[i];
+		if (tile < 0 || tile >= Wnd.Ptr->GetCharset()->GetSize()) {
+			Abort(String::Format(Error.InvalidTileIndex, tile));
+			return;
+		}
 		if (transparent)
 			Wnd.Ptr->DrawTileTransparent(tile, fgc, bgc, x, y);
 		else
@@ -356,6 +364,12 @@ void CHR()
 	int r7 = ArgNumber();
 	int r8 = ArgNumber();
 	Wnd.Ptr->GetCharset()->Set(ix, r1, r2, r3, r4, r5, r6, r7, r8);
+}
+void LDCHR()
+{
+	Argc(1);
+	std::string file = ArgString();
+	Wnd.Ptr->GetCharset()->LoadFromImage(file);
 }
 void RND()
 {
@@ -515,6 +529,7 @@ void InitCommands()
 	OP(FLS);	// Fill screen with same tile
 	OP(PAL);	// Set palette color
 	OP(CHR);	// Set charset data
+	OP(LDCHR);	// Load charset data from image file
 
 	//=== INPUT ===
 	OP(IN);		// Get key pressed
