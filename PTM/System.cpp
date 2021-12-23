@@ -199,11 +199,11 @@ void OUT()
 	int fgc = ArgNumber();
 	int bgc = ArgNumber();
 	bool transparent = ArgNumber() <= 0;
+	
+	AssertTileIndex(tile);
+	AssertPaletteIndex(fgc);
+	AssertPaletteIndex(bgc);
 
-	if (tile < 0 || tile >= Wnd.Ptr->GetCharset()->GetSize()) {
-		Abort(String::Format(Error.InvalidTileIndex, tile));
-		return;
-	}
 	if (transparent)
 		Wnd.Ptr->DrawTileTransparent(tile, fgc, bgc, x, y);
 	else
@@ -219,13 +219,14 @@ void OUTS()
 	int bgc = ArgNumber();
 	bool transparent = ArgNumber() <= 0;
 
+	AssertPaletteIndex(fgc);
+	AssertPaletteIndex(bgc);
+
 	int tile = 0;
 	for (int i = 0; i < str.length(); i++) {
 		tile = str[i];
-		if (tile < 0 || tile >= Wnd.Ptr->GetCharset()->GetSize()) {
-			Abort(String::Format(Error.InvalidTileIndex, tile));
-			return;
-		}
+		AssertTileIndex(tile);
+
 		if (transparent)
 			Wnd.Ptr->DrawTileTransparent(tile, fgc, bgc, x, y);
 		else
@@ -370,6 +371,14 @@ void LDCHR()
 	Argc(1);
 	std::string file = ArgString();
 	Wnd.Ptr->GetCharset()->LoadFromImage(file);
+}
+void LDPAL()
+{
+	Argc(3);
+	std::string file = ArgString();
+	int wSwatch = ArgNumber();
+	int hSwatch = ArgNumber();
+	Wnd.Ptr->GetPalette()->LoadFromImage(file, wSwatch, hSwatch);
 }
 void RND()
 {
@@ -530,6 +539,7 @@ void InitCommands()
 	OP(PAL);	// Set palette color
 	OP(CHR);	// Set charset data
 	OP(LDCHR);	// Load charset data from image file
+	OP(LDPAL);	// Load palette data from image file
 
 	//=== INPUT ===
 	OP(IN);		// Get key pressed

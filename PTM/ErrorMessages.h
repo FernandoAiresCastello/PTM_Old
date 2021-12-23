@@ -28,6 +28,7 @@ struct ErrorMessages {
 	cstr ArrayIndexOutOfBounds = "Array index (%i) out of bounds (%i)";
 	cstr IllegalArgumentValue = "Illegal argument value: %s";
 	cstr InvalidTileIndex = "Invalid tile index: %i";
+	cstr InvalidPaletteIndex = "Invalid palette index: %i";
 };
 
 extern ErrorMessages Error;

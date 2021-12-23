@@ -3,9 +3,24 @@ main:
 	TITLE "Test Program"
 	WINDOW 256 192 640 500
 	LDCHR "chars.bmp"
+	LDPAL "palette.bmp" 307 165
 	OUTM 1
 
-	OUT 146 1 1 15 0 1
-	OUTS "Hello World!" 2 2 15 0 1
+	OUTS "Hello World!" 0 0 0 0 1
+	OUTS "Hello World!" 0 1 1 0 1
+	OUTS "Hello World!" 0 2 2 0 1
+	OUTS "Hello World!" 0 3 3 0 1
+	OUTS "Hello World!" 0 4 4 0 1
+	OUTS "Hello World!" 0 5 5 0 1
+	OUTS "Hello World!" 0 6 6 0 1
+	OUTS "Hello World!" 0 7 7 0 1
+	OUTS "Hello World!" 0 8 8 0 1
+	OUTS "Hello World!" 0 9 9 0 1
+	OUTS "Hello World!" 0 10 10 0 1
+	OUTS "Hello World!" 0 11 11 0 1
+	OUTS "Hello World!" 0 12 12 0 1
+	OUTS "Hello World!" 0 13 13 0 1
+	OUTS "Hello World!" 0 14 14 0 1
+	OUTS "Hello World!" 0 15 15 14 0
 
 	HALT

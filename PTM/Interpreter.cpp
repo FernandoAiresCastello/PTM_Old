@@ -512,3 +512,15 @@ void AssertFileExists(std::string& path)
 	if (!File::Exists(path))
 		Abort(String::Format(Error.FileNotFound, path.c_str()));
 }
+
+void AssertTileIndex(int index)
+{
+	if (index < 0 || index >= Wnd.Ptr->GetCharset()->GetSize())
+		Abort(String::Format(Error.InvalidTileIndex, index));
+}
+
+void AssertPaletteIndex(int index)
+{
+	if (index < 0 || index >= Wnd.Ptr->GetPalette()->GetSize())
+		Abort(String::Format(Error.InvalidPaletteIndex, index));
+}
