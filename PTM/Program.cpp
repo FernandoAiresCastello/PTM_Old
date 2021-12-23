@@ -86,7 +86,7 @@ bool Program::ParseParams(std::string& args, std::vector<Parameter>& params)
 		}
 		else if (String::IsEnclosedBy(arg, '[', ']')) {
 			arg = String::RemoveFirstAndLast(arg);
-			auto arrayAccess = String::Split(arg, ' ');
+			auto arrayAccess = String::Split(arg, ' ', true);
 
 			if (String::StartsWithNumber(arrayAccess[1]) || arrayAccess[1][0] == '-' || arrayAccess[1][0] == '+') {
 				param.Type = ParameterType::ArrayIndexLiteral;

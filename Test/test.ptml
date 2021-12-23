@@ -63,7 +63,7 @@ stopSong:
 	JP loop
 
 beepThenNextChar:
-	BEEP 770 100
+	BEEP 770 40
 
 nextChar:
 	RND rnd 0 255
