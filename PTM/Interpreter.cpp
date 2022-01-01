@@ -370,7 +370,7 @@ std::string GetStringFromVariable(std::string& identifier)
 {
 	if (Vars.find(identifier) == Vars.end()) {
 		Abort(String::Format(Error.VariableNotDeclared, identifier.c_str()));
-		return 0;
+		return "";
 	}
 
 	if (Vars[identifier].Type == VariableType::String) {

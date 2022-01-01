@@ -218,6 +218,7 @@ void OUTS()
 	int fgc = ArgNumber();
 	int bgc = ArgNumber();
 	bool transparent = ArgNumber() <= 0;
+	const int px = x;
 
 	AssertPaletteIndex(fgc);
 	AssertPaletteIndex(bgc);
@@ -227,12 +228,21 @@ void OUTS()
 		tile = str[i];
 		AssertTileIndex(tile);
 
-		if (transparent)
-			Wnd.Ptr->DrawTileTransparent(tile, fgc, bgc, x, y);
-		else
-			Wnd.Ptr->DrawTile(tile, fgc, bgc, x, y);
+		if (i < str.length() - 1 && tile == '\\') {
+			i++;
+			if (str[i] == 'n') {
+				x = px;
+				y += TChar::Height;
+			}
+		}
+		else {
+			if (transparent)
+				Wnd.Ptr->DrawTileTransparent(tile, fgc, bgc, x, y);
+			else
+				Wnd.Ptr->DrawTile(tile, fgc, bgc, x, y);
 
-		x += TChar::Width;
+			x += TChar::Width;
+		}
 	}
 }
 void FLS()

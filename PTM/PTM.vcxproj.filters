@@ -50,9 +50,6 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <Filter Include="Test">
-      <UniqueIdentifier>{40ddf4fe-ec42-4096-8b43-aeebf34d1945}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Docs">
       <UniqueIdentifier>{4a6cc3df-37db-4cf3-8eda-c0e0427bd211}</UniqueIdentifier>
     </Filter>
@@ -70,9 +67,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\Test\test.ptml">
-      <Filter>Test</Filter>
-    </None>
     <None Include="..\README.md">
       <Filter>Docs</Filter>
     </None>

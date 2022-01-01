@@ -153,7 +153,6 @@ copy "$(TargetPath)" "$(SolutionDir)Binaries\$(TargetFileName)"</Command>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\README.md" />
-    <None Include="..\Test\test.ptml" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
