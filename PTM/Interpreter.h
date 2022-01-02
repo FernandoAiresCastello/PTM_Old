@@ -10,7 +10,6 @@ using namespace TileGameLib;
 extern bool Exit;
 extern std::map<std::string, void(*)()> Op;
 extern ErrorMessages Error;
-extern int KeyPressed;
 
 void InitMachine(Program* prog);
 void DestroyMachine();

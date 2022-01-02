@@ -2,7 +2,13 @@
 
 #define OP(x)	Op[#x] = &x
 
+constexpr int DEFAULT_WNDBUF_W = 320;
+constexpr int DEFAULT_WNDBUF_H = 240;
+constexpr int DEFAULT_WND_W = 2 * DEFAULT_WNDBUF_W;
+constexpr int DEFAULT_WND_H = 2 * DEFAULT_WNDBUF_H;
+
 std::map<std::string, Variable> Vars;
+int KeyPressed = 0;
 int CmpResult = 0;
 SystemWindow Wnd;
 TSound* Snd = nullptr;
@@ -10,6 +16,12 @@ TSound* Snd = nullptr;
 void InitSystem()
 {
 	Snd = new TSound();
+
+	Wnd.BufWidth = DEFAULT_WNDBUF_W;
+	Wnd.BufHeight = DEFAULT_WNDBUF_H;
+	Wnd.WndWidth = DEFAULT_WND_W;
+	Wnd.WndHeight = DEFAULT_WND_H;
+	Wnd.CreationRequested = true;
 }
 
 void DestroySystem()
@@ -18,6 +30,43 @@ void DestroySystem()
 	Wnd.Ptr = nullptr;
 	delete Snd;
 	Snd = nullptr;
+}
+
+void CreateWindow()
+{
+	if (Wnd.Ptr) {
+		Abort(Error.WindowAlreadyOpen);
+		return;
+	}
+
+	Wnd.CreationRequested = false;
+	Wnd.Ptr = new TWindow(
+		Wnd.BufWidth, Wnd.BufHeight,
+		Wnd.WndWidth, Wnd.WndHeight, false);
+
+	Wnd.Pal = Wnd.Ptr->GetPalette();
+	Wnd.Chr = Wnd.Ptr->GetCharset();
+}
+
+void UpdateWindow()
+{
+	if (!Wnd.Ptr)
+		return;
+
+	if (Wnd.Title != Wnd.OldTitle) {
+		Wnd.OldTitle = Wnd.Title;
+		Wnd.Ptr->SetTitle(Wnd.Title);
+	}
+	if (Wnd.FullScreenRequest >= 0) {
+		Wnd.Ptr->SetFullscreen(Wnd.FullScreenRequest);
+		Wnd.FullScreenRequest = -1;
+	}
+	if (Wnd.AutoUpdate) {
+		Wnd.Ptr->Update();
+	}
+	else {
+		SDL_Delay(1);
+	}
 }
 
 void NOP()
@@ -176,6 +225,12 @@ void TITLE()
 void WINDOW()
 {
 	Argc(4);
+
+	if (Wnd.Ptr) {
+		Abort(Error.WindowAlreadyOpen);
+		return;
+	}
+
 	Wnd.BufWidth = ArgNumber();
 	Wnd.BufHeight = ArgNumber();
 	Wnd.WndWidth = ArgNumber();
@@ -360,7 +415,7 @@ void PAL()
 	Argc(2);
 	int ix = ArgNumber();
 	int rgb = ArgNumber();
-	Wnd.Ptr->GetPalette()->Set(ix, rgb);
+	Wnd.Pal->Set(ix, rgb);
 }
 void CHR()
 {
@@ -374,13 +429,14 @@ void CHR()
 	int r6 = ArgNumber();
 	int r7 = ArgNumber();
 	int r8 = ArgNumber();
-	Wnd.Ptr->GetCharset()->Set(ix, r1, r2, r3, r4, r5, r6, r7, r8);
+	Wnd.Chr->Set(ix, r1, r2, r3, r4, r5, r6, r7, r8);
 }
 void LDCHR()
 {
 	Argc(1);
 	std::string file = ArgString();
-	Wnd.Ptr->GetCharset()->LoadFromImage(file);
+	AssertFileExists(file);
+	Wnd.Chr->LoadFromImage(file);
 }
 void LDPAL()
 {
@@ -388,7 +444,14 @@ void LDPAL()
 	std::string file = ArgString();
 	int wSwatch = ArgNumber();
 	int hSwatch = ArgNumber();
-	Wnd.Ptr->GetPalette()->LoadFromImage(file, wSwatch, hSwatch);
+	AssertFileExists(file);
+	Wnd.Pal->LoadFromImage(file, wSwatch, hSwatch);
+}
+void PRTSCN()
+{
+	Argc(1);
+	std::string file = ArgString();
+	Wnd.Ptr->SaveScreenshot(file);
 }
 void RND()
 {
@@ -550,6 +613,7 @@ void InitCommands()
 	OP(CHR);	// Set charset data
 	OP(LDCHR);	// Load charset data from image file
 	OP(LDPAL);	// Load palette data from image file
+	OP(PRTSCN);	// Save screenshot
 
 	//=== INPUT ===
 	OP(IN);		// Get key pressed

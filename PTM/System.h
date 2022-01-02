@@ -13,9 +13,10 @@
 using namespace CppUtils;
 using namespace TileGameLib;
 
-extern std::map<std::string, Variable> Vars;
-
 enum class OutputMode { Free, Tiled };
+
+extern std::map<std::string, Variable> Vars;
+extern int KeyPressed;
 
 struct SystemWindow {
 	std::string Title = "";
@@ -29,9 +30,13 @@ struct SystemWindow {
 	OutputMode OutMode = OutputMode::Free;
 	bool AutoUpdate = true;
 	int FullScreenRequest = -1;
+	TPalette* Pal = nullptr;
+	TCharset* Chr = nullptr;
 };
 extern SystemWindow Wnd;
 
 void InitSystem();
 void DestroySystem();
+void CreateWindow();
+void UpdateWindow();
 void InitCommands();

@@ -1,7 +1,28 @@
 
-WINDOW 320 240 640 480
-LDCHR "chars.bmp"
-CLS 20
-OUTM 1
-OUTS "Hello World!\n\nSecond line" 1 1 15 0 0
-HALT
+main:
+	JP palette_test
+
+end:
+	HALT
+
+palette_test:
+	TITLE "Palette Test"
+	OUTM 1
+
+	NUM c 0
+	NUM x 0
+	NUM y 0
+
+palette_test_loop:
+	OUT 0 x y c c 1
+	ADD x 1
+	OUT 0 x y c c 1
+	ADD c 1
+	CMP c 256
+	JE end
+	ADD x 1
+	CMP x 32
+	JNE palette_test_loop
+	ADD y 1
+	SET x 0
+	JP palette_test_loop

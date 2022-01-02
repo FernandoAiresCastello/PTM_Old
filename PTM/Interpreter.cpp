@@ -8,17 +8,16 @@
 using namespace CppUtils;
 using namespace TileGameLib;
 
-Program* Prog;
-ProgramLine* CurLine;
-int IxCurLine;
-bool Exit;
+Program* Prog = nullptr;
+ProgramLine* CurLine = nullptr;
+int IxCurLine = 0;
+bool Exit = false;
 std::map<std::string, void(*)()> Op;
-std::vector<Parameter>* Args;
-int IxArg;
-bool Branch;
+std::vector<Parameter>* Args = nullptr;
+int IxArg = 0;
+bool Branch = false;
 SDL_Event Event;
 std::stack<int> CallStack;
-int KeyPressed;
 
 void InitMachine(Program* prog)
 {
@@ -31,7 +30,6 @@ void InitMachine(Program* prog)
 	Branch = false;
 	Args = nullptr;
 	IxArg = 0;
-	KeyPressed = 0;
 }
 
 void DestroyMachine()
@@ -46,39 +44,22 @@ void RunMachine()
 
 	while (!Exit) {
 		ProcessGlobalEvents();
-		if (Wnd.CreationRequested) {
-			if (Wnd.Ptr) {
-				Abort(Error.WindowAlreadyOpen);
-			}
-			else {
-				Wnd.CreationRequested = false;
-				Wnd.Ptr = new TWindow(
-					Wnd.BufWidth, Wnd.BufHeight, 
-					Wnd.WndWidth, Wnd.WndHeight, false);
-			}
-		}
-		if (Wnd.Ptr) {
-			if (Wnd.Title != Wnd.OldTitle) {
-				Wnd.OldTitle = Wnd.Title;
-				Wnd.Ptr->SetTitle(Wnd.Title);
-			}
-			if (Wnd.FullScreenRequest >= 0) {
-				Wnd.Ptr->SetFullscreen(Wnd.FullScreenRequest);
-				Wnd.FullScreenRequest = -1;
-			}
-			if (Wnd.AutoUpdate) {
-				Wnd.Ptr->Update();
-			}
-			else {
-				SDL_Delay(1);
-			}
-		}
+		
+		if (Wnd.CreationRequested)
+			CreateWindow();
+		
+		UpdateWindow();
 	}
 }
 
 int RunMachineThread(void* dummy)
 {
 	while (!Exit) {
+		if (!Wnd.Ptr) {
+			SDL_Delay(1);
+			continue;
+		}
+
 		CurLine = &Prog->Lines[IxCurLine];
 		Args = &CurLine->Cmd.Params;
 		IxArg = 0;
@@ -196,7 +177,7 @@ std::string ArgStringLiteral()
 	Parameter* arg = Arg();
 	if (arg->Type != ParameterType::StringLiteral) {
 		Abort(Error.StringLiteralExpected);
-		return 0;
+		return "";
 	}
 	return arg->StringValue;
 }
@@ -216,7 +197,7 @@ std::string ArgVariableName(bool assertExists)
 	Parameter* arg = Arg();
 	if (arg->Type != ParameterType::Identifier) {
 		Abort(Error.IdentifierExpected);
-		return 0;
+		return "";
 	}
 	AssertVariable(arg->StringValue, assertExists);
 
