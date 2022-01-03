@@ -1,11 +1,7 @@
 #include "System.h"
+#include "Boot.h"
 
 #define OP(x)	Op[#x] = &x
-
-constexpr int DEFAULT_WNDBUF_W = 320;
-constexpr int DEFAULT_WNDBUF_H = 240;
-constexpr int DEFAULT_WND_W = 2 * DEFAULT_WNDBUF_W;
-constexpr int DEFAULT_WND_H = 2 * DEFAULT_WNDBUF_H;
 
 std::map<std::string, Variable> Vars;
 int KeyPressed = 0;
@@ -17,10 +13,10 @@ void InitSystem()
 {
 	Snd = new TSound();
 
-	Wnd.BufWidth = DEFAULT_WNDBUF_W;
-	Wnd.BufHeight = DEFAULT_WNDBUF_H;
-	Wnd.WndWidth = DEFAULT_WND_W;
-	Wnd.WndHeight = DEFAULT_WND_H;
+	Wnd.BufWidth = Boot.ResWidth;
+	Wnd.BufHeight = Boot.ResHeight;
+	Wnd.WndWidth = Boot.WndWidth;
+	Wnd.WndHeight = Boot.WndHeight;
 	Wnd.CreationRequested = true;
 }
 

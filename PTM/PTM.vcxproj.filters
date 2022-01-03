@@ -16,6 +16,9 @@
     <ClCompile Include="Main.cpp">
       <Filter>Sources</Filter>
     </ClCompile>
+    <ClCompile Include="Boot.cpp">
+      <Filter>Sources\Boot</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ProgramLine.h">
@@ -48,6 +51,12 @@
     <ClInclude Include="ErrorMessages.h">
       <Filter>Sources\Shared</Filter>
     </ClInclude>
+    <ClInclude Include="Boot.h">
+      <Filter>Sources\Boot</Filter>
+    </ClInclude>
+    <ClInclude Include="GlobalDefs.h">
+      <Filter>Sources\Shared</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Docs">
@@ -64,6 +73,9 @@
     </Filter>
     <Filter Include="Sources\Shared">
       <UniqueIdentifier>{7ca85f82-4a91-47e5-8ab5-32cc25026a8f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Boot">
+      <UniqueIdentifier>{7888af98-f461-4b89-b387-46a1724e4fb5}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

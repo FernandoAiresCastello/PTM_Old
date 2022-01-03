@@ -5,6 +5,9 @@ main:
 end:
 	HALT
 
+;======================================
+;	Palette Test
+;======================================
 palette_test:
 	TITLE "Palette Test"
 	OUTM 1
