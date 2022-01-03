@@ -40,26 +40,25 @@ void DestroyMachine()
 void RunMachine()
 {
 	InitSystem();
-	SDL_CreateThread(RunMachineThread, "RunMachineThread", nullptr);
+	SDL_Thread* thread = nullptr;
 
 	while (!Exit) {
 		ProcessGlobalEvents();
-		
-		if (Wnd.CreationRequested)
+		if (Wnd.CreationRequested) {
 			CreateWindow();
+			ShowIntro();
+		}
 		
 		UpdateWindow();
+
+		if (!thread)
+			thread = SDL_CreateThread(RunMachineThread, "RunMachineThread", nullptr);
 	}
 }
 
 int RunMachineThread(void* dummy)
 {
 	while (!Exit) {
-		if (!Wnd.Ptr) {
-			SDL_Delay(1);
-			continue;
-		}
-
 		CurLine = &Prog->Lines[IxCurLine];
 		Args = &CurLine->Cmd.Params;
 		IxArg = 0;

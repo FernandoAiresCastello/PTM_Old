@@ -37,6 +37,9 @@ bool LoadBootFile()
 			}
 			Boot.Autorun = value;
 		}
+		else if (name == "INTRO") {
+			Boot.ShowIntro = String::ToInt(value) > 0;
+		}
 		else if (name == "RES_W") {
 			Boot.ResWidth = String::ToInt(value);
 		}

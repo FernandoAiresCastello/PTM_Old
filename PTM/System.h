@@ -39,4 +39,5 @@ void InitSystem();
 void DestroySystem();
 void CreateWindow();
 void UpdateWindow();
+void ShowIntro();
 void InitCommands();

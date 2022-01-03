@@ -65,6 +65,64 @@ void UpdateWindow()
 	}
 }
 
+void Print(std::string str, int x, int y)
+{
+	x *= TChar::Width;
+	y *= TChar::Height;
+
+	const auto px = x;
+	auto tile = 0;
+
+	for (int i = 0; i < str.length(); i++) {
+		tile = str[i];
+		AssertTileIndex(tile);
+
+		if (i < str.length() - 1 && tile == '\\') {
+			i++;
+			if (str[i] == 'n') {
+				x = px;
+				y += TChar::Height;
+			}
+		}
+		else {
+			Wnd.Ptr->DrawTileTransparent(tile, 15, 0, x, y);
+			x += TChar::Width;
+		}
+	}
+}
+
+void Delay(int cycles)
+{
+	for (int i = 0; i < cycles; i++) {
+		ProcessGlobalEvents();
+		Wnd.Ptr->Update();
+		if (Exit)
+			break;
+
+		SDL_Delay(1);
+	}
+}
+
+void ShowIntro()
+{
+	if (!Boot.ShowIntro)
+		return;
+
+	Wnd.Ptr->SetBackColor(0x00);
+	Wnd.Ptr->Clear();
+	Wnd.Ptr->Update();
+	Delay(50);
+
+	Print("PTM 0.1", 13, 11);
+	Wnd.Ptr->Update();
+	Snd->PlaySubSound("c6 50 d6 70 c6 80 d6 120");
+	Delay(256);
+
+	Wnd.Ptr->SetBackColor(0x00);
+	Wnd.Ptr->Clear();
+	Wnd.Ptr->Update();
+}
+
 void NOP()
 {
 	Argc(0);
