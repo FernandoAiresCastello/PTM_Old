@@ -22,19 +22,15 @@ int main(int argc, char* argv[]) {
 
 	if (!Boot.Autorun.empty()) {
 		prog->Load(Boot.Autorun);
-		if (prog->Lines.empty()) {
-			MsgBox::Error(APP_NAME, String::Format(Error.InvalidProgramFile, Boot.Autorun.c_str()));
+		if (prog->Validate()) {
+			InitMachine(prog);
+			RunMachine();
+			DestroyMachine();
+		}
+		else {
 			delete prog;
 			return 1;
 		}
-		if (!prog->Errors.empty()) {
-			MsgBox::Error(APP_NAME, prog->Errors[0]);
-			delete prog;
-			return 1;
-		}
-		InitMachine(prog);
-		RunMachine();
-		DestroyMachine();
 	}
 
 	delete prog;

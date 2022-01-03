@@ -1,10 +1,13 @@
 #include <CppUtils.h>
 #include "Program.h"
 #include "Interpreter.h"
+#include "GlobalDefs.h"
 using namespace CppUtils;
 
 void Program::Load(std::string& path)
 {
+	FilePath = path;
+
 	auto file = File::ReadLines(path);
 	
 	Lines.clear();
@@ -161,4 +164,17 @@ std::vector<std::string> Program::SplitArgs(std::string& args)
 	}
 
 	return arglist;
+}
+
+bool Program::Validate()
+{
+	if (Lines.empty()) {
+		MsgBox::Error(APP_NAME, String::Format(Error.InvalidProgramFile, FilePath.c_str()));
+		return false;
+	}
+	if (!Errors.empty()) {
+		MsgBox::Error(APP_NAME, Errors[0]);
+		return false;
+	}
+	return true;
 }

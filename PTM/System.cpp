@@ -82,7 +82,7 @@ void HALT()
 void NUM()
 {
 	Argc(2);
-	std::string id = ArgVariableName(false);
+	auto id = ArgVariableName(false);
 	Variable var;
 	var.Type = VariableType::Number;
 	var.Number = ArgNumber();
@@ -91,7 +91,7 @@ void NUM()
 void STR()
 {
 	Argc(2);
-	std::string id = ArgVariableName(false);
+	auto id = ArgVariableName(false);
 	Variable var;
 	var.Type = VariableType::String;
 	var.String = ArgString();
@@ -100,7 +100,7 @@ void STR()
 void NUM_ARRAY()
 {
 	Argc(1);
-	std::string id = ArgVariableName(false);
+	auto id = ArgVariableName(false);
 	Variable var;
 	var.Type = VariableType::NumberArray;
 	Vars[id] = var;
@@ -108,7 +108,7 @@ void NUM_ARRAY()
 void STR_ARRAY()
 {
 	Argc(1);
-	std::string id = ArgVariableName(false);
+	auto id = ArgVariableName(false);
 	Variable var;
 	var.Type = VariableType::StringArray;
 	Vars[id] = var;
@@ -117,8 +117,8 @@ void SET()
 {
 	Argc(2);
 	if (Arg(0)->Type == ParameterType::Identifier) {
-		std::string id = ArgVariableName(true);
-		Variable& var = Vars[id];
+		auto id = ArgVariableName(true);
+		auto& var = Vars[id];
 		if (var.Type == VariableType::Number)
 			var.Number = ArgNumber();
 		else if (var.Type == VariableType::String)
@@ -127,11 +127,11 @@ void SET()
 			Abort(Error.TypeMismatch);
 	}
 	else if (Arg(0)->Type == ParameterType::ArrayIndexLiteral) {
-		Parameter* arg = Arg();
-		std::string& id = arg->StringValue;
+		auto* arg = Arg();
+		auto& id = arg->StringValue;
 		AssertVariable(id, true);
-		Variable& var = Vars[id];
-		int index = arg->ArrayIndex;
+		auto& var = Vars[id];
+		auto index = arg->ArrayIndex;
 		AssertArrayIndex(id, index);
 		if (var.Type == VariableType::NumberArray)
 			var.NumberArray[index] = ArgNumber();
@@ -141,12 +141,12 @@ void SET()
 			Abort(Error.TypeMismatch);
 	}
 	else if (Arg(0)->Type == ParameterType::ArrayIndexVariable) {
-		Parameter* arg0 = Arg(0);
-		Parameter* arg1 = Arg(1);
-		std::string& id = arg0->StringValue;
+		auto* arg0 = Arg(0);
+		auto* arg1 = Arg(1);
+		auto& id = arg0->StringValue;
 		AssertVariable(id, true);
-		Variable& var = Vars[id];
-		std::string& arrIxId = arg1->StringValue;
+		auto& var = Vars[id];
+		auto& arrIxId = arg1->StringValue;
 
 		if (Vars[arrIxId].Type != VariableType::NumberArray && Vars[arrIxId].Type != VariableType::StringArray) {
 			Abort(Error.TypeMismatch);
@@ -157,9 +157,9 @@ void SET()
 			return;
 		}
 
-		int index0 = Vars[arg0->VariableArrayIndex].Number;
-		int index1 = Vars[arg1->VariableArrayIndex].Number;
+		auto index0 = Vars[arg0->VariableArrayIndex].Number;
 		AssertArrayIndex(id, index0);
+		auto index1 = Vars[arg1->VariableArrayIndex].Number;
 		AssertArrayIndex(id, index1);
 
 		if (var.Type == VariableType::NumberArray)
@@ -176,8 +176,8 @@ void SET()
 void PUSH()
 {
 	Argc(2);
-	std::string id = ArgVariableName(true);
-	Variable& var = Vars[id];
+	auto id = ArgVariableName(true);
+	auto& var = Vars[id];
 	if (var.Type == VariableType::NumberArray)
 		var.NumberArray.push_back(ArgNumber());
 	else if (var.Type == VariableType::StringArray)
@@ -188,29 +188,21 @@ void PUSH()
 void COUNT()
 {
 	Argc(2);
-	std::string idResult = ArgVariableName(true);
-	std::string idArray = ArgVariableName(true);
+	auto idResult = ArgVariableName(true);
+	AssertVariableIsTypeNumber(idResult);
+	auto idArray = ArgVariableName(true);
 
-	if (Vars[idResult].Type != VariableType::Number) {
-		Abort(Error.TypeMismatch);
-		return;
-	}
-
-	if (Vars[idArray].Type == VariableType::StringArray) {
+	if (Vars[idArray].Type == VariableType::StringArray)
 		Vars[idResult].Number = Vars[idArray].StringArray.size();
-	}
-	else if (Vars[idArray].Type == VariableType::NumberArray) {
+	else if (Vars[idArray].Type == VariableType::NumberArray)
 		Vars[idResult].Number = Vars[idArray].NumberArray.size();
-	}
-	else {
+	else
 		Abort(Error.TypeMismatch);
-		return;
-	}
 }
 void MSGB()
 {
 	Argc(1);
-	std::string msg = ArgString();
+	auto msg = ArgString();
 	MsgBox::Info(Wnd.Title, msg);
 }
 void TITLE()
@@ -244,12 +236,12 @@ void OUTM()
 void OUT()
 {
 	Argc(6);
-	int tile = ArgNumber();
-	int x = Wnd.OutMode == OutputMode::Free ? ArgNumber() : ArgNumber() * TChar::Width;
-	int y = Wnd.OutMode == OutputMode::Free ? ArgNumber() : ArgNumber() * TChar::Width;
-	int fgc = ArgNumber();
-	int bgc = ArgNumber();
-	bool transparent = ArgNumber() <= 0;
+	auto tile = ArgNumber();
+	auto x = Wnd.OutMode == OutputMode::Free ? ArgNumber() : ArgNumber() * TChar::Width;
+	auto y = Wnd.OutMode == OutputMode::Free ? ArgNumber() : ArgNumber() * TChar::Width;
+	auto fgc = ArgNumber();
+	auto bgc = ArgNumber();
+	auto transparent = ArgNumber() <= 0;
 	
 	AssertTileIndex(tile);
 	AssertPaletteIndex(fgc);
@@ -263,13 +255,13 @@ void OUT()
 void OUTS()
 {
 	Argc(6);
-	std::string str = ArgString();
-	int x = Wnd.OutMode == OutputMode::Free ? ArgNumber() : ArgNumber() * TChar::Width;
-	int y = Wnd.OutMode == OutputMode::Free ? ArgNumber() : ArgNumber() * TChar::Width;
-	int fgc = ArgNumber();
-	int bgc = ArgNumber();
-	bool transparent = ArgNumber() <= 0;
-	const int px = x;
+	auto str = ArgString();
+	auto x = Wnd.OutMode == OutputMode::Free ? ArgNumber() : ArgNumber() * TChar::Width;
+	auto y = Wnd.OutMode == OutputMode::Free ? ArgNumber() : ArgNumber() * TChar::Width;
+	auto fgc = ArgNumber();
+	auto bgc = ArgNumber();
+	auto transparent = ArgNumber() <= 0;
+	const auto px = x;
 
 	AssertPaletteIndex(fgc);
 	AssertPaletteIndex(bgc);
@@ -299,10 +291,10 @@ void OUTS()
 void FLS()
 {
 	Argc(4);
-	int tile = ArgNumber();
-	int fgc = ArgNumber();
-	int bgc = ArgNumber();
-	bool transparent = ArgNumber() <= 0;
+	auto tile = ArgNumber();
+	auto fgc = ArgNumber();
+	auto bgc = ArgNumber();
+	auto transparent = ArgNumber() <= 0;
 
 	for (int y = 0; y < Wnd.Ptr->Rows; y++) {
 		for (int x = 0; x < Wnd.Ptr->Cols; x++) {
@@ -316,27 +308,17 @@ void FLS()
 void ADD()
 {
 	Argc(2);
-	std::string id = ArgVariableName(true);
-	int value = ArgNumber();
-
-	if (Vars[id].Type != VariableType::Number) {
-		Abort(Error.TypeMismatch);
-		return;
-	}
-
+	auto id = ArgVariableName(true);
+	auto value = ArgNumber();
+	AssertVariableIsTypeNumber(id);
 	Vars[id].Number = Vars[id].Number + value;
 }
 void CMP()
 {
 	Argc(2);
-	std::string id = ArgVariableName(true);
-	int value = ArgNumber();
-
-	if (Vars[id].Type != VariableType::Number) {
-		Abort(Error.TypeMismatch);
-		return;
-	}
-
+	auto id = ArgVariableName(true);
+	auto value = ArgNumber();
+	AssertVariableIsTypeNumber(id);
 	CmpResult = Vars[id].Number - value;
 }
 void JP()
@@ -409,74 +391,82 @@ void CLS()
 void PAL()
 {
 	Argc(2);
-	int ix = ArgNumber();
-	int rgb = ArgNumber();
+	auto ix = ArgNumber();
+	auto rgb = ArgNumber();
 	Wnd.Pal->Set(ix, rgb);
 }
 void CHR()
 {
 	Argc(9);
-	int ix = ArgNumber();
-	int r1 = ArgNumber();
-	int r2 = ArgNumber();
-	int r3 = ArgNumber();
-	int r4 = ArgNumber();
-	int r5 = ArgNumber();
-	int r6 = ArgNumber();
-	int r7 = ArgNumber();
-	int r8 = ArgNumber();
+	auto ix = ArgNumber();
+	auto r1 = ArgNumber();
+	auto r2 = ArgNumber();
+	auto r3 = ArgNumber();
+	auto r4 = ArgNumber();
+	auto r5 = ArgNumber();
+	auto r6 = ArgNumber();
+	auto r7 = ArgNumber();
+	auto r8 = ArgNumber();
 	Wnd.Chr->Set(ix, r1, r2, r3, r4, r5, r6, r7, r8);
 }
 void LDCHR()
 {
 	Argc(1);
-	std::string file = ArgString();
+	auto file = ArgString();
 	AssertFileExists(file);
 	Wnd.Chr->LoadFromImage(file);
 }
 void LDPAL()
 {
 	Argc(3);
-	std::string file = ArgString();
-	int wSwatch = ArgNumber();
-	int hSwatch = ArgNumber();
+	auto file = ArgString();
+	auto wSwatch = ArgNumber();
+	auto hSwatch = ArgNumber();
 	AssertFileExists(file);
 	Wnd.Pal->LoadFromImage(file, wSwatch, hSwatch);
 }
 void PRTSCN()
 {
 	Argc(1);
-	std::string file = ArgString();
+	auto file = ArgString();
 	Wnd.Ptr->SaveScreenshot(file);
+}
+void COLS()
+{
+	Argc(1);
+	auto id = ArgVariableName(true);
+	AssertVariableIsTypeNumber(id);
+	Vars[id].Number = Wnd.Ptr->Cols;
+}
+void ROWS()
+{
+	Argc(1);
+	auto id = ArgVariableName(true);
+	AssertVariableIsTypeNumber(id);
+	Vars[id].Number = Wnd.Ptr->Rows;
 }
 void RND()
 {
 	Argc(3);
-	std::string id = ArgVariableName(true);
-	int min = ArgNumber();
-	int max = ArgNumber();
-	int rnd = Util::Random(min, max);
-	if (Vars[id].Type != VariableType::Number) {
-		Abort(Error.TypeMismatch);
-		return;
-	}
+	auto id = ArgVariableName(true);
+	auto min = ArgNumber();
+	auto max = ArgNumber();
+	auto rnd = Util::Random(min, max);
+	AssertVariableIsTypeNumber(id);
 	Vars[id].Number = rnd;
 }
 void IN()
 {
 	Argc(1);
-	std::string id = ArgVariableName(true);
-	if (Vars[id].Type != VariableType::Number) {
-		Abort(Error.TypeMismatch);
-		return;
-	}
+	auto id = ArgVariableName(true);
+	AssertVariableIsTypeNumber(id);
 	Vars[id].Number = KeyPressed;
 	KeyPressed = 0;
 }
 void SSND()
 {
 	Argc(1);
-	int value = ArgNumber();
+	auto value = ArgNumber();
 	if (value == 0) {
 		Snd->StopMainSound();
 		Snd->StopSubSound();
@@ -494,7 +484,7 @@ void SSND()
 void SWFT()
 {
 	Argc(1);
-	int type = ArgNumber();
+	auto type = ArgNumber();
 	if (type < 0 || type > (int)TSoundType::Noise) 
 		Abort(String::Format(Error.IllegalArgumentValue, String::ToString(type).c_str()));
 	else
@@ -508,8 +498,8 @@ void VOL()
 void BEEP()
 {
 	Argc(2);
-	int freq = ArgNumber();
-	int length = ArgNumber();
+	auto freq = ArgNumber();
+	auto length = ArgNumber();
 	Snd->Beep(freq, length);
 }
 void PLAY()
@@ -525,33 +515,30 @@ void LPLAY()
 void PAUSE()
 {
 	Argc(1);
-	int ms = ArgNumber();
+	auto ms = ArgNumber();
 	SDL_Delay(ms);
 }
 void READ()
 {
 	Argc(2);
-	std::string id = ArgVariableName(true);
-	if (Vars[id].Type != VariableType::String) {
-		Abort(Error.TypeMismatch);
-		return;
-	}
-	std::string path = ArgString();
+	auto id = ArgVariableName(true);
+	AssertVariableIsTypeString(id);
+	auto path = ArgString();
 	AssertFileExists(path);
-	std::string data = File::ReadText(path);
+	auto data = File::ReadText(path);
 	Vars[id].String = data;
 }
 void WRITE()
 {
 	Argc(2);
-	std::string data = ArgString();
-	std::string filePath = ArgString();
+	auto data = ArgString();
+	auto filePath = ArgString();
 	File::WriteText(filePath, data);
 }
 void DEL()
 {
 	Argc(1);
-	std::string path = ArgString();
+	auto path = ArgString();
 	AssertFileExists(path);
 	File::Delete(path);
 }
@@ -610,6 +597,8 @@ void InitCommands()
 	OP(LDCHR);	// Load charset data from image file
 	OP(LDPAL);	// Load palette data from image file
 	OP(PRTSCN);	// Save screenshot
+	OP(COLS);	// Get screen column count
+	OP(ROWS);	// Get screen row count
 
 	//=== INPUT ===
 	OP(IN);		// Get key pressed

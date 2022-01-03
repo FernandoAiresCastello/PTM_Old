@@ -471,6 +471,18 @@ void AssertVariable(std::string& identifier, bool exists)
 	}
 }
 
+void AssertVariableIsTypeNumber(std::string& identifier)
+{
+	if (Vars[identifier].Type != VariableType::Number)
+		Abort(Error.TypeMismatch);
+}
+
+void AssertVariableIsTypeString(std::string& identifier)
+{
+	if (Vars[identifier].Type != VariableType::String)
+		Abort(Error.TypeMismatch);
+}
+
 void AssertArrayIndex(std::string& identifier, int index)
 {
 	if (Vars[identifier].Type == VariableType::StringArray) {
