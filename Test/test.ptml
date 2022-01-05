@@ -21,9 +21,9 @@ charset_test_loop:
 	ADD x 1
 	ADD c 1
 	CMP c 256
-	JE end
+	JP= end
 	CMP x 32
-	JNE charset_test_loop
+	JP!= charset_test_loop
 	ADD y 1
 	SET x 0
 	JP charset_test_loop
@@ -44,10 +44,10 @@ palette_test_loop:
 	OUT 0 x y c c 1
 	ADD c 1
 	CMP c 256
-	JE end
+	JP= end
 	ADD x 1
 	CMP x 32
-	JNE palette_test_loop
+	JP!= palette_test_loop
 	ADD y 1
 	SET x 0
 	JP palette_test_loop
