@@ -12,6 +12,7 @@ extern std::map<std::string, void(*)()> Op;
 extern ErrorMessages Error;
 
 void InitMachine(Program* prog);
+void ResetMachine();
 void DestroyMachine();
 void RunMachine();
 int RunMachineThread(void* dummy);

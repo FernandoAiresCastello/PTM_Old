@@ -36,6 +36,7 @@ struct SystemWindow {
 extern SystemWindow Wnd;
 
 void InitSystem();
+void ResetSystem();
 void DestroySystem();
 void CreateWindow();
 void UpdateWindow();

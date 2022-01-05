@@ -16,20 +16,31 @@ std::map<std::string, void(*)()> Op;
 std::vector<Parameter>* Args = nullptr;
 int IxArg = 0;
 bool Branch = false;
-SDL_Event Event;
+SDL_Event Event = { 0 };
 std::stack<int> CallStack;
 
 void InitMachine(Program* prog)
 {
+	Prog = prog;
+	ResetMachine();
+}
+
+void ResetMachine()
+{
 	Util::Randomize();
 
 	Exit = false;
-	Prog = prog;
-	CurLine = nullptr;
-	IxCurLine = 0;
 	Branch = false;
-	Args = nullptr;
+	IxCurLine = 0;
+	CurLine = &Prog->Lines[IxCurLine];
 	IxArg = 0;
+	Args = &CurLine->Cmd.Params;
+	Event = { 0 };
+
+	while (!CallStack.empty())
+		CallStack.pop();
+
+	ResetSystem();
 }
 
 void DestroyMachine()
@@ -40,6 +51,7 @@ void DestroyMachine()
 void RunMachine()
 {
 	InitSystem();
+
 	SDL_Thread* thread = nullptr;
 
 	while (!Exit) {
@@ -109,12 +121,25 @@ void ProcessGlobalEvents()
 	if (Event.type == SDL_QUIT) {
 		Exit = true;
 	}
-	else if (Event.type == SDL_KEYDOWN && Event.key.keysym.sym == SDLK_RETURN && TKey::Alt() && Wnd.Ptr) {
-		Wnd.Ptr->ToggleFullscreen();
-		Wnd.Ptr->Update();
-	}
 	else if (Event.type == SDL_KEYDOWN) {
-		KeyPressed = Event.key.keysym.sym;
+		SDL_Keycode key = Event.key.keysym.sym;
+
+		// System key events are a combination of ALT + key
+		if (TKey::Alt()) {
+			// Toggle fullscreen
+			if (key == SDLK_RETURN && Wnd.Ptr) {
+				Wnd.Ptr->ToggleFullscreen();
+				Wnd.Ptr->Update();
+			}
+			// Force exit
+			else if (TKey::Ctrl() && key == SDLK_x) {
+				Exit = true;
+			}
+		}
+		// User key events
+		else {
+			KeyPressed = key;
+		}
 	}
 }
 

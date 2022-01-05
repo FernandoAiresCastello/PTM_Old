@@ -20,6 +20,15 @@ void InitSystem()
 	Wnd.CreationRequested = true;
 }
 
+void ResetSystem()
+{
+	Vars.clear();
+	KeyPressed = 0;
+	CmpResult = 0;
+	Snd->StopMainSound();
+	Snd->StopSubSound();
+}
+
 void DestroySystem()
 {
 	delete Wnd.Ptr;
@@ -113,7 +122,11 @@ void ShowIntro()
 	Wnd.Ptr->Update();
 	Delay(50);
 
-	Print("PTM 0.1", 13, 11);
+	std::string intro = "PTM 0.1";
+	int x = Wnd.Ptr->Cols / 2 - intro.length() / 2;
+	int y = Wnd.Ptr->Rows / 2 - 1;
+
+	Print(intro, x, y);
 	Wnd.Ptr->Update();
 	Snd->PlaySubSound("c6 50 d6 70 c6 80 d6 120");
 	Delay(256);
