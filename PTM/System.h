@@ -14,6 +14,7 @@ using namespace CppUtils;
 using namespace TileGameLib;
 
 enum class OutputMode { Free, Tiled };
+enum class InputMode { Continuous, Paused };
 
 extern std::map<std::string, Variable> Vars;
 extern int KeyPressed;
@@ -28,6 +29,7 @@ struct SystemWindow {
 	int WndWidth = 0;
 	int WndHeight = 0;
 	OutputMode OutMode = OutputMode::Free;
+	InputMode InMode = InputMode::Continuous;
 	bool AutoUpdate = true;
 	int FullScreenRequest = -1;
 	TPalette* Pal = nullptr;

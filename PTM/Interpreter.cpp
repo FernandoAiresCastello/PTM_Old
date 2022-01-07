@@ -115,7 +115,9 @@ void Abort(std::string msg, bool printInfo)
 
 void ProcessGlobalEvents()
 {
-	Event = { 0 };
+	if (Wnd.InMode == InputMode::Paused)
+		Event = { 0 };
+
 	SDL_PollEvent(&Event);
 
 	if (Event.type == SDL_QUIT) {

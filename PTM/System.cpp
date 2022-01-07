@@ -560,6 +560,11 @@ void RND()
 	AssertVariableIsTypeNumber(id);
 	Vars[id].Number = rnd;
 }
+void INPM()
+{
+	Argc(1);
+	Wnd.InMode = (InputMode)ArgNumber();
+}
 void IN()
 {
 	Argc(1);
@@ -666,11 +671,11 @@ void InitCommands()
 	Op["EXIT"] = &EXIT;			// Exit program normally
 	Op["HALT"] = &HALT;			// Stop program execution
 	Op["JP"] = &JP;				// Jump
-	Op["JP=" ] = &JP_E;			// Jump if equal
+	Op["JP="] = &JP_E;			// Jump if equal
 	Op["JP!="] = &JP_NE;		// Jump if not equal
-	Op["JP>" ] = &JP_G;			// Jump if greater
+	Op["JP>"] = &JP_G;			// Jump if greater
 	Op["JP>="] = &JP_GE;		// Jump if greater or equal
-	Op["JP<" ] = &JP_L;			// Jump if less
+	Op["JP<"] = &JP_L;			// Jump if less
 	Op["JP<="] = &JP_LE;		// Jump if less or equal
 	Op["CALL"] = &CALL;			// Call
 	Op["CALL="] = &CALL_E;		// Call if equal
@@ -712,6 +717,7 @@ void InitCommands()
 	Op["ROWS"] = &ROWS;			// Get screen row count
 
 	//=== INPUT ===
+	Op["INPM"] = &INPM;			// Set input mode
 	Op["IN"] = &IN;				// Get key pressed
 
 	//=== SOUND ===

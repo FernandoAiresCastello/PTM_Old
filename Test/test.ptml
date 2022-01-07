@@ -1,5 +1,7 @@
 
 main:
+	OUTM 1
+	JP input_test
 	JP palette_test
 	JP charset_test
 
@@ -7,10 +9,50 @@ end:
 	HALT
 
 ;======================================
+;	Input Test
+;======================================
+input_test:
+	INPM 1
+	NUM key_up 1073741906
+	NUM key_down 1073741905
+	NUM key_left 1073741904
+	NUM key_right 1073741903
+	NUM key 0
+	NUM x 0
+	NUM y 0
+input_test_loop:
+	OUT 2 x y 15 0 0
+	IN key
+	CMP key key_up
+	CALL= key_up_handler
+	CMP key key_down
+	CALL= key_down_handler
+	CMP key key_right
+	CALL= key_right_handler
+	CMP key key_left
+	CALL= key_left_handler
+	JP input_test_loop
+key_up_handler:
+	ADD y -1
+	CLS 0
+	RET
+key_down_handler:
+	ADD y 1
+	CLS 0
+	RET
+key_right_handler:
+	ADD x 1
+	CLS 0
+	RET
+key_left_handler:
+	ADD x -1
+	CLS 0
+	RET
+
+;======================================
 ;	Charset Test
 ;======================================
 charset_test:
-	OUTM 1
 	OUTS "Charset Test" 0 0 10 0 0
 	NUM c 0
 	NUM x 0
@@ -32,7 +74,6 @@ charset_test_loop:
 ;	Palette Test
 ;======================================
 palette_test:
-	OUTM 1
 	OUTS "Palette Test" 0 0 10 0 0
 	NUM c 0
 	NUM x 0
