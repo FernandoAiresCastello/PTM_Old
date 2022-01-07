@@ -16,6 +16,39 @@ void InitSystem()
 	Wnd.WndWidth = Boot.WndWidth;
 	Wnd.WndHeight = Boot.WndHeight;
 	Wnd.CreationRequested = true;
+
+	InitSystemVars();
+}
+
+void InitSystemVars()
+{
+	AddSystemVar("version", APP_VERSION);
+	AddSystemVar("cols", Wnd.BufWidth / TChar::Width);
+	AddSystemVar("rows", Wnd.BufHeight / TChar::Height);
+	AddSystemVar("width", Wnd.BufWidth);
+	AddSystemVar("height", Wnd.BufHeight);
+	AddSystemVar("key_up", SDLK_UP);
+	AddSystemVar("key_down", SDLK_DOWN);
+	AddSystemVar("key_left", SDLK_LEFT);
+	AddSystemVar("key_right", SDLK_RIGHT);
+}
+
+void AddSystemVar(std::string name, int value)
+{
+	Variable var;
+	var.Type = VariableType::Number;
+	var.Number = value;
+	var.String = String::ToString(value);
+	Vars["$" + name] = var;
+}
+
+void AddSystemVar(std::string name, std::string value)
+{
+	Variable var;
+	var.Type = VariableType::String;
+	var.String = value;
+	var.Number = String::ToInt(value);
+	Vars["$" + name] = var;
 }
 
 void ResetSystem()
@@ -120,7 +153,7 @@ void ShowIntro()
 	Wnd.Ptr->Update();
 	Delay(50);
 
-	std::string intro = "PTM 0.1";
+	std::string intro = APP_VERSION;
 	int x = Wnd.Ptr->Cols / 2 - intro.length() / 2;
 	int y = Wnd.Ptr->Rows / 2 - 1;
 
@@ -137,6 +170,18 @@ void ShowIntro()
 void NOP()
 {
 	Argc(0);
+}
+void SYS()
+{
+	Argc(1);
+	auto fn = String::ToLower(ArgString());
+	
+	if (fn == "test") {
+		MsgBox::Info(Wnd.Title, "Test");
+	}
+	else {
+		Abort(Error.SystemFunctionNotFound);
+	}
 }
 void EXIT()
 {
@@ -187,6 +232,10 @@ void SET()
 	Argc(2);
 	if (Arg(0)->Type == ParameterType::Identifier) {
 		auto id = ArgVariableName(true);
+		if (String::StartsWith(id, '$')) {
+			Abort(Error.IllegalVariableName);
+			return;
+		}
 		auto& var = Vars[id];
 		if (var.Type == VariableType::Number)
 			var.Number = ArgNumber();
@@ -550,6 +599,20 @@ void ROWS()
 	AssertVariableIsTypeNumber(id);
 	Vars[id].Number = Wnd.Ptr->Rows;
 }
+void WIDTH()
+{
+	Argc(1);
+	auto id = ArgVariableName(true);
+	AssertVariableIsTypeNumber(id);
+	Vars[id].Number = Wnd.Ptr->ScreenWidth;
+}
+void HEIGHT()
+{
+	Argc(1);
+	auto id = ArgVariableName(true);
+	AssertVariableIsTypeNumber(id);
+	Vars[id].Number = Wnd.Ptr->ScreenHeight;
+}
 void RND()
 {
 	Argc(3);
@@ -652,10 +715,41 @@ void FDEL()
 	AssertFileExists(path);
 	File::Delete(path);
 }
+void STRCMP()
+{
+	Argc(2);
+	auto id = ArgVariableName(true);
+	AssertVariableIsTypeString(id);
+	auto expectedValue = ArgString();
+	auto actualValue = Vars[id].String;
+
+	if (expectedValue == actualValue)
+		CmpResult = 0;
+	else
+		CmpResult = -1;
+}
+void STRCAT()
+{
+	Argc(3);
+	auto id = ArgVariableName(true);
+	AssertVariableIsTypeString(id);
+	auto str1 = ArgString();
+	auto str2 = ArgString();
+	Vars[id].String = str1 + str2;
+}
+void STRLEN()
+{
+	Argc(2);
+	auto id = ArgVariableName(true);
+	AssertVariableIsTypeNumber(id);
+	auto str = ArgString();
+	Vars[id].Number = str.length();
+}
 void InitCommands()
 {
 	//=== MISC ===
 	Op["NOP"] = &NOP;			// No operation
+	Op["SYS"] = &SYS;			// Call internal system function
 
 	//=== VARIABLES ===
 	Op["NUM"] = &NUM;			// Declare variable as number
@@ -665,7 +759,8 @@ void InitCommands()
 	Op["SET"] = &SET;			// Set value to variable
 	Op["PUSH"] = &PUSH;			// Push value into array
 	Op["COUNT"] = &COUNT;		// Get number of items in array
-	Op["RND"] = &RND;			// Set random number value variable
+	Op["RND"] = &RND;			// Get random number
+	Op["CMP"] = &CMP;			// Compare two numeric values
 
 	//=== PROGRAM FLOW ===
 	Op["EXIT"] = &EXIT;			// Exit program normally
@@ -690,9 +785,6 @@ void InitCommands()
 	//=== MATH ===
 	Op["ADD"] = &ADD;			// Add to number variable
 	
-	//=== COMPARE ===
-	Op["CMP"] = &CMP;			// Compare value with number variable
-	
 	//=== DEBUG ===
 	Op["MSGB"] = &MSGB;			// Show message box
 
@@ -713,8 +805,6 @@ void InitCommands()
 	Op["LDCHR"] = &LDCHR;		// Load charset data from image file
 	Op["LDPAL"] = &LDPAL;		// Load palette data from image file
 	Op["PRTSCN"] = &PRTSCN;		// Save screenshot
-	Op["COLS"] = &COLS;			// Get screen column count
-	Op["ROWS"] = &ROWS;			// Get screen row count
 
 	//=== INPUT ===
 	Op["INPM"] = &INPM;			// Set input mode
@@ -732,4 +822,9 @@ void InitCommands()
 	Op["FREAD"] = &FREAD;		// Read file into string
 	Op["FWRITE"] = &FWRITE;		// Write string to file
 	Op["FDEL"] = &FDEL;			// Delete file
+
+	//=== STRING ===
+	Op["STRCMP"] = &STRCMP;		// Compare value with string variable
+	Op["STRCAT"] = &STRCAT;		// Concatenate two strings
+	Op["STRLEN"] = &STRLEN;		// Get length of string
 }

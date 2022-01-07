@@ -29,6 +29,8 @@ struct ErrorMessages {
 	cstr IllegalArgumentValue = "Illegal argument value: %s";
 	cstr InvalidTileIndex = "Invalid tile index: %i";
 	cstr InvalidPaletteIndex = "Invalid palette index: %i";
+	cstr SystemFunctionNotFound = "Unrecognized system function call";
+	cstr IllegalVariableName = "Illegal variable name";
 };
 
 extern ErrorMessages Error;

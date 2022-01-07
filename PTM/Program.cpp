@@ -105,7 +105,7 @@ bool Program::ParseParams(std::string& args, std::vector<Parameter>& params)
 		else if (String::StartsWithNumber(arg) || arg[0] == '-' || arg[0] == '+') {
 			param.Type = ParameterType::NumberLiteral;
 		}
-		else if (isalpha(arg[0])) {
+		else if (isalpha(arg[0]) || String::StartsWith(arg, '$')) {
 			param.Type = ParameterType::Identifier;
 		}
 		else {

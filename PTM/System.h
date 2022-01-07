@@ -38,6 +38,9 @@ struct SystemWindow {
 extern SystemWindow Wnd;
 
 void InitSystem();
+void InitSystemVars();
+void AddSystemVar(std::string name, int value);
+void AddSystemVar(std::string name, std::string value);
 void ResetSystem();
 void DestroySystem();
 void CreateWindow();
