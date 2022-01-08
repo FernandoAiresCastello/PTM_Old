@@ -1,14 +1,6 @@
 
 main:
 	OUTM 1
-	;JP input_test
-	MSGB $cols
-	MSGB $rows
-	MSGB $width
-	MSGB $height
-	EXIT
-
-	;JP test
 	JP input_test
 	JP palette_test
 	JP charset_test
@@ -33,15 +25,15 @@ input_test:
 	NUM y 0
 input_test_loop:
 	OUT 2 x y 15 0 0
-	IN key
-	CMP key $key_up
-	CALL= key_up_handler
-	CMP key $key_down
-	CALL= key_down_handler
-	CMP key $key_right
-	CALL= key_right_handler
-	CMP key $key_left
-	CALL= key_left_handler
+	INP		key
+	CMP		key $key_up
+	CALL=	key_up_handler
+	CMP		key $key_down
+	CALL=	key_down_handler
+	CMP		key $key_right
+	CALL=	key_right_handler
+	CMP		key $key_left
+	CALL=	key_left_handler
 	JP input_test_loop
 key_up_handler:
 	ADD y -1

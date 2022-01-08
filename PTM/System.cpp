@@ -167,6 +167,12 @@ void ShowIntro()
 	Wnd.Ptr->Update();
 }
 
+/*#############################################################################
+ 
+							COMMAND IMPLEMENTATION
+
+#############################################################################*/
+
 void NOP()
 {
 	Argc(0);
@@ -628,7 +634,7 @@ void INPM()
 	Argc(1);
 	Wnd.InMode = (InputMode)ArgNumber();
 }
-void IN()
+void INP()
 {
 	Argc(1);
 	auto id = ArgVariableName(true);
@@ -808,7 +814,7 @@ void InitCommands()
 
 	//=== INPUT ===
 	Op["INPM"] = &INPM;			// Set input mode
-	Op["IN"] = &IN;				// Get key pressed
+	Op["INP"] = &INP;			// Get key pressed
 
 	//=== SOUND ===
 	Op["SSND"] = &SSND;			// Stop all currently playing sounds
