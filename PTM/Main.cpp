@@ -33,6 +33,5 @@ int main(int argc, char* argv[]) {
 		}
 	}
 
-	delete prog;
 	return 0;
 }

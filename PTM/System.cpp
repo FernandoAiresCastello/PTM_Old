@@ -54,10 +54,18 @@ void AddSystemVar(std::string name, std::string value)
 void ResetSystem()
 {
 	Vars.clear();
+	InitSystemVars();
 	KeyPressed = 0;
 	CmpResult = 0;
 	Snd->StopMainSound();
 	Snd->StopSubSound();
+
+	if (Wnd.Ptr) {
+		Wnd.Pal->InitDefault();
+		Wnd.Chr->InitDefault();
+		Wnd.Ptr->Clear();
+		Wnd.Ptr->Update();
+	}
 }
 
 void DestroySystem()
@@ -181,13 +189,7 @@ void SYS()
 {
 	Argc(1);
 	auto fn = String::ToLower(ArgString());
-	
-	if (fn == "test") {
-		MsgBox::Info(Wnd.Title, "Test");
-	}
-	else {
-		Abort(Error.SystemFunctionNotFound);
-	}
+	Abort(Error.SystemFunctionNotFound);
 }
 void EXIT()
 {

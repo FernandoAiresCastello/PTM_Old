@@ -21,6 +21,9 @@ std::stack<int> CallStack;
 
 void InitMachine(Program* prog)
 {
+	if (prog != Prog)
+		delete Prog;
+	
 	Prog = prog;
 	ResetMachine();
 }
@@ -30,7 +33,7 @@ void ResetMachine()
 	Util::Randomize();
 
 	Exit = false;
-	Branch = false;
+	Branch = true;
 	IxCurLine = 0;
 	CurLine = &Prog->Lines[IxCurLine];
 	IxArg = 0;
@@ -46,6 +49,8 @@ void ResetMachine()
 void DestroyMachine()
 {
 	DestroySystem();
+	delete Prog;
+	Prog = nullptr;
 }
 
 void RunMachine()
