@@ -11,10 +11,10 @@ void InitSystem()
 {
 	Snd = new TSound();
 
-	Wnd.BufWidth = Boot.ResWidth;
-	Wnd.BufHeight = Boot.ResHeight;
-	Wnd.WndWidth = Boot.WndWidth;
-	Wnd.WndHeight = Boot.WndHeight;
+	Wnd.BufWidth = 256;
+	Wnd.BufHeight = 192;
+	Wnd.WndWidth = 768;
+	Wnd.WndHeight = 576;
 	Wnd.CreationRequested = true;
 
 	InitSystemVars();
@@ -153,9 +153,6 @@ void Delay(int cycles)
 
 void ShowIntro()
 {
-	if (!Boot.ShowIntro)
-		return;
-
 	Wnd.Ptr->SetBackColor(0x00);
 	Wnd.Ptr->Clear();
 	Wnd.Ptr->Update();
@@ -335,24 +332,6 @@ void TITLE()
 {
 	Argc(1);
 	Wnd.Title = ArgString();
-}
-void WINDOW()
-{
-	Argc(4);
-
-	if (Wnd.Ptr) {
-		Abort(Error.WindowAlreadyOpen);
-		return;
-	}
-
-	Wnd.BufWidth = ArgNumber();
-	Wnd.BufHeight = ArgNumber();
-	Wnd.WndWidth = ArgNumber();
-	Wnd.WndHeight = ArgNumber();
-	Wnd.CreationRequested = true;
-
-	while (!Wnd.Ptr)
-		SDL_Delay(1);
 }
 void OUTM()
 {
@@ -699,7 +678,7 @@ void PAUSE()
 	auto ms = ArgNumber();
 	SDL_Delay(ms);
 }
-void FREAD()
+void READ()
 {
 	Argc(2);
 	auto id = ArgVariableName(true);
@@ -709,14 +688,27 @@ void FREAD()
 	auto data = File::ReadText(path);
 	Vars[id].String = data;
 }
-void FWRITE()
+void READ_ARRAY()
+{
+	Argc(2);
+	auto id = ArgVariableName(true);
+	AssertVariableIsTypeNumberArray(id);
+	auto path = ArgString();
+	AssertFileExists(path);
+	auto data = File::ReadBytes(path);
+	Vars[id].NumberArray.clear();
+
+	for (auto value : data)
+		Vars[id].NumberArray.push_back((int)value);
+}
+void WRITE()
 {
 	Argc(2);
 	auto data = ArgString();
 	auto filePath = ArgString();
 	File::WriteText(filePath, data);
 }
-void FDEL()
+void DEL()
 {
 	Argc(1);
 	auto path = ArgString();
@@ -797,7 +789,6 @@ void InitCommands()
 	Op["MSGB"] = &MSGB;			// Show message box
 
 	//=== WINDOW ===
-	Op["WINDOW"] = &WINDOW;		// Open window
 	Op["TITLE"] = &TITLE;		// Set window title
 
 	//=== GRAPHICS ===
@@ -827,9 +818,10 @@ void InitCommands()
 	Op["LPLAY"] = &LPLAY;		// Play notes from a sound string (loop)
 
 	//=== FILESYSTEM ===
-	Op["FREAD"] = &FREAD;		// Read file into string
-	Op["FWRITE"] = &FWRITE;		// Write string to file
-	Op["FDEL"] = &FDEL;			// Delete file
+	Op["READ"] = &READ;			// Read file into string
+	Op["READ[]"] = &READ_ARRAY;	// Read file bytes into number array
+	Op["WRITE"] = &WRITE;		// Write string to file
+	Op["DEL"] = &DEL;			// Delete file
 
 	//=== STRING ===
 	Op["STRCMP"] = &STRCMP;		// Compare value with string variable

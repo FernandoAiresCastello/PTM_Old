@@ -37,21 +37,6 @@ bool LoadBootFile()
 			}
 			Boot.Autorun = value;
 		}
-		else if (name == "INTRO") {
-			Boot.ShowIntro = String::ToInt(value) > 0;
-		}
-		else if (name == "RES_W") {
-			Boot.ResWidth = String::ToInt(value);
-		}
-		else if (name == "RES_H") {
-			Boot.ResHeight = String::ToInt(value);
-		}
-		else if (name == "WND_W") {
-			Boot.WndWidth = String::ToInt(value);
-		}
-		else if (name == "WND_H") {
-			Boot.WndHeight = String::ToInt(value);
-		}
 		else {
 			MsgBox::Error(APP_NAME, String::Format(Error.BootError, value.c_str()));
 			return false;
