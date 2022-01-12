@@ -745,6 +745,7 @@ void STRLEN()
 	auto str = ArgString();
 	Vars[id].Number = str.length();
 }
+
 void InitCommands()
 {
 	//=== MISC ===

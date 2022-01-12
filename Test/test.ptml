@@ -1,11 +1,6 @@
 
 main:
 	OUTM 1
-
-	NUM[] bytes
-	READ[] bytes "song_2"
-	MSGB bytes
-
 	JP input_test
 	JP palette_test
 	JP charset_test

@@ -63,7 +63,7 @@ void RunMachine()
 		ProcessGlobalEvents();
 		if (Wnd.CreationRequested) {
 			CreateWindow();
-			ShowIntro();
+			//ShowIntro();
 		}
 		
 		UpdateWindow();
