@@ -1,6 +1,7 @@
 
 main:
 	OUTM 1
+	CLS 0x58
 	JP input_test
 	JP palette_test
 	JP charset_test

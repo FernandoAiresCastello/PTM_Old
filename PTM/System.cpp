@@ -1,5 +1,4 @@
 #include "System.h"
-#include "Boot.h"
 
 std::map<std::string, Variable> Vars;
 int KeyPressed = 0;

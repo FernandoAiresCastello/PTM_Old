@@ -14,9 +14,6 @@
       <Filter>Sources\Shared</Filter>
     </ClCompile>
     <ClCompile Include="Main.cpp">
-      <Filter>Sources</Filter>
-    </ClCompile>
-    <ClCompile Include="Boot.cpp">
       <Filter>Sources\Boot</Filter>
     </ClCompile>
   </ItemGroup>
@@ -50,9 +47,6 @@
     </ClInclude>
     <ClInclude Include="ErrorMessages.h">
       <Filter>Sources\Shared</Filter>
-    </ClInclude>
-    <ClInclude Include="Boot.h">
-      <Filter>Sources\Boot</Filter>
     </ClInclude>
     <ClInclude Include="GlobalDefs.h">
       <Filter>Sources\Shared</Filter>

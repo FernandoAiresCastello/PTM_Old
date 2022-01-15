@@ -4,6 +4,7 @@
 #include <string>
 #include <CppUtils.h>
 #include <TileGameLib.h>
+#include "GlobalDefs.h"
 #include "System.h"
 #include "Parameter.h"
 #include "System.h"
