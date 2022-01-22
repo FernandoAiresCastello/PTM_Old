@@ -133,6 +133,7 @@ copy "$(TargetPath)" "$(SolutionDir)Binaries\$(TargetFileName)"</Command>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="BootMenu.cpp" />
     <ClCompile Include="ErrorMessages.cpp" />
     <ClCompile Include="System.cpp" />
     <ClCompile Include="Interpreter.cpp" />
@@ -140,6 +141,7 @@ copy "$(TargetPath)" "$(SolutionDir)Binaries\$(TargetFileName)"</Command>
     <ClCompile Include="Program.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="BootMenu.h" />
     <ClInclude Include="Command.h" />
     <ClInclude Include="ErrorMessages.h" />
     <ClInclude Include="GlobalDefs.h" />

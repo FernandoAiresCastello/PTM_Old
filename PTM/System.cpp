@@ -10,12 +10,6 @@ void InitSystem()
 {
 	Snd = new TSound();
 
-	Wnd.BufWidth = 256;
-	Wnd.BufHeight = 192;
-	Wnd.WndWidth = 768;
-	Wnd.WndHeight = 576;
-	Wnd.CreationRequested = true;
-
 	InitSystemVars();
 }
 
@@ -82,7 +76,11 @@ void CreateWindow()
 		return;
 	}
 
-	Wnd.CreationRequested = false;
+	Wnd.BufWidth = 256;
+	Wnd.BufHeight = 192;
+	Wnd.WndWidth = 768;
+	Wnd.WndHeight = 576;
+
 	Wnd.Ptr = new TWindow(
 		Wnd.BufWidth, Wnd.BufHeight,
 		Wnd.WndWidth, Wnd.WndHeight, false);
@@ -132,7 +130,7 @@ void Print(std::string str, int x, int y)
 			}
 		}
 		else {
-			Wnd.Ptr->DrawTileTransparent(tile, 15, 0, x, y);
+			Wnd.Ptr->DrawTile(tile, 15, 0, x, y, true);
 			x += TChar::Width;
 		}
 	}
@@ -351,10 +349,7 @@ void OUT()
 	AssertPaletteIndex(fgc);
 	AssertPaletteIndex(bgc);
 
-	if (transparent)
-		Wnd.Ptr->DrawTileTransparent(tile, fgc, bgc, x, y);
-	else
-		Wnd.Ptr->DrawTile(tile, fgc, bgc, x, y);
+	Wnd.Ptr->DrawTile(tile, fgc, bgc, x, y, transparent);
 }
 void OUTS()
 {
@@ -383,11 +378,7 @@ void OUTS()
 			}
 		}
 		else {
-			if (transparent)
-				Wnd.Ptr->DrawTileTransparent(tile, fgc, bgc, x, y);
-			else
-				Wnd.Ptr->DrawTile(tile, fgc, bgc, x, y);
-
+			Wnd.Ptr->DrawTile(tile, fgc, bgc, x, y, transparent);
 			x += TChar::Width;
 		}
 	}
@@ -402,20 +393,19 @@ void FLS()
 
 	for (int y = 0; y < Wnd.Ptr->Rows; y++) {
 		for (int x = 0; x < Wnd.Ptr->Cols; x++) {
-			if (transparent)
-				Wnd.Ptr->DrawTileTransparent(tile, fgc, bgc, x * TChar::Width, y * TChar::Height);
-			else
-				Wnd.Ptr->DrawTile(tile, fgc, bgc, x * TChar::Width, y * TChar::Height);
+			Wnd.Ptr->DrawTile(tile, fgc, bgc, x * TChar::Width, y * TChar::Height, transparent);
 		}
 	}
 }
 void ADD()
 {
-	Argc(2);
-	auto id = ArgVariableName(true);
+	Argc(3);
+	auto a = ArgVariableName(true);
+	auto b = ArgVariableName(true);
 	auto value = ArgNumber();
-	AssertVariableIsTypeNumber(id);
-	Vars[id].Number = Vars[id].Number + value;
+	AssertVariableIsTypeNumber(a);
+	AssertVariableIsTypeNumber(b);
+	Vars[a].Number = Vars[b].Number + value;
 }
 void CMP()
 {
@@ -537,17 +527,11 @@ void PAL()
 }
 void CHR()
 {
-	Argc(9);
+	Argc(3);
 	auto ix = ArgNumber();
-	auto r1 = ArgNumber();
-	auto r2 = ArgNumber();
-	auto r3 = ArgNumber();
-	auto r4 = ArgNumber();
-	auto r5 = ArgNumber();
-	auto r6 = ArgNumber();
-	auto r7 = ArgNumber();
-	auto r8 = ArgNumber();
-	Wnd.Chr->Set(ix, r1, r2, r3, r4, r5, r6, r7, r8);
+	auto row = ArgNumber();
+	auto data = ArgNumber();
+	Wnd.Chr->Set(ix, row, data);
 }
 void LDCHR()
 {
@@ -570,34 +554,6 @@ void PRTSCN()
 	Argc(1);
 	auto file = ArgString();
 	Wnd.Ptr->SaveScreenshot(file);
-}
-void COLS()
-{
-	Argc(1);
-	auto id = ArgVariableName(true);
-	AssertVariableIsTypeNumber(id);
-	Vars[id].Number = Wnd.Ptr->Cols;
-}
-void ROWS()
-{
-	Argc(1);
-	auto id = ArgVariableName(true);
-	AssertVariableIsTypeNumber(id);
-	Vars[id].Number = Wnd.Ptr->Rows;
-}
-void WIDTH()
-{
-	Argc(1);
-	auto id = ArgVariableName(true);
-	AssertVariableIsTypeNumber(id);
-	Vars[id].Number = Wnd.Ptr->ScreenWidth;
-}
-void HEIGHT()
-{
-	Argc(1);
-	auto id = ArgVariableName(true);
-	AssertVariableIsTypeNumber(id);
-	Vars[id].Number = Wnd.Ptr->ScreenHeight;
 }
 void RND()
 {

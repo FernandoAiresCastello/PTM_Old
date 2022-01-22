@@ -1,31 +1,34 @@
 
 main:
 	OUTM 1
-	CLS 0x58
+	CHR 2 0 0b11111111
+	CHR 2 1 0b10000001
+	CHR 2 2 0b10111101
+	CHR 2 3 0b10100101
+	CHR 2 4 0b10100101
+	CHR 2 5 0b10111101
+	CHR 2 6 0b10000001
+	CHR 2 7 0b11111111
+	PAL 0 0x000000
+	PAL 1 0xffffff
 	JP input_test
-	JP palette_test
-	JP charset_test
 
 end:
 	HALT
 
 ;======================================
-;	Hello
-;======================================
-hello:
-	MSGB "Hello!"
-	RET
-
-;======================================
 ;	Input Test
 ;======================================
 input_test:
+	CLS 0
 	INPM 1
 	NUM key 0
 	NUM x 0
 	NUM y 0
+	NUM fgc 0
+	NUM ctr_blink 0
 input_test_loop:
-	OUT 2 x y 15 0 0
+	OUT 2 x y fgc 0 0
 	INP		key
 	CMP		key $key_up
 	CALL=	key_up_handler
@@ -35,21 +38,32 @@ input_test_loop:
 	CALL=	key_right_handler
 	CMP		key $key_left
 	CALL=	key_left_handler
+	ADD ctr_blink ctr_blink 1
+	CMP ctr_blink 1000
+	JP!= loop
+	SET ctr_blink 0
+	ADD fgc fgc 1
+	CMP fgc 2
+	CALL= reset_fgc
+loop:
 	JP input_test_loop
+reset_fgc:
+	SET fgc 0
+	RET
 key_up_handler:
-	ADD y -1
+	ADD y y -1
 	CLS 0
 	RET
 key_down_handler:
-	ADD y 1
+	ADD y y 1
 	CLS 0
 	RET
 key_right_handler:
-	ADD x 1
+	ADD x x 1
 	CLS 0
 	RET
 key_left_handler:
-	ADD x -1
+	ADD x x -1
 	CLS 0
 	RET
 
@@ -64,13 +78,13 @@ charset_test:
 
 charset_test_loop:
 	OUT c x y 15 0 1
-	ADD x 1
-	ADD c 1
+	ADD x x 1
+	ADD c c 1
 	CMP c 256
 	JP= end
 	CMP x 32
 	JP!= charset_test_loop
-	ADD y 1
+	ADD y y 1
 	SET x 0
 	JP charset_test_loop
 
@@ -85,14 +99,14 @@ palette_test:
 
 palette_test_loop:
 	OUT 0 x y c c 1
-	ADD x 1
+	ADD x x 1
 	OUT 0 x y c c 1
-	ADD c 1
+	ADD c c 1
 	CMP c 256
 	JP= end
-	ADD x 1
+	ADD x x 1
 	CMP x 32
 	JP!= palette_test_loop
-	ADD y 1
+	ADD y y 1
 	SET x 0
 	JP palette_test_loop

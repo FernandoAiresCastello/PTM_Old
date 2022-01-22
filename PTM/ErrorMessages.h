@@ -3,8 +3,7 @@
 typedef const char* cstr;
 
 struct ErrorMessages {
-	cstr BootFileNotFound = "Boot file not found";
-	cstr BootError = "Boot error";
+	cstr NoProgramFound = "No program file found";
 	cstr ProgramFileNotFound = "Program file not found: %s";
 	cstr InvalidProgramFile = "Invalid program file: %s";
 	cstr FileNotFound = "File not found: %s";

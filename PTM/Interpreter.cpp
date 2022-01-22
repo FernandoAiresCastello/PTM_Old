@@ -61,11 +61,6 @@ void RunMachine()
 
 	while (!Exit) {
 		ProcessGlobalEvents();
-		if (Wnd.CreationRequested) {
-			CreateWindow();
-			//ShowIntro();
-		}
-		
 		UpdateWindow();
 
 		if (!thread)

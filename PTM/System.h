@@ -24,7 +24,6 @@ struct SystemWindow {
 	std::string Title = "";
 	std::string OldTitle = "";
 	TWindow* Ptr = nullptr;
-	bool CreationRequested = false;
 	int BufWidth = 0;
 	int BufHeight = 0;
 	int WndWidth = 0;

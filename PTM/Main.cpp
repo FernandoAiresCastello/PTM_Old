@@ -6,12 +6,15 @@
 #include "Interpreter.h"
 #include "System.h"
 #include "ErrorMessages.h"
+#include "BootMenu.h"
 using namespace CppUtils;
 using namespace TileGameLib;
 
 int main(int argc, char* argv[]) {
 
 	InitCommands();
+	CreateWindow();
+
 	Program* prog = new Program();
 
 	if (argc > 1) {
@@ -26,12 +29,18 @@ int main(int argc, char* argv[]) {
 		}
 	}
 	else {
-		MsgBox::Error(APP_NAME, "Program file not specified");
-		delete prog;
-		return 1;
+		std::string programFile = ShowBootMenu(Wnd.Ptr);
+		if (!programFile.empty()) {
+			prog->Load(programFile);
+		}
+		else {
+			delete prog;
+			return 0;
+		}
 	}
 
 	if (prog->Validate()) {
+		Wnd.Ptr->SetTitle("");
 		InitMachine(prog);
 		RunMachine();
 		DestroyMachine();
