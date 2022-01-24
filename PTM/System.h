@@ -42,7 +42,7 @@ void InitSystemVars();
 void AddSystemVar(std::string name, int value);
 void AddSystemVar(std::string name, std::string value);
 void ResetSystem();
-void DestroySystem();
+void DestroySystem(bool destroyWindow);
 void CreateWindow();
 void UpdateWindow();
 void ShowIntro();

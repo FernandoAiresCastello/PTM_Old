@@ -46,9 +46,9 @@ void ResetMachine()
 	ResetSystem();
 }
 
-void DestroyMachine()
+void DestroyMachine(bool destroyWindow)
 {
-	DestroySystem();
+	DestroySystem(destroyWindow);
 	delete Prog;
 	Prog = nullptr;
 }

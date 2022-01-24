@@ -13,7 +13,7 @@ extern ErrorMessages Error;
 
 void InitMachine(Program* prog);
 void ResetMachine();
-void DestroyMachine();
+void DestroyMachine(bool destroyWindow);
 void RunMachine();
 int RunMachineThread(void* dummy);
 bool IsValidOpcode(std::string& opcode);

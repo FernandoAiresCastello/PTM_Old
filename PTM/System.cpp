@@ -61,12 +61,15 @@ void ResetSystem()
 	}
 }
 
-void DestroySystem()
+void DestroySystem(bool destroyWindow)
 {
-	delete Wnd.Ptr;
-	Wnd.Ptr = nullptr;
 	delete Snd;
 	Snd = nullptr;
+
+	if (destroyWindow) {
+		delete Wnd.Ptr;
+		Wnd.Ptr = nullptr;
+	}
 }
 
 void CreateWindow()

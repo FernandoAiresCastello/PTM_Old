@@ -1,0 +1,67 @@
+; Use directional arrow keys to move the blinking cursor
+
+; Define blinking cursor character
+CHR 2 0 0b11111111
+CHR 2 1 0b10000001
+CHR 2 2 0b10111101
+CHR 2 3 0b10100101
+CHR 2 4 0b10100101
+CHR 2 5 0b10111101
+CHR 2 6 0b10000001
+CHR 2 7 0b11111111
+
+; Define black and white palette
+PAL 0 0x000000
+PAL 1 0xffffff
+
+CLS 0
+OUTM 1
+INPM 1
+
+; Declare variables
+NUM key 0
+NUM x 0
+NUM y 0
+NUM fgc 0
+NUM ctr_blink 0
+
+loop:
+	OUT 2 x y fgc 0 0
+	INP		key
+	CMP		key $key_up
+	CALL=	key_up_handler
+	CMP		key $key_down
+	CALL=	key_down_handler
+	CMP		key $key_right
+	CALL=	key_right_handler
+	CMP		key $key_left
+	CALL=	key_left_handler
+	INC ctr_blink
+	CMP ctr_blink 1000
+	JP!= loop
+	SET ctr_blink 0
+	INC fgc
+	CMP fgc 2
+	CALL= reset_fgc
+	JP loop
+	
+reset_fgc:
+	SET fgc 0
+	RET
+	
+key_up_handler:
+	DEC y
+	CLS 0
+	RET
+key_down_handler:
+	INC y
+	CLS 0
+	RET
+key_right_handler:
+	INC x
+	CLS 0
+	RET
+key_left_handler:
+	DEC x
+	CLS 0
+	RET

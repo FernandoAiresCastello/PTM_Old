@@ -13,42 +13,51 @@ using namespace TileGameLib;
 int main(int argc, char* argv[]) {
 
 	InitCommands();
-	CreateWindow();
 
-	Program* prog = new Program();
+	bool bootMenu = false;
 
-	if (argc > 1) {
-		std::string programFile = argv[1];
-		if (File::Exists(programFile)) {
-			prog->Load(programFile);
+	do {
+		if (!bootMenu)
+			CreateWindow();
+
+		Program* prog = new Program();
+
+		if (argc > 1) {
+			bootMenu = false;
+			std::string programFile = argv[1];
+			if (File::Exists(programFile)) {
+				prog->Load(programFile);
+			}
+			else {
+				MsgBox::Error(APP_NAME, String::Format(Error.ProgramFileNotFound, programFile.c_str()));
+				delete prog;
+				return 1;
+			}
 		}
 		else {
-			MsgBox::Error(APP_NAME, String::Format(Error.ProgramFileNotFound, programFile));
+			bootMenu = true;
+			std::string programFile = ShowBootMenu(Wnd.Ptr);
+			if (!programFile.empty()) {
+				prog->Load(programFile);
+			}
+			else {
+				delete prog;
+				return 0;
+			}
+		}
+
+		if (prog->Validate()) {
+			Wnd.Ptr->SetTitle("");
+			InitMachine(prog);
+			RunMachine();
+			DestroyMachine(!bootMenu);
+		}
+		else {
 			delete prog;
 			return 1;
 		}
-	}
-	else {
-		std::string programFile = ShowBootMenu(Wnd.Ptr);
-		if (!programFile.empty()) {
-			prog->Load(programFile);
-		}
-		else {
-			delete prog;
-			return 0;
-		}
-	}
 
-	if (prog->Validate()) {
-		Wnd.Ptr->SetTitle("");
-		InitMachine(prog);
-		RunMachine();
-		DestroyMachine();
-	}
-	else {
-		delete prog;
-		return 1;
-	}
+	} while (bootMenu);
 
 	return 0;
 }

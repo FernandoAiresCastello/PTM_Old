@@ -6,10 +6,14 @@ int SelectedIndex = 0;
 
 void PrintPath(TWindow* wnd, std::string path, int y, bool highlight)
 {
-	int x = 0;
+	int ch = 0;
+	int x = TChar::Width;
 	y *= TChar::Height;
 
-	auto ch = 0;
+	if (highlight)
+		wnd->DrawTile(16, 15, 0, 0, y, true);
+
+	path = " " + path;
 
 	for (int i = 0; i < wnd->Cols; i++) {
 		if (i < path.length()) {
@@ -31,7 +35,8 @@ void PrintPath(TWindow* wnd, std::string path, int y, bool highlight)
 
 std::string ShowBootMenu(TWindow* wnd)
 {
-	wnd->SetTitle(APP_NAME);
+	wnd->SetTitle(LONG_APP_NAME);
+
 	auto files = File::List(".", "*.ptml", false);
 	if (files.empty()) {
 		MsgBox::Error(APP_NAME, Error.NoProgramFound);
@@ -47,11 +52,11 @@ std::string ShowBootMenu(TWindow* wnd)
 		for (int i = 0; i < files.size(); i++) {
 			auto file = files[i];
 			auto name = String::GetFirstChars(file, file.length() - 5);
-			PrintPath(wnd, String::Format(" %s ", name.c_str()), i, i == SelectedIndex);
+			PrintPath(wnd, name, i, i == SelectedIndex);
 		}
 		wnd->Update();
 
-		SDL_Event e;
+		SDL_Event e = { 0 };
 		SDL_PollEvent(&e);
 		if (e.type == SDL_QUIT) {
 			return "";
