@@ -23,7 +23,7 @@ int main(int argc, char* argv[]) {
 			prog->Load(programFile);
 		}
 		else {
-			MsgBox::Error(APP_NAME, "Program file not found:\n\n" + programFile);
+			MsgBox::Error(APP_NAME, String::Format(Error.ProgramFileNotFound, programFile));
 			delete prog;
 			return 1;
 		}

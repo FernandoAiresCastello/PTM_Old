@@ -407,6 +407,20 @@ void ADD()
 	AssertVariableIsTypeNumber(b);
 	Vars[a].Number = Vars[b].Number + value;
 }
+void INC()
+{
+	Argc(1);
+	auto id = ArgVariableName(true);
+	AssertVariableIsTypeNumber(id);
+	Vars[id].Number++;
+}
+void DEC()
+{
+	Argc(1);
+	auto id = ArgVariableName(true);
+	AssertVariableIsTypeNumber(id);
+	Vars[id].Number--;
+}
 void CMP()
 {
 	Argc(2);
@@ -578,7 +592,7 @@ void INP()
 	Vars[id].Number = KeyPressed;
 	KeyPressed = 0;
 }
-void SSND()
+void SNDOFF()
 {
 	Argc(1);
 	auto value = ArgNumber();
@@ -740,6 +754,8 @@ void InitCommands()
 	
 	//=== MATH ===
 	Op["ADD"] = &ADD;			// Add to number variable
+	Op["INC"] = &INC;			// Increment variable by 1
+	Op["DEC"] = &DEC;			// Decrement variable by 1
 	
 	//=== DEBUG ===
 	Op["MSGB"] = &MSGB;			// Show message box
@@ -766,7 +782,7 @@ void InitCommands()
 	Op["INP"] = &INP;			// Get key pressed
 
 	//=== SOUND ===
-	Op["SSND"] = &SSND;			// Stop all currently playing sounds
+	Op["SNDOFF"] = &SNDOFF;		// Stop all currently playing sounds
 	Op["SWFT"] = &SWFT;			// Set waveform type
 	Op["VOL"] = &VOL;			// Set sound volume
 	Op["BEEP"] = &BEEP;			// Play a single beep

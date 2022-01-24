@@ -38,11 +38,11 @@ input_test_loop:
 	CALL=	key_right_handler
 	CMP		key $key_left
 	CALL=	key_left_handler
-	ADD ctr_blink ctr_blink 1
+	INC ctr_blink
 	CMP ctr_blink 1000
 	JP!= loop
 	SET ctr_blink 0
-	ADD fgc fgc 1
+	INC fgc
 	CMP fgc 2
 	CALL= reset_fgc
 loop:
@@ -51,19 +51,19 @@ reset_fgc:
 	SET fgc 0
 	RET
 key_up_handler:
-	ADD y y -1
+	DEC y
 	CLS 0
 	RET
 key_down_handler:
-	ADD y y 1
+	INC y
 	CLS 0
 	RET
 key_right_handler:
-	ADD x x 1
+	INC x
 	CLS 0
 	RET
 key_left_handler:
-	ADD x x -1
+	DEC x
 	CLS 0
 	RET
 
@@ -78,13 +78,13 @@ charset_test:
 
 charset_test_loop:
 	OUT c x y 15 0 1
-	ADD x x 1
-	ADD c c 1
+	INC x
+	INC c
 	CMP c 256
 	JP= end
 	CMP x 32
 	JP!= charset_test_loop
-	ADD y y 1
+	INC y
 	SET x 0
 	JP charset_test_loop
 
@@ -99,14 +99,14 @@ palette_test:
 
 palette_test_loop:
 	OUT 0 x y c c 1
-	ADD x x 1
+	INC x
 	OUT 0 x y c c 1
-	ADD c c 1
+	INC c
 	CMP c 256
 	JP= end
-	ADD x x 1
+	INC x
 	CMP x 32
 	JP!= palette_test_loop
-	ADD y y 1
+	INC y
 	SET x 0
 	JP palette_test_loop
