@@ -1,0 +1,20 @@
+OUTM 1
+OUTS "Press 1, 2 or 3..." 1 1 15 0 0
+NUM key 0
+
+loop:
+	INP key
+	CMP		key $KB.1
+	CALL=	key_1_handler
+	CMP		key $KB.2
+	CALL=	key_2_handler
+	CMP		key $KB.3
+	CALL=	key_3_handler
+	JP loop
+
+key_1_handler:
+	RUN "Default Charset.ptml"
+key_2_handler:
+	RUN "Default Palette.ptml"
+key_3_handler:
+	RUN "Directional Input.ptml"

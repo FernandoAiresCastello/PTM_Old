@@ -120,15 +120,16 @@ void ResetSystem()
 	}
 }
 
-void DestroySystem(bool destroyWindow)
+void DestroySystem()
 {
 	delete Snd;
 	Snd = nullptr;
+}
 
-	if (destroyWindow) {
-		delete Wnd.Ptr;
-		Wnd.Ptr = nullptr;
-	}
+void DestroyWindow()
+{
+	delete Wnd.Ptr;
+	Wnd.Ptr = nullptr;
 }
 
 void CreateWindow()
@@ -256,6 +257,12 @@ void HALT()
 {
 	Argc(0);
 	while (!Exit);
+}
+void RUN()
+{
+	Argc(1);
+	Exit = true;
+	NewProgram = ArgString();
 }
 void NUM()
 {
@@ -795,8 +802,8 @@ void InitCommands()
 	Op["CMP"] = &CMP;			// Compare two numeric values
 
 	//=== PROGRAM FLOW ===
-	Op["EXIT"] = &EXIT;			// Exit program normally
-	Op["HALT"] = &HALT;			// Stop program execution
+	Op["EXIT"] = &EXIT;			// End program and close window
+	Op["HALT"] = &HALT;			// End program but keep window open
 	Op["JP"] = &JP;				// Jump
 	Op["JP="] = &JP_E;			// Jump if equal
 	Op["JP!="] = &JP_NE;		// Jump if not equal
@@ -813,6 +820,7 @@ void InitCommands()
 	Op["CALL<="] = &CALL_LE;	// Call if less or equal
 	Op["RET"] = &RET;			// Return
 	Op["PAUSE"] = &PAUSE;		// Pause program execution
+	Op["RUN"] = &RUN;			// Reset machine with a different program
 	
 	//=== MATH ===
 	Op["ADD"] = &ADD;			// Add to number variable

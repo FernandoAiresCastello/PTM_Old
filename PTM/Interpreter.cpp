@@ -18,6 +18,7 @@ int IxArg = 0;
 bool Branch = false;
 SDL_Event Event = { 0 };
 std::stack<int> CallStack;
+std::string NewProgram = "";
 
 void InitMachine(Program* prog)
 {
@@ -46,9 +47,9 @@ void ResetMachine()
 	ResetSystem();
 }
 
-void DestroyMachine(bool destroyWindow)
+void DestroyMachine()
 {
-	DestroySystem(destroyWindow);
+	DestroySystem();
 	delete Prog;
 	Prog = nullptr;
 }

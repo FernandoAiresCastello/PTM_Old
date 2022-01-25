@@ -33,16 +33,8 @@ void PrintPath(TWindow* wnd, std::string path, int y, bool highlight)
 	}
 }
 
-std::string ShowBootMenu(TWindow* wnd)
+std::string ShowBootMenu(TWindow* wnd, std::vector<std::string>& files)
 {
-	wnd->SetTitle(LONG_APP_NAME);
-
-	auto files = File::List(".", "*.ptml", false);
-	if (files.empty()) {
-		MsgBox::Error(APP_NAME, Error.NoProgramFound);
-		return "";
-	}
-
 	std::string selectedFile = "";
 
 	while (selectedFile.empty()) {

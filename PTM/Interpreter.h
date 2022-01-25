@@ -10,10 +10,11 @@ using namespace TileGameLib;
 extern bool Exit;
 extern std::map<std::string, void(*)()> Op;
 extern ErrorMessages Error;
+extern std::string NewProgram;
 
 void InitMachine(Program* prog);
 void ResetMachine();
-void DestroyMachine(bool destroyWindow);
+void DestroyMachine();
 void RunMachine();
 int RunMachineThread(void* dummy);
 bool IsValidOpcode(std::string& opcode);
