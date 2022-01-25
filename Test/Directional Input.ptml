@@ -10,9 +10,10 @@ CHR 2 5 0b10111101
 CHR 2 6 0b10000001
 CHR 2 7 0b11111111
 
-; Define black and white palette
+; Define colors
 PAL 0 0x000000
-PAL 1 0xffffff
+PAL 1 0x808080
+PAL 2 0xffffff
 
 CLS 0
 OUTM 1
@@ -22,31 +23,31 @@ INPM 1
 NUM key 0
 NUM x 0
 NUM y 0
-NUM fgc 0
+NUM fgc 1
 NUM ctr_blink 0
 
 loop:
 	OUT 2 x y fgc 0 0
 	INP		key
-	CMP		key $key_up
+	CMP		key $KB.UP
 	CALL=	key_up_handler
-	CMP		key $key_down
+	CMP		key $KB.DOWN
 	CALL=	key_down_handler
-	CMP		key $key_right
+	CMP		key $KB.RIGHT
 	CALL=	key_right_handler
-	CMP		key $key_left
+	CMP		key $KB.LEFT
 	CALL=	key_left_handler
 	INC ctr_blink
 	CMP ctr_blink 1000
 	JP!= loop
 	SET ctr_blink 0
 	INC fgc
-	CMP fgc 2
+	CMP fgc 3
 	CALL= reset_fgc
 	JP loop
 	
 reset_fgc:
-	SET fgc 0
+	SET fgc 1
 	RET
 	
 key_up_handler:

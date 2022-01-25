@@ -15,15 +15,74 @@ void InitSystem()
 
 void InitSystemVars()
 {
-	AddSystemVar("version", APP_VERSION);
-	AddSystemVar("cols", Wnd.BufWidth / TChar::Width);
-	AddSystemVar("rows", Wnd.BufHeight / TChar::Height);
-	AddSystemVar("width", Wnd.BufWidth);
-	AddSystemVar("height", Wnd.BufHeight);
-	AddSystemVar("key_up", SDLK_UP);
-	AddSystemVar("key_down", SDLK_DOWN);
-	AddSystemVar("key_left", SDLK_LEFT);
-	AddSystemVar("key_right", SDLK_RIGHT);
+	AddSystemVar("PTM.VERSION", APP_VERSION);
+	AddSystemVar("WND.COLS", Wnd.BufWidth / TChar::Width);
+	AddSystemVar("WND.ROWS", Wnd.BufHeight / TChar::Height);
+	AddSystemVar("WND.WIDTH", Wnd.BufWidth);
+	AddSystemVar("WND.HEIGHT", Wnd.BufHeight);
+	AddSystemVar("KB.UP", SDLK_UP);
+	AddSystemVar("KB.DOWN", SDLK_DOWN);
+	AddSystemVar("KB.LEFT", SDLK_LEFT);
+	AddSystemVar("KB.RIGHT", SDLK_RIGHT);
+	AddSystemVar("KB.SPACE", SDLK_SPACE);
+	AddSystemVar("KB.RETURN", SDLK_RETURN);
+	AddSystemVar("KB.ESC", SDLK_ESCAPE);
+	AddSystemVar("KB.TAB", SDLK_TAB);
+	AddSystemVar("KB.BS", SDLK_BACKSPACE);
+	AddSystemVar("KB.INS", SDLK_INSERT);
+	AddSystemVar("KB.DEL", SDLK_DELETE);
+	AddSystemVar("KB.HOME", SDLK_HOME);
+	AddSystemVar("KB.END", SDLK_END);
+	AddSystemVar("KB.PGUP", SDLK_PAGEUP);
+	AddSystemVar("KB.PGDN", SDLK_PAGEDOWN);
+	AddSystemVar("KB.F1", SDLK_F1);
+	AddSystemVar("KB.F2", SDLK_F2);
+	AddSystemVar("KB.F3", SDLK_F3);
+	AddSystemVar("KB.F4", SDLK_F4);
+	AddSystemVar("KB.F5", SDLK_F5);
+	AddSystemVar("KB.F6", SDLK_F6);
+	AddSystemVar("KB.F7", SDLK_F7);
+	AddSystemVar("KB.F8", SDLK_F8);
+	AddSystemVar("KB.F9", SDLK_F9);
+	AddSystemVar("KB.F10", SDLK_F10);
+	AddSystemVar("KB.F11", SDLK_F11);
+	AddSystemVar("KB.F12", SDLK_F12);
+	AddSystemVar("KB.1", SDLK_1);
+	AddSystemVar("KB.2", SDLK_2);
+	AddSystemVar("KB.3", SDLK_3);
+	AddSystemVar("KB.4", SDLK_4);
+	AddSystemVar("KB.5", SDLK_5);
+	AddSystemVar("KB.6", SDLK_6);
+	AddSystemVar("KB.7", SDLK_7);
+	AddSystemVar("KB.8", SDLK_8);
+	AddSystemVar("KB.9", SDLK_9);
+	AddSystemVar("KB.0", SDLK_0);
+	AddSystemVar("KB.Q", SDLK_q);
+	AddSystemVar("KB.U", SDLK_u);
+	AddSystemVar("KB.E", SDLK_e);
+	AddSystemVar("KB.R", SDLK_r);
+	AddSystemVar("KB.T", SDLK_t);
+	AddSystemVar("KB.Y", SDLK_y);
+	AddSystemVar("KB.U", SDLK_u);
+	AddSystemVar("KB.I", SDLK_i);
+	AddSystemVar("KB.O", SDLK_o);
+	AddSystemVar("KB.P", SDLK_p);
+	AddSystemVar("KB.A", SDLK_a);
+	AddSystemVar("KB.S", SDLK_s);
+	AddSystemVar("KB.D", SDLK_d);
+	AddSystemVar("KB.F", SDLK_f);
+	AddSystemVar("KB.G", SDLK_g);
+	AddSystemVar("KB.H", SDLK_h);
+	AddSystemVar("KB.J", SDLK_j);
+	AddSystemVar("KB.K", SDLK_k);
+	AddSystemVar("KB.L", SDLK_l);
+	AddSystemVar("KB.Z", SDLK_z);
+	AddSystemVar("KB.X", SDLK_x);
+	AddSystemVar("KB.C", SDLK_c);
+	AddSystemVar("KB.V", SDLK_v);
+	AddSystemVar("KB.B", SDLK_b);
+	AddSystemVar("KB.N", SDLK_n);
+	AddSystemVar("KB.M", SDLK_m);
 }
 
 void AddSystemVar(std::string name, int value)
@@ -32,7 +91,7 @@ void AddSystemVar(std::string name, int value)
 	var.Type = VariableType::Number;
 	var.Number = value;
 	var.String = String::ToString(value);
-	Vars["$" + name] = var;
+	Vars["$" + String::ToUpper(name)] = var;
 }
 
 void AddSystemVar(std::string name, std::string value)
@@ -41,7 +100,7 @@ void AddSystemVar(std::string name, std::string value)
 	var.Type = VariableType::String;
 	var.String = value;
 	var.Number = String::ToInt(value);
-	Vars["$" + name] = var;
+	Vars["$" + String::ToUpper(name)] = var;
 }
 
 void ResetSystem()
