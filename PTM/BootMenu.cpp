@@ -3,15 +3,18 @@
 #include "ErrorMessages.h"
 
 int SelectedIndex = 0;
+int CursorChar = 16;
+int ActiveForeColor = 15;
+int InactiveForeColor = 7;
+int BackColor = 0x80;
 
 void PrintPath(TWindow* wnd, std::string path, int y, bool highlight)
 {
 	int ch = 0;
-	int x = TChar::Width;
-	y *= TChar::Height;
+	int x = 0;
 
 	if (highlight)
-		wnd->DrawTile(16, 15, 0, 0, y, true);
+		wnd->DrawTile(CursorChar, ActiveForeColor, InactiveForeColor, 0, y, true, true);
 
 	path = " " + path;
 
@@ -19,26 +22,21 @@ void PrintPath(TWindow* wnd, std::string path, int y, bool highlight)
 		if (i < path.length()) {
 			ch = path[i];
 			if (highlight)
-				wnd->DrawTile(ch, 0, 15, x, y, false);
+				wnd->DrawTile(ch, ActiveForeColor, BackColor, x, y, true, true);
 			else
-				wnd->DrawTile(ch, 15, 0, x, y, false);
+				wnd->DrawTile(ch, InactiveForeColor, BackColor, x, y, true, true);
 		}
-		else {
-			if (highlight)
-				wnd->DrawTile(0, 0, 15, x, y, false);
-			else
-				wnd->DrawTile(0, 15, 0, x, y, false);
-		}
-		x += TChar::Width;
+		x++;
 	}
 }
 
 std::string ShowBootMenu(TWindow* wnd, std::vector<std::string>& files)
 {
 	std::string selectedFile = "";
-
+	wnd->SetPixelSize(2, 2);
+	
 	while (selectedFile.empty()) {
-		wnd->SetBackColor(0);
+		wnd->SetBackColor(BackColor);
 		wnd->Clear();
 
 		for (int i = 0; i < files.size(); i++) {

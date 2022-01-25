@@ -11,9 +11,9 @@ using namespace CppUtils;
 using namespace TileGameLib;
 
 int main(int argc, char* argv[]) {
-
+	
 	InitCommands();
-	CreateWindow();
+	CreateWindow(800, 600);
 	
 	bool bootMenu = false;
 	bool destroyWindowAndExit = false;
@@ -64,7 +64,6 @@ int main(int argc, char* argv[]) {
 		}
 
 		if (prog->Validate()) {
-			Wnd.Ptr->SetTitle("");
 			InitMachine(prog);
 			RunMachine();
 			DestroyMachine();

@@ -15,11 +15,6 @@ void InitSystem()
 
 void InitSystemVars()
 {
-	AddSystemVar("PTM.VERSION", APP_VERSION);
-	AddSystemVar("WND.COLS", Wnd.BufWidth / TChar::Width);
-	AddSystemVar("WND.ROWS", Wnd.BufHeight / TChar::Height);
-	AddSystemVar("WND.WIDTH", Wnd.BufWidth);
-	AddSystemVar("WND.HEIGHT", Wnd.BufHeight);
 	AddSystemVar("KB.UP", SDLK_UP);
 	AddSystemVar("KB.DOWN", SDLK_DOWN);
 	AddSystemVar("KB.LEFT", SDLK_LEFT);
@@ -115,6 +110,9 @@ void ResetSystem()
 	if (Wnd.Ptr) {
 		Wnd.Pal->InitDefault();
 		Wnd.Chr->InitDefault();
+		Wnd.Ptr->SetTitle("");
+		Wnd.Ptr->SetBackColor(0);
+		Wnd.Ptr->SetPixelSize(2, 2);
 		Wnd.Ptr->Clear();
 		Wnd.Ptr->Update();
 	}
@@ -132,22 +130,14 @@ void DestroyWindow()
 	Wnd.Ptr = nullptr;
 }
 
-void CreateWindow()
+void CreateWindow(int width, int height)
 {
 	if (Wnd.Ptr) {
 		Abort(Error.WindowAlreadyOpen);
 		return;
 	}
 
-	Wnd.BufWidth = 256;
-	Wnd.BufHeight = 192;
-	Wnd.WndWidth = 768;
-	Wnd.WndHeight = 576;
-
-	Wnd.Ptr = new TWindow(
-		Wnd.BufWidth, Wnd.BufHeight,
-		Wnd.WndWidth, Wnd.WndHeight, false);
-
+	Wnd.Ptr = new TWindow(width, height, width, height, false);
 	Wnd.Pal = Wnd.Ptr->GetPalette();
 	Wnd.Chr = Wnd.Ptr->GetCharset();
 }
@@ -165,12 +155,8 @@ void UpdateWindow()
 		Wnd.Ptr->SetFullscreen(Wnd.FullScreenRequest);
 		Wnd.FullScreenRequest = -1;
 	}
-	if (Wnd.AutoUpdate) {
-		Wnd.Ptr->Update();
-	}
-	else {
-		SDL_Delay(1);
-	}
+
+	Wnd.Ptr->Update();
 }
 
 void Print(std::string str, int x, int y)
@@ -193,7 +179,7 @@ void Print(std::string str, int x, int y)
 			}
 		}
 		else {
-			Wnd.Ptr->DrawTile(tile, 15, 0, x, y, true);
+			Wnd.Ptr->DrawTile(tile, 15, 0, x, y, true, true);
 			x += TChar::Width;
 		}
 	}
@@ -408,8 +394,8 @@ void OUT()
 {
 	Argc(6);
 	auto tile = ArgNumber();
-	auto x = Wnd.OutMode == OutputMode::Free ? ArgNumber() : ArgNumber() * TChar::Width;
-	auto y = Wnd.OutMode == OutputMode::Free ? ArgNumber() : ArgNumber() * TChar::Width;
+	auto x = ArgNumber();
+	auto y = ArgNumber();
 	auto fgc = ArgNumber();
 	auto bgc = ArgNumber();
 	auto transparent = ArgNumber() <= 0;
@@ -418,14 +404,14 @@ void OUT()
 	AssertPaletteIndex(fgc);
 	AssertPaletteIndex(bgc);
 
-	Wnd.Ptr->DrawTile(tile, fgc, bgc, x, y, transparent);
+	Wnd.Ptr->DrawTile(tile, fgc, bgc, x, y, transparent, Wnd.OutMode == OutputMode::Tiled);
 }
 void OUTS()
 {
 	Argc(6);
 	auto str = ArgString();
-	auto x = Wnd.OutMode == OutputMode::Free ? ArgNumber() : ArgNumber() * TChar::Width;
-	auto y = Wnd.OutMode == OutputMode::Free ? ArgNumber() : ArgNumber() * TChar::Width;
+	auto x = ArgNumber();
+	auto y = ArgNumber();
 	auto fgc = ArgNumber();
 	auto bgc = ArgNumber();
 	auto transparent = ArgNumber() <= 0;
@@ -443,12 +429,12 @@ void OUTS()
 			i++;
 			if (str[i] == 'n') {
 				x = px;
-				y += TChar::Height;
+				y++;
 			}
 		}
 		else {
-			Wnd.Ptr->DrawTile(tile, fgc, bgc, x, y, transparent);
-			x += TChar::Width;
+			Wnd.Ptr->DrawTile(tile, fgc, bgc, x, y, transparent, Wnd.OutMode == OutputMode::Tiled);
+			x++;
 		}
 	}
 }
@@ -462,7 +448,7 @@ void FLS()
 
 	for (int y = 0; y < Wnd.Ptr->Rows; y++) {
 		for (int x = 0; x < Wnd.Ptr->Cols; x++) {
-			Wnd.Ptr->DrawTile(tile, fgc, bgc, x * TChar::Width, y * TChar::Height, transparent);
+			Wnd.Ptr->DrawTile(tile, fgc, bgc, x * TChar::Width, y * TChar::Height, transparent, true);
 		}
 	}
 }
@@ -590,10 +576,12 @@ void FWND()
 	Argc(1);
 	Wnd.FullScreenRequest = ArgNumber() > 0;
 }
-void UPDS()
+void PIXL()
 {
-	Argc(1);
-	Wnd.AutoUpdate = ArgNumber() > 0;
+	Argc(2);
+	int w = ArgNumber();
+	int h = ArgNumber();
+	Wnd.Ptr->SetPixelSize(w, h);
 }
 void CLS()
 {
@@ -835,7 +823,7 @@ void InitCommands()
 
 	//=== GRAPHICS ===
 	Op["FWND"] = &FWND;			// Enable/disable fullscreen mode
-	Op["UPDS"] = &UPDS;			// Enable/disable automatic screen update
+	Op["PIXL"] = &PIXL;			// Set pixel aspect
 	Op["CLS"] = &CLS;			// Clear screen
 	Op["OUTM"] = &OUTM;			// Select output mode
 	Op["OUT"] = &OUT;			// Output tile to screen

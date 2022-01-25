@@ -1,5 +1,6 @@
 ; This program will display the default color palette
 
+PIXL 3 3
 OUTM 1
 OUTS "Default Palette" 0 0 10 0 0
 NUM c 0
