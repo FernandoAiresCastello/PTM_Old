@@ -85,9 +85,7 @@
     </Link>
     <PostBuildEvent>
       <Command>del "$(SolutionDir)Binaries\$(TargetFileName)"
-copy "$(TargetPath)" "$(SolutionDir)Binaries\$(TargetFileName)"
-del "$(SolutionDir)Debug\*.ptml"
-xcopy "$(SolutionDir)Test\*.*" "$(SolutionDir)Debug\" /Y</Command>
+copy "$(TargetPath)" "$(SolutionDir)Binaries\$(TargetFileName)"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -135,7 +133,6 @@ xcopy "$(SolutionDir)Test\*.*" "$(SolutionDir)Debug\" /Y</Command>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="BootMenu.cpp" />
     <ClCompile Include="ErrorMessages.cpp" />
     <ClCompile Include="System.cpp" />
     <ClCompile Include="Interpreter.cpp" />
@@ -143,7 +140,6 @@ xcopy "$(SolutionDir)Test\*.*" "$(SolutionDir)Debug\" /Y</Command>
     <ClCompile Include="Program.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="BootMenu.h" />
     <ClInclude Include="Command.h" />
     <ClInclude Include="ErrorMessages.h" />
     <ClInclude Include="GlobalDefs.h" />

@@ -6,14 +6,13 @@
 #include "Interpreter.h"
 #include "System.h"
 #include "ErrorMessages.h"
-#include "BootMenu.h"
 using namespace CppUtils;
 using namespace TileGameLib;
 
 int main(int argc, char* argv[]) {
 	
 	InitCommands();
-	CreateWindow(800, 600);
+	CreateWindow(800, 600, 3, 3);
 	
 	bool bootMenu = false;
 	bool destroyWindowAndExit = false;
@@ -38,29 +37,10 @@ int main(int argc, char* argv[]) {
 			}
 		}
 		else { // User started machine without providing a program file
-			auto files = File::List(".", "*.ptml", false);
-
-			if (files.empty()) { // There are no program files around, will abort immediately
-				MsgBox::Error(APP_NAME, Error.NoProgramFound);
-				DestroyWindow();
-				delete prog;
-				return EXIT_FAILURE;
-			}
-			else if (files.size() == 1) { // There is only 1 program file, will run it automatically
-				prog->Load(files[0]);
-			}
-			else { // There are multiple program files, start boot menu
-				bootMenu = true;
-				std::string programFile = ShowBootMenu(Wnd.Ptr, files);
-				if (!programFile.empty()) {
-					prog->Load(programFile);
-				}
-				else {
-					DestroyWindow();
-					delete prog;
-					return EXIT_SUCCESS;
-				}
-			}
+			MsgBox::Error(APP_NAME, Error.ProgramFileNotSpecified);
+			DestroyWindow();
+			delete prog;
+			return EXIT_FAILURE;
 		}
 
 		if (prog->Validate()) {

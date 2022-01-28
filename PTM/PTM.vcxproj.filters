@@ -16,9 +16,6 @@
     <ClCompile Include="Main.cpp">
       <Filter>Sources\Boot</Filter>
     </ClCompile>
-    <ClCompile Include="BootMenu.cpp">
-      <Filter>Sources\Boot</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ProgramLine.h">
@@ -53,9 +50,6 @@
     </ClInclude>
     <ClInclude Include="GlobalDefs.h">
       <Filter>Sources\Shared</Filter>
-    </ClInclude>
-    <ClInclude Include="BootMenu.h">
-      <Filter>Sources\Boot</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

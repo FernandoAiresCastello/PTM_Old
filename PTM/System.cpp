@@ -5,6 +5,8 @@ int KeyPressed = 0;
 int CmpResult = 0;
 SystemWindow Wnd;
 TSound* Snd = nullptr;
+int DefaultPixelWidth = 0;
+int DefaultPixelHeight = 0;
 
 void InitSystem()
 {
@@ -112,7 +114,7 @@ void ResetSystem()
 		Wnd.Chr->InitDefault();
 		Wnd.Ptr->SetTitle("");
 		Wnd.Ptr->SetBackColor(0);
-		Wnd.Ptr->SetPixelSize(2, 2);
+		Wnd.Ptr->SetPixelSize(DefaultPixelWidth, DefaultPixelHeight);
 		Wnd.Ptr->Clear();
 		Wnd.Ptr->Update();
 	}
@@ -130,14 +132,18 @@ void DestroyWindow()
 	Wnd.Ptr = nullptr;
 }
 
-void CreateWindow(int width, int height)
+void CreateWindow(int width, int height, int pixelWidth, int pixelHeight)
 {
 	if (Wnd.Ptr) {
 		Abort(Error.WindowAlreadyOpen);
 		return;
 	}
 
+	DefaultPixelWidth = pixelWidth;
+	DefaultPixelHeight = pixelHeight;
+
 	Wnd.Ptr = new TWindow(width, height, width, height, false);
+	Wnd.Ptr->SetPixelSize(pixelWidth, pixelHeight);
 	Wnd.Pal = Wnd.Ptr->GetPalette();
 	Wnd.Chr = Wnd.Ptr->GetCharset();
 }

@@ -16,9 +16,6 @@ PAL 1 0x808080
 PAL 2 0xffffff
 
 CLS 0
-PIXL 3 3
-OUTM 1
-INPM 1
 
 ; Declare variables
 NUM key 0
