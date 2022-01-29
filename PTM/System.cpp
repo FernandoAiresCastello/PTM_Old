@@ -468,6 +468,62 @@ void ADD()
 	AssertVariableIsTypeNumber(b);
 	Vars[a].Number = Vars[b].Number + value;
 }
+void SUB()
+{
+	Argc(3);
+	auto a = ArgVariableName(true);
+	auto b = ArgVariableName(true);
+	auto value = ArgNumber();
+	AssertVariableIsTypeNumber(a);
+	AssertVariableIsTypeNumber(b);
+	Vars[a].Number = Vars[b].Number - value;
+}
+void MUL()
+{
+	Argc(3);
+	auto a = ArgVariableName(true);
+	auto b = ArgVariableName(true);
+	auto value = ArgNumber();
+	AssertVariableIsTypeNumber(a);
+	AssertVariableIsTypeNumber(b);
+	Vars[a].Number = Vars[b].Number * value;
+}
+void DIV()
+{
+	Argc(3);
+	auto a = ArgVariableName(true);
+	auto b = ArgVariableName(true);
+	auto value = ArgNumber();
+	if (value == 0) {
+		Abort("Division by zero");
+		return;
+	}
+	AssertVariableIsTypeNumber(a);
+	AssertVariableIsTypeNumber(b);
+	Vars[a].Number = Vars[b].Number / value;
+}
+void MOD()
+{
+	Argc(3);
+	auto a = ArgVariableName(true);
+	auto b = ArgVariableName(true);
+	auto value = ArgNumber();
+	if (value == 0) {
+		Abort("Division by zero");
+		return;
+	}
+	AssertVariableIsTypeNumber(a);
+	AssertVariableIsTypeNumber(b);
+	Vars[a].Number = Vars[b].Number % value;
+}
+void SQRT()
+{
+	Argc(3);
+	auto a = ArgVariableName(true);
+	auto value = ArgNumber();
+	AssertVariableIsTypeNumber(a);
+	Vars[a].Number = floor(sqrt(value));
+}
 void INC()
 {
 	Argc(1);
@@ -577,12 +633,12 @@ void RET()
 	Argc(0);
 	Return();
 }
-void FWND()
+void FSCR()
 {
 	Argc(1);
 	Wnd.FullScreenRequest = ArgNumber() > 0;
 }
-void PIXL()
+void SCRM()
 {
 	Argc(2);
 	int w = ArgNumber();
@@ -817,9 +873,14 @@ void InitCommands()
 	Op["RUN"] = &RUN;			// Reset machine with a different program
 	
 	//=== MATH ===
-	Op["ADD"] = &ADD;			// Add to number variable
-	Op["INC"] = &INC;			// Increment variable by 1
-	Op["DEC"] = &DEC;			// Decrement variable by 1
+	Op["ADD"] = &ADD;			// Add
+	Op["SUB"] = &SUB;			// Subtract
+	Op["MUL"] = &MUL;			// Multiply
+	Op["DIV"] = &DIV;			// Divide
+	Op["MOD"] = &MOD;			// Divide and get remainder
+	Op["SQRT"] = &SQRT;			// Square root
+	Op["INC"] = &INC;			// Increment by 1
+	Op["DEC"] = &DEC;			// Decrement by 1
 	
 	//=== DEBUG ===
 	Op["MSGB"] = &MSGB;			// Show message box
@@ -828,8 +889,8 @@ void InitCommands()
 	Op["TITLE"] = &TITLE;		// Set window title
 
 	//=== GRAPHICS ===
-	Op["FWND"] = &FWND;			// Enable/disable fullscreen mode
-	Op["PIXL"] = &PIXL;			// Set pixel aspect
+	Op["FSCR"] = &FSCR;			// Enable/disable fullscreen mode
+	Op["SCRM"] = &SCRM;			// Set screen mode (pixel aspect)
 	Op["CLS"] = &CLS;			// Clear screen
 	Op["OUTM"] = &OUTM;			// Select output mode
 	Op["OUT"] = &OUT;			// Output tile to screen

@@ -44,9 +44,9 @@ int main(int argc, char* argv[]) {
 		}
 
 		if (prog->Validate()) {
-			InitMachine(prog);
-			RunMachine();
-			DestroyMachine();
+			InitInterpreter(prog);
+			RunInterpreter();
+			DestroyInterpreter();
 			destroyWindowAndExit = !bootMenu && NewProgram.empty();
 		}
 		else {

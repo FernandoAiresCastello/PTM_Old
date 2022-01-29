@@ -12,11 +12,11 @@ extern std::map<std::string, void(*)()> Op;
 extern ErrorMessages Error;
 extern std::string NewProgram;
 
-void InitMachine(Program* prog);
-void ResetMachine();
-void DestroyMachine();
-void RunMachine();
-int RunMachineThread(void* dummy);
+void InitInterpreter(Program* prog);
+void ResetInterpreter();
+void DestroyInterpreter();
+void RunInterpreter();
+int RunInterpreterThread(void* dummy);
 bool IsValidOpcode(std::string& opcode);
 void Abort(std::string msg, bool printInfo = true);
 void ProcessGlobalEvents();

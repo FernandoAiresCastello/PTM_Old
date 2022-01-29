@@ -20,16 +20,16 @@ SDL_Event Event = { 0 };
 std::stack<int> CallStack;
 std::string NewProgram = "";
 
-void InitMachine(Program* prog)
+void InitInterpreter(Program* prog)
 {
 	if (prog != Prog)
 		delete Prog;
 	
 	Prog = prog;
-	ResetMachine();
+	ResetInterpreter();
 }
 
-void ResetMachine()
+void ResetInterpreter()
 {
 	Util::Randomize();
 
@@ -47,14 +47,14 @@ void ResetMachine()
 	ResetSystem();
 }
 
-void DestroyMachine()
+void DestroyInterpreter()
 {
 	DestroySystem();
 	delete Prog;
 	Prog = nullptr;
 }
 
-void RunMachine()
+void RunInterpreter()
 {
 	InitSystem();
 
@@ -65,11 +65,11 @@ void RunMachine()
 		UpdateWindow();
 
 		if (!thread)
-			thread = SDL_CreateThread(RunMachineThread, "RunMachineThread", nullptr);
+			thread = SDL_CreateThread(RunInterpreterThread, "RunMachineThread", nullptr);
 	}
 }
 
-int RunMachineThread(void* dummy)
+int RunInterpreterThread(void* dummy)
 {
 	while (!Exit) {
 		CurLine = &Prog->Lines[IxCurLine];
