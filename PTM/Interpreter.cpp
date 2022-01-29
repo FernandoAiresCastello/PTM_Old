@@ -134,6 +134,11 @@ void ProcessGlobalEvents()
 				Wnd.Ptr->ToggleFullscreen();
 				Wnd.Ptr->Update();
 			}
+			// Reset
+			else if (TKey::Ctrl() && key == SDLK_r) {
+				NewProgram = Prog->GetFilePath();
+				Exit = true;
+			}
 			// Force exit
 			else if (TKey::Ctrl() && key == SDLK_x) {
 				Exit = true;

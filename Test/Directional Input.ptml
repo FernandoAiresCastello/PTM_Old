@@ -26,15 +26,17 @@ NUM ctr_blink 0
 
 loop:
 	OUT 2 x y fgc 0 0
-	INP		key
-	CMP		key $KB.UP
-	CALL=	key_up_handler
-	CMP		key $KB.DOWN
-	CALL=	key_down_handler
-	CMP		key $KB.RIGHT
-	CALL=	key_right_handler
-	CMP		key $KB.LEFT
-	CALL=	key_left_handler
+	INP key
+	CMP key $KB.UP
+	CALL= key_up_handler
+	CMP key $KB.DOWN
+	CALL= key_down_handler
+	CMP key $KB.RIGHT
+	CALL= key_right_handler
+	CMP key $KB.LEFT
+	CALL= key_left_handler
+	CMP key $KB.ESC
+	CALL= reset
 	INC ctr_blink
 	CMP ctr_blink 1000
 	JP!= loop
@@ -64,3 +66,6 @@ key_left_handler:
 	DEC x
 	CLS 0
 	RET
+
+reset:
+	RESET

@@ -11,7 +11,6 @@ int DefaultPixelHeight = 0;
 void InitSystem()
 {
 	Snd = new TSound();
-
 	InitSystemVars();
 }
 
@@ -255,6 +254,12 @@ void RUN()
 	Argc(1);
 	Exit = true;
 	NewProgram = ArgString();
+}
+void RESET()
+{
+	Argc(0);
+	Exit = true;
+	NewProgram = Prog->GetFilePath();
 }
 void NUM()
 {
@@ -870,6 +875,7 @@ void InitCommands()
 	Op["CALL<="] = &CALL_LE;	// Call if less or equal
 	Op["RET"] = &RET;			// Return
 	Op["PAUSE"] = &PAUSE;		// Pause program execution
+	Op["RESET"] = &RESET;		// Reset machine
 	Op["RUN"] = &RUN;			// Reset machine with a different program
 	
 	//=== MATH ===

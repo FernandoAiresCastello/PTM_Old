@@ -53,6 +53,11 @@ void Program::Load(std::string& path)
 	}
 }
 
+std::string Program::GetFilePath()
+{
+	return FilePath;
+}
+
 ProgramLine Program::Parse(int srcLineNr, std::string& srcLine)
 {
 	ProgramLine line;
