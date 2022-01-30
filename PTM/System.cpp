@@ -801,6 +801,14 @@ void WRITE()
 	auto filePath = ArgString();
 	File::WriteText(filePath, data);
 }
+void WRITE_ARRAY()
+{
+	Argc(2);
+	auto id = ArgVariableName(true);
+	AssertVariableIsTypeNumberArray(id);
+	auto path = ArgString();
+	File::WriteBytes(path, Vars[id].NumberArray);
+}
 void DEL()
 {
 	Argc(1);
@@ -846,10 +854,10 @@ void InitCommands()
 	Op["SYS"] = &SYS;			// Call internal system function
 
 	//=== VARIABLES ===
-	Op["NUM"] = &NUM;			// Declare variable as number
-	Op["STR"] = &STR;			// Declare variable as string
-	Op["NUM[]"] = &NUM_ARRAY;	// Declare variable as number array
-	Op["STR[]"] = &STR_ARRAY;	// Declare variable as string array
+	Op["VAR"] = &NUM;			// Declare variable as number
+	Op["VAR$"] = &STR;			// Declare variable as string
+	Op["VAR[]"] = &NUM_ARRAY;	// Declare variable as number array
+	Op["VAR$[]"] = &STR_ARRAY;	// Declare variable as string array
 	Op["SET"] = &SET;			// Set value to variable
 	Op["PUSH"] = &PUSH;			// Push value into array
 	Op["COUNT"] = &COUNT;		// Get number of items in array
@@ -924,6 +932,7 @@ void InitCommands()
 	Op["READ"] = &READ;			// Read file into string
 	Op["READ[]"] = &READ_ARRAY;	// Read file bytes into number array
 	Op["WRITE"] = &WRITE;		// Write string to file
+	Op["WRIT[]"] = &WRITE_ARRAY;// Write bytes from number array to file
 	Op["DEL"] = &DEL;			// Delete file
 
 	//=== STRING ===

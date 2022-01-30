@@ -1,10 +1,10 @@
 ; This program will display the default character set
 
 OUTS "Default Charset" 0 0 10 0 0
-NUM c 0
-NUM x 0
-NUM y 2
-NUM key 0
+VAR c 0
+VAR x 0
+VAR y 2
+VAR key 0
 
 loop:
 	OUT c x y 15 0 1

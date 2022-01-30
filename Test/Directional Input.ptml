@@ -18,11 +18,11 @@ PAL 2 0xffffff
 CLS 0
 
 ; Declare variables
-NUM key 0
-NUM x 0
-NUM y 0
-NUM fgc 1
-NUM ctr_blink 0
+VAR key 0
+VAR x 0
+VAR y 0
+VAR fgc 1
+VAR ctr_blink 0
 
 loop:
 	OUT 2 x y fgc 0 0

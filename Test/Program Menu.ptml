@@ -1,6 +1,6 @@
 
 OUTS "Press 1, 2 or 3..." 1 1 15 0 0
-NUM key 0
+VAR key 0
 
 loop:
 	INP key
