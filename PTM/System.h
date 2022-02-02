@@ -34,8 +34,8 @@ extern SystemWindow Wnd;
 
 void InitSystem();
 void InitSystemVars();
-void AddSystemVar(std::string name, int value);
-void AddSystemVar(std::string name, std::string value);
+void SetSystemVar(std::string name, int value);
+void SetSystemVar(std::string name, std::string value);
 void ResetSystem();
 void DestroySystem();
 void DestroyWindow();

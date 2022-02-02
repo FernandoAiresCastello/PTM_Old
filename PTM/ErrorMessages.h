@@ -30,6 +30,7 @@ struct ErrorMessages {
 	cstr InvalidPaletteIndex = "Invalid palette index: %i";
 	cstr SystemFunctionNotFound = "Unrecognized system function call";
 	cstr IllegalVariableName = "Illegal variable name";
+	cstr InvalidGraphicsMode = "Invalid graphics mode: %i";
 };
 
 extern ErrorMessages Error;

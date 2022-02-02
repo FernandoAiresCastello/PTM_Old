@@ -4,7 +4,7 @@
 #include "GlobalDefs.h"
 using namespace CppUtils;
 
-void Program::Load(std::string& path)
+void Program::Load(std::string path)
 {
 	FilePath = path;
 

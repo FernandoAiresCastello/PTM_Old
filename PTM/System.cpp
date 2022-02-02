@@ -16,72 +16,75 @@ void InitSystem()
 
 void InitSystemVars()
 {
-	AddSystemVar("KB.UP", SDLK_UP);
-	AddSystemVar("KB.DOWN", SDLK_DOWN);
-	AddSystemVar("KB.LEFT", SDLK_LEFT);
-	AddSystemVar("KB.RIGHT", SDLK_RIGHT);
-	AddSystemVar("KB.SPACE", SDLK_SPACE);
-	AddSystemVar("KB.RETURN", SDLK_RETURN);
-	AddSystemVar("KB.ESC", SDLK_ESCAPE);
-	AddSystemVar("KB.TAB", SDLK_TAB);
-	AddSystemVar("KB.BS", SDLK_BACKSPACE);
-	AddSystemVar("KB.INS", SDLK_INSERT);
-	AddSystemVar("KB.DEL", SDLK_DELETE);
-	AddSystemVar("KB.HOME", SDLK_HOME);
-	AddSystemVar("KB.END", SDLK_END);
-	AddSystemVar("KB.PGUP", SDLK_PAGEUP);
-	AddSystemVar("KB.PGDN", SDLK_PAGEDOWN);
-	AddSystemVar("KB.F1", SDLK_F1);
-	AddSystemVar("KB.F2", SDLK_F2);
-	AddSystemVar("KB.F3", SDLK_F3);
-	AddSystemVar("KB.F4", SDLK_F4);
-	AddSystemVar("KB.F5", SDLK_F5);
-	AddSystemVar("KB.F6", SDLK_F6);
-	AddSystemVar("KB.F7", SDLK_F7);
-	AddSystemVar("KB.F8", SDLK_F8);
-	AddSystemVar("KB.F9", SDLK_F9);
-	AddSystemVar("KB.F10", SDLK_F10);
-	AddSystemVar("KB.F11", SDLK_F11);
-	AddSystemVar("KB.F12", SDLK_F12);
-	AddSystemVar("KB.1", SDLK_1);
-	AddSystemVar("KB.2", SDLK_2);
-	AddSystemVar("KB.3", SDLK_3);
-	AddSystemVar("KB.4", SDLK_4);
-	AddSystemVar("KB.5", SDLK_5);
-	AddSystemVar("KB.6", SDLK_6);
-	AddSystemVar("KB.7", SDLK_7);
-	AddSystemVar("KB.8", SDLK_8);
-	AddSystemVar("KB.9", SDLK_9);
-	AddSystemVar("KB.0", SDLK_0);
-	AddSystemVar("KB.Q", SDLK_q);
-	AddSystemVar("KB.U", SDLK_u);
-	AddSystemVar("KB.E", SDLK_e);
-	AddSystemVar("KB.R", SDLK_r);
-	AddSystemVar("KB.T", SDLK_t);
-	AddSystemVar("KB.Y", SDLK_y);
-	AddSystemVar("KB.U", SDLK_u);
-	AddSystemVar("KB.I", SDLK_i);
-	AddSystemVar("KB.O", SDLK_o);
-	AddSystemVar("KB.P", SDLK_p);
-	AddSystemVar("KB.A", SDLK_a);
-	AddSystemVar("KB.S", SDLK_s);
-	AddSystemVar("KB.D", SDLK_d);
-	AddSystemVar("KB.F", SDLK_f);
-	AddSystemVar("KB.G", SDLK_g);
-	AddSystemVar("KB.H", SDLK_h);
-	AddSystemVar("KB.J", SDLK_j);
-	AddSystemVar("KB.K", SDLK_k);
-	AddSystemVar("KB.L", SDLK_l);
-	AddSystemVar("KB.Z", SDLK_z);
-	AddSystemVar("KB.X", SDLK_x);
-	AddSystemVar("KB.C", SDLK_c);
-	AddSystemVar("KB.V", SDLK_v);
-	AddSystemVar("KB.B", SDLK_b);
-	AddSystemVar("KB.N", SDLK_n);
-	AddSystemVar("KB.M", SDLK_m);
+	SetSystemVar("SCR.COLS", Wnd.Ptr->ScreenWidth / (Wnd.Ptr->GetPixelWidth() * 8));
+	SetSystemVar("SCR.ROWS", Wnd.Ptr->ScreenHeight / (Wnd.Ptr->GetPixelHeight() * 8));
+
+	SetSystemVar("KB.UP", SDLK_UP);
+	SetSystemVar("KB.DOWN", SDLK_DOWN);
+	SetSystemVar("KB.LEFT", SDLK_LEFT);
+	SetSystemVar("KB.RIGHT", SDLK_RIGHT);
+	SetSystemVar("KB.SPACE", SDLK_SPACE);
+	SetSystemVar("KB.RETURN", SDLK_RETURN);
+	SetSystemVar("KB.ESC", SDLK_ESCAPE);
+	SetSystemVar("KB.TAB", SDLK_TAB);
+	SetSystemVar("KB.BS", SDLK_BACKSPACE);
+	SetSystemVar("KB.INS", SDLK_INSERT);
+	SetSystemVar("KB.DEL", SDLK_DELETE);
+	SetSystemVar("KB.HOME", SDLK_HOME);
+	SetSystemVar("KB.END", SDLK_END);
+	SetSystemVar("KB.PGUP", SDLK_PAGEUP);
+	SetSystemVar("KB.PGDN", SDLK_PAGEDOWN);
+	SetSystemVar("KB.F1", SDLK_F1);
+	SetSystemVar("KB.F2", SDLK_F2);
+	SetSystemVar("KB.F3", SDLK_F3);
+	SetSystemVar("KB.F4", SDLK_F4);
+	SetSystemVar("KB.F5", SDLK_F5);
+	SetSystemVar("KB.F6", SDLK_F6);
+	SetSystemVar("KB.F7", SDLK_F7);
+	SetSystemVar("KB.F8", SDLK_F8);
+	SetSystemVar("KB.F9", SDLK_F9);
+	SetSystemVar("KB.F10", SDLK_F10);
+	SetSystemVar("KB.F11", SDLK_F11);
+	SetSystemVar("KB.F12", SDLK_F12);
+	SetSystemVar("KB.1", SDLK_1);
+	SetSystemVar("KB.2", SDLK_2);
+	SetSystemVar("KB.3", SDLK_3);
+	SetSystemVar("KB.4", SDLK_4);
+	SetSystemVar("KB.5", SDLK_5);
+	SetSystemVar("KB.6", SDLK_6);
+	SetSystemVar("KB.7", SDLK_7);
+	SetSystemVar("KB.8", SDLK_8);
+	SetSystemVar("KB.9", SDLK_9);
+	SetSystemVar("KB.0", SDLK_0);
+	SetSystemVar("KB.Q", SDLK_q);
+	SetSystemVar("KB.U", SDLK_u);
+	SetSystemVar("KB.E", SDLK_e);
+	SetSystemVar("KB.R", SDLK_r);
+	SetSystemVar("KB.T", SDLK_t);
+	SetSystemVar("KB.Y", SDLK_y);
+	SetSystemVar("KB.U", SDLK_u);
+	SetSystemVar("KB.I", SDLK_i);
+	SetSystemVar("KB.O", SDLK_o);
+	SetSystemVar("KB.P", SDLK_p);
+	SetSystemVar("KB.A", SDLK_a);
+	SetSystemVar("KB.S", SDLK_s);
+	SetSystemVar("KB.D", SDLK_d);
+	SetSystemVar("KB.F", SDLK_f);
+	SetSystemVar("KB.G", SDLK_g);
+	SetSystemVar("KB.H", SDLK_h);
+	SetSystemVar("KB.J", SDLK_j);
+	SetSystemVar("KB.K", SDLK_k);
+	SetSystemVar("KB.L", SDLK_l);
+	SetSystemVar("KB.Z", SDLK_z);
+	SetSystemVar("KB.X", SDLK_x);
+	SetSystemVar("KB.C", SDLK_c);
+	SetSystemVar("KB.V", SDLK_v);
+	SetSystemVar("KB.B", SDLK_b);
+	SetSystemVar("KB.N", SDLK_n);
+	SetSystemVar("KB.M", SDLK_m);
 }
 
-void AddSystemVar(std::string name, int value)
+void SetSystemVar(std::string name, int value)
 {
 	Variable var;
 	var.Type = VariableType::Number;
@@ -90,7 +93,7 @@ void AddSystemVar(std::string name, int value)
 	Vars["$" + String::ToUpper(name)] = var;
 }
 
-void AddSystemVar(std::string name, std::string value)
+void SetSystemVar(std::string name, std::string value)
 {
 	Variable var;
 	var.Type = VariableType::String;
@@ -643,12 +646,28 @@ void FSCR()
 	Argc(1);
 	Wnd.FullScreenRequest = ArgNumber() > 0;
 }
-void SCRM()
+void GFXM()
 {
-	Argc(2);
-	int w = ArgNumber();
-	int h = ArgNumber();
+	Argc(1);
+	int mode = ArgNumber();
+	int w = 0;
+	int h = 0;
+
+	switch (mode) {
+		case 0: w = 2; h = 2; break;
+		case 1: w = 2; h = 3; break;
+		case 2: w = 4; h = 3; break;
+		case 3: w = 8; h = 4; break;
+		case 4: w = 4; h = 8; break;
+		default:
+			Abort(String::Format(Error.InvalidGraphicsMode, mode));
+			return;
+	}
+
 	Wnd.Ptr->SetPixelSize(w, h);
+
+	SetSystemVar("SCR.COLS", Wnd.Ptr->ScreenWidth / (Wnd.Ptr->GetPixelWidth() * 8));
+	SetSystemVar("SCR.ROWS", Wnd.Ptr->ScreenHeight / (Wnd.Ptr->GetPixelHeight() * 8));
 }
 void CLS()
 {
@@ -899,12 +918,10 @@ void InitCommands()
 	//=== DEBUG ===
 	Op["MSGB"] = &MSGB;			// Show message box
 
-	//=== WINDOW ===
+	//=== WINDOW / GRAPHICS ===
 	Op["TITLE"] = &TITLE;		// Set window title
-
-	//=== GRAPHICS ===
 	Op["FSCR"] = &FSCR;			// Enable/disable fullscreen mode
-	Op["SCRM"] = &SCRM;			// Set screen mode (pixel aspect)
+	Op["GFXM"] = &GFXM;			// Set graphics mode
 	Op["CLS"] = &CLS;			// Clear screen
 	Op["OUTM"] = &OUTM;			// Select output mode
 	Op["OUT"] = &OUT;			// Output tile to screen

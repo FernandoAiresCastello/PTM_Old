@@ -34,7 +34,7 @@ void ResetInterpreter()
 	Util::Randomize();
 
 	Exit = false;
-	Branch = true;
+	Branch = false;
 	IxCurLine = 0;
 	CurLine = &Prog->Lines[IxCurLine];
 	IxArg = 0;

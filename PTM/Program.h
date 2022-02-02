@@ -7,7 +7,7 @@
 class Program
 {
 public:
-	void Load(std::string& path);
+	void Load(std::string path);
 	std::string GetFilePath();
 
 	std::vector<ProgramLine> Lines;

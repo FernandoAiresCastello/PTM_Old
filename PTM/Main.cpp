@@ -12,7 +12,7 @@ using namespace TileGameLib;
 int main(int argc, char* argv[]) {
 	
 	InitCommands();
-	CreateWindow(800, 600, 3, 3);
+	CreateWindow(1024, 768, 2, 2);
 	
 	bool bootMenu = false;
 	bool destroyWindowAndExit = false;
@@ -37,10 +37,15 @@ int main(int argc, char* argv[]) {
 			}
 		}
 		else { // User started machine without providing a program file
-			MsgBox::Error(APP_NAME, Error.ProgramFileNotSpecified);
-			DestroyWindow();
-			delete prog;
-			return EXIT_FAILURE;
+			if (File::Exists("autorun")) {
+				prog->Load("autorun");
+			}
+			else {
+				MsgBox::Error(APP_NAME, Error.ProgramFileNotSpecified);
+				DestroyWindow();
+				delete prog;
+				return EXIT_FAILURE;
+			}
 		}
 
 		if (prog->Validate()) {
