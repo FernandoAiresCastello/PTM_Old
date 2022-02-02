@@ -1,20 +1,18 @@
 
 init:
-	;GFXM 2
-
 	VAR x 0
 	VAR y 0
-	VAR x_max $SCR.COLS
-	VAR y_max $SCR.ROWS
-	VAR scale 1
+	VAR x_max SYS.COLS
+	VAR y_max SYS.ROWS
+	VAR border 0
 	VAR fgc 0
 	VAR bgc 0
 	VAR chr 0
 
-	ADD x x scale
-	SUB x_max x_max scale
-	ADD y y scale
-	SUB y_max y_max scale
+	ADD x x border
+	SUB x_max x_max border
+	ADD y y border
+	SUB y_max y_max border
 	
 	VAR x_init x
 	VAR y_init y

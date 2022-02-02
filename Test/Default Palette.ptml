@@ -22,6 +22,6 @@ loop:
 
 end:
 	INP key
-	CMP key $KB.ESC
+	CMP key SYS.KEY_ESC
 	JP!= end
 	RUN "Program Menu.ptml"

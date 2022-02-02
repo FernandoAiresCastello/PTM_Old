@@ -14,6 +14,8 @@
 using namespace CppUtils;
 using namespace TileGameLib;
 
+#define SYS_VAR_PREFIX "SYS."
+
 enum class OutputMode { Free, Tiled };
 enum class InputMode { Continuous, Paused };
 

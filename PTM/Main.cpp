@@ -12,7 +12,7 @@ using namespace TileGameLib;
 int main(int argc, char* argv[]) {
 	
 	InitCommands();
-	CreateWindow(1024, 768, 2, 2);
+	CreateWindow(960, 720, 3, 3);
 	
 	bool bootMenu = false;
 	bool destroyWindowAndExit = false;

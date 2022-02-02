@@ -27,15 +27,15 @@ VAR ctr_blink 0
 loop:
 	OUT 2 x y fgc 0 0
 	INP key
-	CMP key $KB.UP
+	CMP key SYS.KEY_UP
 	CALL= key_up_handler
-	CMP key $KB.DOWN
+	CMP key SYS.KEY_DOWN
 	CALL= key_down_handler
-	CMP key $KB.RIGHT
+	CMP key SYS.KEY_RIGHT
 	CALL= key_right_handler
-	CMP key $KB.LEFT
+	CMP key SYS.KEY_LEFT
 	CALL= key_left_handler
-	CMP key $KB.ESC
+	CMP key SYS.KEY_ESC
 	CALL= reset
 	INC ctr_blink
 	CMP ctr_blink 1000

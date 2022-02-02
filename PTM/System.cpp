@@ -16,72 +16,72 @@ void InitSystem()
 
 void InitSystemVars()
 {
-	SetSystemVar("SCR.COLS", Wnd.Ptr->ScreenWidth / (Wnd.Ptr->GetPixelWidth() * 8));
-	SetSystemVar("SCR.ROWS", Wnd.Ptr->ScreenHeight / (Wnd.Ptr->GetPixelHeight() * 8));
+	SetSystemVar("COLS", Wnd.Ptr->ScreenWidth / (Wnd.Ptr->GetPixelWidth() * 8));
+	SetSystemVar("ROWS", Wnd.Ptr->ScreenHeight / (Wnd.Ptr->GetPixelHeight() * 8));
 
-	SetSystemVar("KB.UP", SDLK_UP);
-	SetSystemVar("KB.DOWN", SDLK_DOWN);
-	SetSystemVar("KB.LEFT", SDLK_LEFT);
-	SetSystemVar("KB.RIGHT", SDLK_RIGHT);
-	SetSystemVar("KB.SPACE", SDLK_SPACE);
-	SetSystemVar("KB.RETURN", SDLK_RETURN);
-	SetSystemVar("KB.ESC", SDLK_ESCAPE);
-	SetSystemVar("KB.TAB", SDLK_TAB);
-	SetSystemVar("KB.BS", SDLK_BACKSPACE);
-	SetSystemVar("KB.INS", SDLK_INSERT);
-	SetSystemVar("KB.DEL", SDLK_DELETE);
-	SetSystemVar("KB.HOME", SDLK_HOME);
-	SetSystemVar("KB.END", SDLK_END);
-	SetSystemVar("KB.PGUP", SDLK_PAGEUP);
-	SetSystemVar("KB.PGDN", SDLK_PAGEDOWN);
-	SetSystemVar("KB.F1", SDLK_F1);
-	SetSystemVar("KB.F2", SDLK_F2);
-	SetSystemVar("KB.F3", SDLK_F3);
-	SetSystemVar("KB.F4", SDLK_F4);
-	SetSystemVar("KB.F5", SDLK_F5);
-	SetSystemVar("KB.F6", SDLK_F6);
-	SetSystemVar("KB.F7", SDLK_F7);
-	SetSystemVar("KB.F8", SDLK_F8);
-	SetSystemVar("KB.F9", SDLK_F9);
-	SetSystemVar("KB.F10", SDLK_F10);
-	SetSystemVar("KB.F11", SDLK_F11);
-	SetSystemVar("KB.F12", SDLK_F12);
-	SetSystemVar("KB.1", SDLK_1);
-	SetSystemVar("KB.2", SDLK_2);
-	SetSystemVar("KB.3", SDLK_3);
-	SetSystemVar("KB.4", SDLK_4);
-	SetSystemVar("KB.5", SDLK_5);
-	SetSystemVar("KB.6", SDLK_6);
-	SetSystemVar("KB.7", SDLK_7);
-	SetSystemVar("KB.8", SDLK_8);
-	SetSystemVar("KB.9", SDLK_9);
-	SetSystemVar("KB.0", SDLK_0);
-	SetSystemVar("KB.Q", SDLK_q);
-	SetSystemVar("KB.U", SDLK_u);
-	SetSystemVar("KB.E", SDLK_e);
-	SetSystemVar("KB.R", SDLK_r);
-	SetSystemVar("KB.T", SDLK_t);
-	SetSystemVar("KB.Y", SDLK_y);
-	SetSystemVar("KB.U", SDLK_u);
-	SetSystemVar("KB.I", SDLK_i);
-	SetSystemVar("KB.O", SDLK_o);
-	SetSystemVar("KB.P", SDLK_p);
-	SetSystemVar("KB.A", SDLK_a);
-	SetSystemVar("KB.S", SDLK_s);
-	SetSystemVar("KB.D", SDLK_d);
-	SetSystemVar("KB.F", SDLK_f);
-	SetSystemVar("KB.G", SDLK_g);
-	SetSystemVar("KB.H", SDLK_h);
-	SetSystemVar("KB.J", SDLK_j);
-	SetSystemVar("KB.K", SDLK_k);
-	SetSystemVar("KB.L", SDLK_l);
-	SetSystemVar("KB.Z", SDLK_z);
-	SetSystemVar("KB.X", SDLK_x);
-	SetSystemVar("KB.C", SDLK_c);
-	SetSystemVar("KB.V", SDLK_v);
-	SetSystemVar("KB.B", SDLK_b);
-	SetSystemVar("KB.N", SDLK_n);
-	SetSystemVar("KB.M", SDLK_m);
+	SetSystemVar("KEY_UP", SDLK_UP);
+	SetSystemVar("KEY_DOWN", SDLK_DOWN);
+	SetSystemVar("KEY_LEFT", SDLK_LEFT);
+	SetSystemVar("KEY_RIGHT", SDLK_RIGHT);
+	SetSystemVar("KEY_SPACE", SDLK_SPACE);
+	SetSystemVar("KEY_RETURN", SDLK_RETURN);
+	SetSystemVar("KEY_ESC", SDLK_ESCAPE);
+	SetSystemVar("KEY_TAB", SDLK_TAB);
+	SetSystemVar("KEY_BS", SDLK_BACKSPACE);
+	SetSystemVar("KEY_INS", SDLK_INSERT);
+	SetSystemVar("KEY_DEL", SDLK_DELETE);
+	SetSystemVar("KEY_HOME", SDLK_HOME);
+	SetSystemVar("KEY_END", SDLK_END);
+	SetSystemVar("KEY_PGUP", SDLK_PAGEUP);
+	SetSystemVar("KEY_PGDN", SDLK_PAGEDOWN);
+	SetSystemVar("KEY_F1", SDLK_F1);
+	SetSystemVar("KEY_F2", SDLK_F2);
+	SetSystemVar("KEY_F3", SDLK_F3);
+	SetSystemVar("KEY_F4", SDLK_F4);
+	SetSystemVar("KEY_F5", SDLK_F5);
+	SetSystemVar("KEY_F6", SDLK_F6);
+	SetSystemVar("KEY_F7", SDLK_F7);
+	SetSystemVar("KEY_F8", SDLK_F8);
+	SetSystemVar("KEY_F9", SDLK_F9);
+	SetSystemVar("KEY_F10", SDLK_F10);
+	SetSystemVar("KEY_F11", SDLK_F11);
+	SetSystemVar("KEY_F12", SDLK_F12);
+	SetSystemVar("KEY_1", SDLK_1);
+	SetSystemVar("KEY_2", SDLK_2);
+	SetSystemVar("KEY_3", SDLK_3);
+	SetSystemVar("KEY_4", SDLK_4);
+	SetSystemVar("KEY_5", SDLK_5);
+	SetSystemVar("KEY_6", SDLK_6);
+	SetSystemVar("KEY_7", SDLK_7);
+	SetSystemVar("KEY_8", SDLK_8);
+	SetSystemVar("KEY_9", SDLK_9);
+	SetSystemVar("KEY_0", SDLK_0);
+	SetSystemVar("KEY_Q", SDLK_q);
+	SetSystemVar("KEY_U", SDLK_u);
+	SetSystemVar("KEY_E", SDLK_e);
+	SetSystemVar("KEY_R", SDLK_r);
+	SetSystemVar("KEY_T", SDLK_t);
+	SetSystemVar("KEY_Y", SDLK_y);
+	SetSystemVar("KEY_U", SDLK_u);
+	SetSystemVar("KEY_I", SDLK_i);
+	SetSystemVar("KEY_O", SDLK_o);
+	SetSystemVar("KEY_P", SDLK_p);
+	SetSystemVar("KEY_A", SDLK_a);
+	SetSystemVar("KEY_S", SDLK_s);
+	SetSystemVar("KEY_D", SDLK_d);
+	SetSystemVar("KEY_F", SDLK_f);
+	SetSystemVar("KEY_G", SDLK_g);
+	SetSystemVar("KEY_H", SDLK_h);
+	SetSystemVar("KEY_J", SDLK_j);
+	SetSystemVar("KEY_K", SDLK_k);
+	SetSystemVar("KEY_L", SDLK_l);
+	SetSystemVar("KEY_Z", SDLK_z);
+	SetSystemVar("KEY_X", SDLK_x);
+	SetSystemVar("KEY_C", SDLK_c);
+	SetSystemVar("KEY_V", SDLK_v);
+	SetSystemVar("KEY_B", SDLK_b);
+	SetSystemVar("KEY_N", SDLK_n);
+	SetSystemVar("KEY_M", SDLK_m);
 }
 
 void SetSystemVar(std::string name, int value)
@@ -90,7 +90,7 @@ void SetSystemVar(std::string name, int value)
 	var.Type = VariableType::Number;
 	var.Number = value;
 	var.String = String::ToString(value);
-	Vars["$" + String::ToUpper(name)] = var;
+	Vars[SYS_VAR_PREFIX + String::ToUpper(name)] = var;
 }
 
 void SetSystemVar(std::string name, std::string value)
@@ -99,7 +99,7 @@ void SetSystemVar(std::string name, std::string value)
 	var.Type = VariableType::String;
 	var.String = value;
 	var.Number = String::ToInt(value);
-	Vars["$" + String::ToUpper(name)] = var;
+	Vars[SYS_VAR_PREFIX + String::ToUpper(name)] = var;
 }
 
 void ResetSystem()
@@ -255,8 +255,16 @@ void HALT()
 void RUN()
 {
 	Argc(1);
-	Exit = true;
-	NewProgram = ArgString();
+	std::string file = ArgString();
+	
+	if (File::Exists(file)) {
+		NewProgram = file;
+		Exit = true;
+	}
+	else {
+		NewProgram = "";
+		Abort(String::Format(Error.ProgramFileNotFound, file.c_str()));
+	}
 }
 void RESET()
 {
@@ -303,10 +311,6 @@ void SET()
 	Argc(2);
 	if (Arg(0)->Type == ParameterType::Identifier) {
 		auto id = ArgVariableName(true);
-		if (String::StartsWith(id, '$')) {
-			Abort(Error.IllegalVariableName);
-			return;
-		}
 		auto& var = Vars[id];
 		if (var.Type == VariableType::Number)
 			var.Number = ArgNumber();
@@ -654,11 +658,14 @@ void GFXM()
 	int h = 0;
 
 	switch (mode) {
-		case 0: w = 2; h = 2; break;
-		case 1: w = 2; h = 3; break;
-		case 2: w = 4; h = 3; break;
-		case 3: w = 8; h = 4; break;
-		case 4: w = 4; h = 8; break;
+		case 6: w = 1; h = 1; break;
+		case 5: w = 2; h = 2; break;
+		case 4: w = 3; h = 3; break;
+		case 3: w = 4; h = 3; break;
+		case 2: w = 3; h = 5; break;
+		case 1: w = 5; h = 3; break;
+		case 0: w = 5; h = 5; break;
+
 		default:
 			Abort(String::Format(Error.InvalidGraphicsMode, mode));
 			return;
@@ -666,8 +673,8 @@ void GFXM()
 
 	Wnd.Ptr->SetPixelSize(w, h);
 
-	SetSystemVar("SCR.COLS", Wnd.Ptr->ScreenWidth / (Wnd.Ptr->GetPixelWidth() * 8));
-	SetSystemVar("SCR.ROWS", Wnd.Ptr->ScreenHeight / (Wnd.Ptr->GetPixelHeight() * 8));
+	SetSystemVar("COLS", Wnd.Ptr->ScreenWidth / (Wnd.Ptr->GetPixelWidth() * 8));
+	SetSystemVar("ROWS", Wnd.Ptr->ScreenHeight / (Wnd.Ptr->GetPixelHeight() * 8));
 }
 void CLS()
 {

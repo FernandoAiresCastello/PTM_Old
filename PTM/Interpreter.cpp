@@ -103,8 +103,10 @@ bool IsValidOpcode(std::string& opcode)
 void Abort(std::string msg, bool printInfo)
 {
 	if (printInfo) {
-		MsgBox::Error(Wnd.Title, String::Format("%s at line %i:\n\n%s",
-			msg.c_str(), CurLine->SrcLineNr, CurLine->SrcCode.c_str()));
+		std::string fmt = String::Format("%s at line %i:\n\n%s",
+			msg.c_str(), CurLine->SrcLineNr, CurLine->SrcCode.c_str());
+
+		MsgBox::Error(Wnd.Title, fmt);
 	}
 	else {
 		MsgBox::Error(Wnd.Title, msg);
@@ -231,6 +233,11 @@ std::string ArgVariableName(bool assertExists)
 		Abort(Error.IdentifierExpected);
 		return "";
 	}
+	if (String::StartsWith(arg->StringValue, SYS_VAR_PREFIX)) {
+		Abort(Error.IllegalVariableName);
+		return "";
+	}
+
 	AssertVariable(arg->StringValue, assertExists);
 
 	return arg->StringValue;

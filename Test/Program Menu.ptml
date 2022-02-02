@@ -4,11 +4,11 @@ VAR key 0
 
 loop:
 	INP key
-	CMP		key $KB.1
+	CMP		key SYS.KEY_1
 	CALL=	key_1_handler
-	CMP		key $KB.2
+	CMP		key SYS.KEY_2
 	CALL=	key_2_handler
-	CMP		key $KB.3
+	CMP		key SYS.KEY_3
 	CALL=	key_3_handler
 	JP loop
 

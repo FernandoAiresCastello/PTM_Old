@@ -16,17 +16,8 @@ void Program::Load(std::string path)
 
 	for (int srcLineNr = 0; srcLineNr < file.size(); srcLineNr++) {
 		std::string srcLine = String::Trim(file[srcLineNr]);
-
-		if (String::StartsWith(srcLine, "INTRO ")) {
-			// todo
-			continue;
-		}
-		else if (String::StartsWith(srcLine, "WINDOW ")) {
-			// todo
-			continue;
-		}
-
 		bool quote = false;
+
 		for (int i = 0; i < srcLine.length(); i++) {
 			char ch = srcLine[i];
 			if (ch == '"') {
