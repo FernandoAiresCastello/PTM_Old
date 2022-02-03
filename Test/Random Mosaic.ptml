@@ -1,5 +1,8 @@
 
 init:
+	GFXM 1
+	CLS 0
+
 	VAR x 0
 	VAR y 0
 	VAR x_max SYS.COLS
@@ -16,8 +19,6 @@ init:
 	
 	VAR x_init x
 	VAR y_init y
-
-	CLS 0
 
 loop:
 	RND fgc 0 255
