@@ -1,0 +1,15 @@
+GFXM 0
+OUTS "Mode 0" 1 1 15 0 0
+GFXM 1
+OUTS "Mode 1" 1 4 15 0 0
+GFXM 2
+OUTS "Mode 2" 2 4 15 0 0
+GFXM 3
+OUTS "Mode 3" 1 9 15 0 0
+GFXM 4
+OUTS "Mode 4 (default)" 2 11 15 0 0
+GFXM 5
+OUTS "Mode 5" 2 19 15 0 0
+GFXM 6
+OUTS "Mode 6" 5 43 15 0 0
+HALT
