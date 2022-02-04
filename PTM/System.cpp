@@ -272,7 +272,7 @@ void RESET()
 	Exit = true;
 	NewProgram = Prog->GetFilePath();
 }
-void NUM()
+void VAR()
 {
 	Argc(2);
 	auto id = ArgVariableName(false);
@@ -281,7 +281,7 @@ void NUM()
 	var.Number = ArgNumber();
 	Vars[id] = var;
 }
-void STR()
+void VAR$()
 {
 	Argc(2);
 	auto id = ArgVariableName(false);
@@ -290,7 +290,7 @@ void STR()
 	var.String = ArgString();
 	Vars[id] = var;
 }
-void NUM_ARRAY()
+void VAR_ARRAY()
 {
 	Argc(1);
 	auto id = ArgVariableName(false);
@@ -298,7 +298,7 @@ void NUM_ARRAY()
 	var.Type = VariableType::NumberArray;
 	Vars[id] = var;
 }
-void STR_ARRAY()
+void VAR$_ARRAY()
 {
 	Argc(1);
 	auto id = ArgVariableName(false);
@@ -689,13 +689,27 @@ void PAL()
 	auto rgb = ArgNumber();
 	Wnd.Pal->Set(ix, rgb);
 }
-void CHR()
+void CHRL()
 {
 	Argc(3);
 	auto ix = ArgNumber();
 	auto row = ArgNumber();
 	auto data = ArgNumber();
 	Wnd.Chr->Set(ix, row, data);
+}
+void CHR()
+{
+	Argc(9);
+	auto ix = ArgNumber();
+	auto line0 = ArgNumber();
+	auto line1 = ArgNumber();
+	auto line2 = ArgNumber();
+	auto line3 = ArgNumber();
+	auto line4 = ArgNumber();
+	auto line5 = ArgNumber();
+	auto line6 = ArgNumber();
+	auto line7 = ArgNumber();
+	Wnd.Chr->Set(ix, line0, line1, line2, line3, line4, line5, line6, line7);
 }
 void LDCHR()
 {
@@ -880,10 +894,10 @@ void InitCommands()
 	Op["SYS"] = &SYS;			// Call internal system function
 
 	//=== VARIABLES ===
-	Op["VAR"] = &NUM;			// Declare variable as number
-	Op["VAR$"] = &STR;			// Declare variable as string
-	Op["VAR[]"] = &NUM_ARRAY;	// Declare variable as number array
-	Op["VAR$[]"] = &STR_ARRAY;	// Declare variable as string array
+	Op["VAR"] = &VAR;			// Declare variable as number
+	Op["VAR$"] = &VAR$;			// Declare variable as string
+	Op["VAR[]"] = &VAR_ARRAY;	// Declare variable as number array
+	Op["VAR$[]"] = &VAR$_ARRAY;	// Declare variable as string array
 	Op["SET"] = &SET;			// Set value to variable
 	Op["PUSH"] = &PUSH;			// Push value into array
 	Op["COUNT"] = &COUNT;		// Get number of items in array
@@ -936,6 +950,7 @@ void InitCommands()
 	Op["FLS"] = &FLS;			// Fill screen with same tile
 	Op["PAL"] = &PAL;			// Set palette color
 	Op["CHR"] = &CHR;			// Set charset data
+	Op["CHRL"] = &CHRL;			// Set charset data line
 	Op["LDCHR"] = &LDCHR;		// Load charset data from image file
 	Op["LDPAL"] = &LDPAL;		// Load palette data from image file
 	Op["PRTSCN"] = &PRTSCN;		// Save screenshot
