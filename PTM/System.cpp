@@ -724,6 +724,12 @@ void CHRL()
 	auto ix = ArgNumber();
 	auto row = ArgNumber();
 	auto data = ArgNumber();
+
+	if (ix >= Wnd.Chr->GetSize()) {
+		int blanksToAdd = ix - Wnd.Chr->GetSize() + 1;
+		Wnd.Chr->AddBlank(blanksToAdd);
+	}
+
 	Wnd.Chr->Set(ix, row, data);
 }
 void CHR()
@@ -738,6 +744,12 @@ void CHR()
 	auto line5 = ArgNumber();
 	auto line6 = ArgNumber();
 	auto line7 = ArgNumber();
+	
+	if (ix >= Wnd.Chr->GetSize()) {
+		int blanksToAdd = Wnd.Chr->GetSize() - ix + 1;
+		Wnd.Chr->AddBlank(blanksToAdd);
+	}
+
 	Wnd.Chr->Set(ix, line0, line1, line2, line3, line4, line5, line6, line7);
 }
 void LDCHR()
