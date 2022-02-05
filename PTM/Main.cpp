@@ -62,8 +62,6 @@ int main(int argc, char* argv[]) {
 
 		// Normal exit point
 		if (destroyWindowAndExit) {
-			Wnd.Ptr->Hide();
-			SDL_Delay(100);
 			DestroyWindow();
 			return EXIT_SUCCESS;
 		}

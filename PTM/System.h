@@ -42,6 +42,8 @@ void ResetSystem();
 void DestroySystem();
 void DestroyWindow();
 void CreateWindow(int width, int height, int pixelWidth, int pixelHeight);
+void ShowWindow();
+void HideWindow();
 void UpdateWindow();
 void ShowIntro();
 void InitCommands();

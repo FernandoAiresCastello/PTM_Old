@@ -12,6 +12,7 @@ void InitSystem()
 {
 	Snd = new TSound();
 	InitSystemVars();
+	ShowWindow();
 }
 
 void InitSystemVars()
@@ -132,6 +133,9 @@ void DestroySystem()
 
 void DestroyWindow()
 {
+	HideWindow();
+	SDL_Delay(100);
+
 	delete Wnd.Ptr;
 	Wnd.Ptr = nullptr;
 }
@@ -146,10 +150,20 @@ void CreateWindow(int width, int height, int pixelWidth, int pixelHeight)
 	DefaultPixelWidth = pixelWidth;
 	DefaultPixelHeight = pixelHeight;
 
-	Wnd.Ptr = new TWindow(width, height, width, height, false);
+	Wnd.Ptr = new TWindow(width, height, width, height, false, true);
 	Wnd.Ptr->SetPixelSize(pixelWidth, pixelHeight);
 	Wnd.Pal = Wnd.Ptr->GetPalette();
 	Wnd.Chr = Wnd.Ptr->GetCharset();
+}
+
+void ShowWindow()
+{
+	Wnd.Ptr->Show();
+}
+
+void HideWindow()
+{
+	Wnd.Ptr->Hide();
 }
 
 void UpdateWindow()
