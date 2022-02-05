@@ -18,6 +18,8 @@ void InitSystemVars()
 {
 	SetSystemVar("COLS", Wnd.Ptr->ScreenWidth / (Wnd.Ptr->GetPixelWidth() * 8));
 	SetSystemVar("ROWS", Wnd.Ptr->ScreenHeight / (Wnd.Ptr->GetPixelHeight() * 8));
+	SetSystemVar("CHR_SIZE", Wnd.Ptr->GetCharset()->GetSize());
+	SetSystemVar("PAL_SIZE", Wnd.Ptr->GetPalette()->GetSize());
 
 	SetSystemVar("KEY_UP", SDLK_UP);
 	SetSystemVar("KEY_DOWN", SDLK_DOWN);
@@ -728,6 +730,7 @@ void CHRL()
 	if (ix >= Wnd.Chr->GetSize()) {
 		int blanksToAdd = ix - Wnd.Chr->GetSize() + 1;
 		Wnd.Chr->AddBlank(blanksToAdd);
+		SetSystemVar("CHR_SIZE", Wnd.Ptr->GetCharset()->GetSize());
 	}
 
 	Wnd.Chr->Set(ix, row, data);
@@ -748,6 +751,7 @@ void CHR()
 	if (ix >= Wnd.Chr->GetSize()) {
 		int blanksToAdd = Wnd.Chr->GetSize() - ix + 1;
 		Wnd.Chr->AddBlank(blanksToAdd);
+		SetSystemVar("CHR_SIZE", Wnd.Ptr->GetCharset()->GetSize());
 	}
 
 	Wnd.Chr->Set(ix, line0, line1, line2, line3, line4, line5, line6, line7);
@@ -815,7 +819,7 @@ void SNDOFF()
 		Abort(String::Format(Error.IllegalArgumentValue, String::ToString(value).c_str()));
 	}
 }
-void SWFT()
+void WAVE()
 {
 	Argc(1);
 	auto type = ArgNumber();
@@ -890,13 +894,6 @@ void WRITE_A()
 	auto path = ArgString();
 	File::WriteBytes(path, Vars[id].NumberArray);
 }
-void DEL()
-{
-	Argc(1);
-	auto path = ArgString();
-	AssertFileExists(path);
-	File::Delete(path);
-}
 void CMPS()
 {
 	Argc(2);
@@ -945,7 +942,7 @@ void TRIM()
 	auto str = ArgString();
 	Vars[id].String = String::Trim(str);
 }
-void GETCH()
+void GETC()
 {
 	Argc(3);
 	auto id = ArgVariableName(true);
@@ -957,7 +954,7 @@ void GETCH()
 	else
 		Abort(Error.StringIndexOutOfRange);
 }
-void SETCH()
+void SETC()
 {
 	Argc(3);
 	auto id = ArgVariableName(true);
@@ -969,7 +966,7 @@ void SETCH()
 	else
 		Abort(Error.StringIndexOutOfRange);
 }
-void ADDCH()
+void ADDC()
 {
 	Argc(2);
 	auto id = ArgVariableName(true);
@@ -977,7 +974,7 @@ void ADDCH()
 	auto ch = ArgNumber();
 	Vars[id].String.append(1, ch);
 }
-void INSCH()
+void INSC()
 {
 	Argc(3);
 	auto id = ArgVariableName(true);
@@ -989,7 +986,7 @@ void INSCH()
 	else
 		Abort(Error.StringIndexOutOfRange);
 }
-void DELCH()
+void DELC()
 {
 	Argc(2);
 	auto id = ArgVariableName(true);
@@ -1083,7 +1080,7 @@ void InitCommands()
 
 	//=== SOUND ===
 	Op["SNDOFF"] = &SNDOFF;		// Stop all currently playing sounds
-	Op["SWFT"] = &SWFT;			// Set waveform type
+	Op["WAVE"] = &WAVE;			// Set waveform type
 	Op["VOL"] = &VOL;			// Set sound volume
 	Op["BEEP"] = &BEEP;			// Play a single beep
 	Op["PLAY"] = &PLAY;			// Play notes from a sound string (once)
@@ -1094,17 +1091,16 @@ void InitCommands()
 	Op["READ[]"] = &READ_A;		// Read file bytes into number array
 	Op["WRITE"] = &WRITE;		// Write string to file
 	Op["WRIT[]"] = &WRITE_A;	// Write bytes from number array to file
-	Op["DEL"] = &DEL;			// Delete file
 
 	//=== STRINGS ===
 	Op["CMPS"] = &CMPS;			// Compare strings
-	Op["ADDS"] = &ADDS;			// Append to string
+	Op["ADDS"] = &ADDS;			// Append string
 	Op["LEN"] = &LEN;			// Get length of string
 	Op["SPLIT"] = &SPLIT;		// Split string into array
 	Op["TRIM"] = &TRIM;			// Trim string
-	Op["GETCH"] = &GETCH;		// Get character at index
-	Op["SETCH"] = &SETCH;		// Set character at index
-	Op["ADDCH"] = &ADDCH;		// Append character
-	Op["INSCH"] = &INSCH;		// Insert character at index
-	Op["DELCH"] = &DELCH;		// Delete character at index
+	Op["GETC"] = &GETC;			// Get character at index
+	Op["SETC"] = &SETC;			// Set character at index
+	Op["ADDC"] = &ADDC;			// Append character
+	Op["INSC"] = &INSC;			// Insert character at index
+	Op["DELC"] = &DELC;			// Delete character at index
 }
