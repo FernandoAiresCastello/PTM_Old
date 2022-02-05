@@ -20,7 +20,7 @@ void Program::Load(std::string path)
 
 		for (int i = 0; i < srcLine.length(); i++) {
 			char ch = srcLine[i];
-			if (ch == '"') {
+			if (ch == '"' || (ch == '\'' && !quote)) {
 				quote = !quote;
 			}
 			else if (ch == ';' && !quote) {

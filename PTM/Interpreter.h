@@ -43,6 +43,7 @@ void AssertVariable(std::string& identifier, bool exists);
 void AssertVariableIsTypeNumber(std::string& identifier);
 void AssertVariableIsTypeString(std::string& identifier);
 void AssertVariableIsTypeNumberArray(std::string& identifier);
+void AssertVariableIsTypeStringArray(std::string& identifier);
 void AssertArrayIndex(std::string& identifier, int index);
 void AssertFileExists(std::string& path);
 void AssertTileIndex(int index);

@@ -24,13 +24,14 @@ struct ErrorMessages {
 	cstr DuplicateLabel = "Duplicate label: %s";
 	cstr WindowAlreadyOpen = "Window already open";
 	cstr TypeMismatch = "Type mismatch";
-	cstr ArrayIndexOutOfBounds = "Array index (%i) out of bounds (%i)";
+	cstr ArrayIndexOutOfBounds = "Array index (%i) out of bounds (0 to %i)";
 	cstr IllegalArgumentValue = "Illegal argument value: %s";
 	cstr InvalidTileIndex = "Invalid tile index: %i";
 	cstr InvalidPaletteIndex = "Invalid palette index: %i";
 	cstr SystemFunctionNotFound = "Unrecognized system function call";
 	cstr IllegalVariableName = "Illegal variable name";
 	cstr InvalidGraphicsMode = "Invalid graphics mode: %i";
+	cstr StringIndexOutOfRange = "String index out of range";
 };
 
 extern ErrorMessages Error;

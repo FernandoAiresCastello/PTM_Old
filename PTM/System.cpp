@@ -378,6 +378,35 @@ void PUSH()
 	else
 		Abort(Error.TypeMismatch);
 }
+void POP()
+{
+	Argc(2);
+	auto id = ArgVariableName(true);
+	int index = ArgNumber();
+	AssertArrayIndex(id, index);
+
+	if (Vars[id].Type == VariableType::StringArray) {
+		auto it = Vars[id].StringArray.begin();
+		Vars[id].StringArray.erase(it + index, it + index + 1);
+	}
+	else if (Vars[id].Type == VariableType::NumberArray) {
+		auto it = Vars[id].NumberArray.begin();
+		Vars[id].NumberArray.erase(it + index, it + index + 1);
+	}
+	else
+		Abort(Error.TypeMismatch);
+}
+void POPA()
+{
+	Argc(1);
+	auto id = ArgVariableName(true);
+	if (Vars[id].Type == VariableType::StringArray)
+		Vars[id].StringArray.clear();
+	else if (Vars[id].Type == VariableType::NumberArray)
+		Vars[id].NumberArray.clear();
+	else
+		Abort(Error.TypeMismatch);
+}
 void COUNT()
 {
 	Argc(2);
@@ -856,7 +885,7 @@ void DEL()
 	AssertFileExists(path);
 	File::Delete(path);
 }
-void STRCMP()
+void CMPS()
 {
 	Argc(2);
 	auto id = ArgVariableName(true);
@@ -869,22 +898,97 @@ void STRCMP()
 	else
 		CmpResult = -1;
 }
-void STRCAT()
+void ADDS()
 {
-	Argc(3);
+	Argc(2);
 	auto id = ArgVariableName(true);
 	AssertVariableIsTypeString(id);
-	auto str1 = ArgString();
-	auto str2 = ArgString();
-	Vars[id].String = str1 + str2;
+	auto str = ArgString();
+	Vars[id].String = Vars[id].String + str;
 }
-void STRLEN()
+void LEN()
 {
 	Argc(2);
 	auto id = ArgVariableName(true);
 	AssertVariableIsTypeNumber(id);
 	auto str = ArgString();
 	Vars[id].Number = str.length();
+}
+void SPLIT()
+{
+	Argc(3);
+	auto arr = ArgVariableName(true);
+	AssertVariableIsTypeStringArray(arr);
+	auto str = ArgString();
+	auto delim = ArgString();
+	
+	auto parts = String::Split(str, delim, true);
+	Vars[arr].StringArray = parts;
+}
+void TRIM()
+{
+	Argc(2);
+	auto id = ArgVariableName(true);
+	AssertVariableIsTypeString(id);
+	auto str = ArgString();
+	Vars[id].String = String::Trim(str);
+}
+void GETCH()
+{
+	Argc(3);
+	auto id = ArgVariableName(true);
+	AssertVariableIsTypeNumber(id);
+	auto str = ArgString();
+	auto index = ArgNumber();
+	if (index >= 0 && index < str.length())
+		Vars[id].Number = str[index];
+	else
+		Abort(Error.StringIndexOutOfRange);
+}
+void SETCH()
+{
+	Argc(3);
+	auto id = ArgVariableName(true);
+	AssertVariableIsTypeString(id);
+	auto index = ArgNumber();
+	auto ch = ArgNumber();
+	if (index >= 0 && index < Vars[id].String.length())
+		Vars[id].String[index] = ch;
+	else
+		Abort(Error.StringIndexOutOfRange);
+}
+void ADDCH()
+{
+	Argc(2);
+	auto id = ArgVariableName(true);
+	AssertVariableIsTypeString(id);
+	auto ch = ArgNumber();
+	Vars[id].String.append(1, ch);
+}
+void INSCH()
+{
+	Argc(3);
+	auto id = ArgVariableName(true);
+	AssertVariableIsTypeString(id);
+	auto index = ArgNumber();
+	auto ch = ArgNumber();
+	if (index >= 0 && index <= Vars[id].String.length())
+		Vars[id].String.insert(Vars[id].String.begin() + index, ch);
+	else
+		Abort(Error.StringIndexOutOfRange);
+}
+void DELCH()
+{
+	Argc(2);
+	auto id = ArgVariableName(true);
+	AssertVariableIsTypeString(id);
+	auto index = ArgNumber();
+	if (index >= 0 && index < Vars[id].String.length()) {
+		auto it = Vars[id].String.begin();
+		Vars[id].String.erase(it + index, it + index + 1);
+	}
+	else
+		Abort(Error.StringIndexOutOfRange);
 }
 
 void InitCommands()
@@ -893,16 +997,8 @@ void InitCommands()
 	Op["NOP"] = &NOP;			// No operation
 	Op["SYS"] = &SYS;			// Call internal system function
 
-	//=== VARIABLES ===
-	Op["VAR"] = &VAR;			// Declare variable as number
-	Op["VAR$"] = &VAR$;			// Declare variable as string
-	Op["VAR[]"] = &VAR_ARRAY;	// Declare variable as number array
-	Op["VAR$[]"] = &VAR$_ARRAY;	// Declare variable as string array
-	Op["SET"] = &SET;			// Set value to variable
-	Op["PUSH"] = &PUSH;			// Push value into array
-	Op["COUNT"] = &COUNT;		// Get number of items in array
-	Op["RND"] = &RND;			// Get random number
-	Op["CMP"] = &CMP;			// Compare two numeric values
+	//=== DEBUG ===
+	Op["MSGB"] = &MSGB;			// Show message box
 
 	//=== PROGRAM FLOW ===
 	Op["EXIT"] = &EXIT;			// End program and close window
@@ -925,7 +1021,24 @@ void InitCommands()
 	Op["PAUSE"] = &PAUSE;		// Pause program execution
 	Op["RESET"] = &RESET;		// Reset machine
 	Op["RUN"] = &RUN;			// Reset machine with a different program
-	
+
+	//=== VARIABLES ===
+	Op["VAR"] = &VAR;			// Declare variable as number
+	Op["VAR$"] = &VAR$;			// Declare variable as string
+	Op["VAR[]"] = &VAR_ARRAY;	// Declare variable as number array
+	Op["VAR$[]"] = &VAR$_ARRAY;	// Declare variable as string array
+	Op["SET"] = &SET;			// Set value to variable
+
+	// === ARRAYS ===
+	Op["PUSH"] = &PUSH;			// Push value into array
+	Op["POP"] = &POP;			// Remove item from array index
+	Op["POPA"] = &POPA;			// Remove all items from array
+	Op["COUNT"] = &COUNT;		// Get number of items in array
+
+	// === NUMBERS ===
+	Op["RND"] = &RND;			// Get random number
+	Op["CMP"] = &CMP;			// Compare two numeric values
+
 	//=== MATH ===
 	Op["ADD"] = &ADD;			// Add
 	Op["SUB"] = &SUB;			// Subtract
@@ -935,15 +1048,12 @@ void InitCommands()
 	Op["SQRT"] = &SQRT;			// Square root
 	Op["INC"] = &INC;			// Increment by 1
 	Op["DEC"] = &DEC;			// Decrement by 1
-	
-	//=== DEBUG ===
-	Op["MSGB"] = &MSGB;			// Show message box
 
-	//=== WINDOW / GRAPHICS ===
+	//=== GRAPHICS ===
 	Op["TITLE"] = &TITLE;		// Set window title
 	Op["FSCR"] = &FSCR;			// Enable/disable fullscreen mode
 	Op["GFXM"] = &GFXM;			// Set graphics mode
-	Op["CLS"] = &CLS;			// Clear screen
+	Op["CLS"] = &CLS;			// Clear screen and set background color
 	Op["OUTM"] = &OUTM;			// Select output mode
 	Op["OUT"] = &OUT;			// Output tile to screen
 	Op["OUTS"] = &OUTS;			// Output string of tiles to screen
@@ -953,7 +1063,7 @@ void InitCommands()
 	Op["CHRL"] = &CHRL;			// Set charset data line
 	Op["LDCHR"] = &LDCHR;		// Load charset data from image file
 	Op["LDPAL"] = &LDPAL;		// Load palette data from image file
-	Op["PRTSCN"] = &PRTSCN;		// Save screenshot
+	Op["PRTSCN"] = &PRTSCN;		// Save screen image to file
 
 	//=== INPUT ===
 	Op["INPM"] = &INPM;			// Set input mode
@@ -974,8 +1084,15 @@ void InitCommands()
 	Op["WRIT[]"] = &WRITE_ARRAY;// Write bytes from number array to file
 	Op["DEL"] = &DEL;			// Delete file
 
-	//=== STRING ===
-	Op["STRCMP"] = &STRCMP;		// Compare value with string variable
-	Op["STRCAT"] = &STRCAT;		// Concatenate two strings
-	Op["STRLEN"] = &STRLEN;		// Get length of string
+	//=== STRINGS ===
+	Op["CMPS"] = &CMPS;		// Compare strings
+	Op["ADDS"] = &ADDS;		// Append to string
+	Op["LEN"] = &LEN;		// Get length of string
+	Op["SPLIT"] = &SPLIT;	// Split string into array
+	Op["TRIM"] = &TRIM;		// Trim string
+	Op["GETCH"] = &GETCH;	// Get character at index
+	Op["SETCH"] = &SETCH;	// Set character at index
+	Op["ADDCH"] = &ADDCH;	// Append character
+	Op["INSCH"] = &INSCH;	// Insert character at index
+	Op["DELCH"] = &DELCH;	// Delete character at index
 }

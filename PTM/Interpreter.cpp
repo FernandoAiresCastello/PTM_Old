@@ -528,17 +528,23 @@ void AssertVariableIsTypeNumberArray(std::string& identifier)
 		Abort(Error.TypeMismatch);
 }
 
+void AssertVariableIsTypeStringArray(std::string& identifier)
+{
+	if (Vars[identifier].Type != VariableType::StringArray)
+		Abort(Error.TypeMismatch);
+}
+
 void AssertArrayIndex(std::string& identifier, int index)
 {
 	if (Vars[identifier].Type == VariableType::StringArray) {
 		size_t length = Vars[identifier].StringArray.size();
 		if (index >= Vars[identifier].StringArray.size())
-			Abort(String::Format(Error.ArrayIndexOutOfBounds, index, length));
+			Abort(String::Format(Error.ArrayIndexOutOfBounds, index, length - 1));
 	}
 	else if (Vars[identifier].Type == VariableType::NumberArray) {
 		size_t length = Vars[identifier].NumberArray.size();
 		if (index >= Vars[identifier].NumberArray.size())
-			Abort(String::Format(Error.ArrayIndexOutOfBounds, index, length));
+			Abort(String::Format(Error.ArrayIndexOutOfBounds, index, length - 1));
 	}
 	else {
 		Abort(Error.TypeMismatch);
