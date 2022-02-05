@@ -290,7 +290,7 @@ void VAR$()
 	var.String = ArgString();
 	Vars[id] = var;
 }
-void VAR_ARRAY()
+void VAR_A()
 {
 	Argc(1);
 	auto id = ArgVariableName(false);
@@ -298,7 +298,7 @@ void VAR_ARRAY()
 	var.Type = VariableType::NumberArray;
 	Vars[id] = var;
 }
-void VAR$_ARRAY()
+void VAR$_A()
 {
 	Argc(1);
 	auto id = ArgVariableName(false);
@@ -850,7 +850,7 @@ void READ()
 	auto data = File::ReadText(path);
 	Vars[id].String = data;
 }
-void READ_ARRAY()
+void READ_A()
 {
 	Argc(2);
 	auto id = ArgVariableName(true);
@@ -870,7 +870,7 @@ void WRITE()
 	auto filePath = ArgString();
 	File::WriteText(filePath, data);
 }
-void WRITE_ARRAY()
+void WRITE_A()
 {
 	Argc(2);
 	auto id = ArgVariableName(true);
@@ -1025,8 +1025,8 @@ void InitCommands()
 	//=== VARIABLES ===
 	Op["VAR"] = &VAR;			// Declare variable as number
 	Op["VAR$"] = &VAR$;			// Declare variable as string
-	Op["VAR[]"] = &VAR_ARRAY;	// Declare variable as number array
-	Op["VAR$[]"] = &VAR$_ARRAY;	// Declare variable as string array
+	Op["VAR[]"] = &VAR_A;		// Declare variable as number array
+	Op["VAR$[]"] = &VAR$_A;		// Declare variable as string array
 	Op["SET"] = &SET;			// Set value to variable
 
 	// === ARRAYS ===
@@ -1079,20 +1079,20 @@ void InitCommands()
 
 	//=== FILESYSTEM ===
 	Op["READ"] = &READ;			// Read file into string
-	Op["READ[]"] = &READ_ARRAY;	// Read file bytes into number array
+	Op["READ[]"] = &READ_A;		// Read file bytes into number array
 	Op["WRITE"] = &WRITE;		// Write string to file
-	Op["WRIT[]"] = &WRITE_ARRAY;// Write bytes from number array to file
+	Op["WRIT[]"] = &WRITE_A;	// Write bytes from number array to file
 	Op["DEL"] = &DEL;			// Delete file
 
 	//=== STRINGS ===
-	Op["CMPS"] = &CMPS;		// Compare strings
-	Op["ADDS"] = &ADDS;		// Append to string
-	Op["LEN"] = &LEN;		// Get length of string
-	Op["SPLIT"] = &SPLIT;	// Split string into array
-	Op["TRIM"] = &TRIM;		// Trim string
-	Op["GETCH"] = &GETCH;	// Get character at index
-	Op["SETCH"] = &SETCH;	// Set character at index
-	Op["ADDCH"] = &ADDCH;	// Append character
-	Op["INSCH"] = &INSCH;	// Insert character at index
-	Op["DELCH"] = &DELCH;	// Delete character at index
+	Op["CMPS"] = &CMPS;			// Compare strings
+	Op["ADDS"] = &ADDS;			// Append to string
+	Op["LEN"] = &LEN;			// Get length of string
+	Op["SPLIT"] = &SPLIT;		// Split string into array
+	Op["TRIM"] = &TRIM;			// Trim string
+	Op["GETCH"] = &GETCH;		// Get character at index
+	Op["SETCH"] = &SETCH;		// Set character at index
+	Op["ADDCH"] = &ADDCH;		// Append character
+	Op["INSCH"] = &INSCH;		// Insert character at index
+	Op["DELCH"] = &DELCH;		// Delete character at index
 }
