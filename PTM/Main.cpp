@@ -24,7 +24,7 @@ int main(int argc, char* argv[]) {
 			prog->Load(NewProgram);
 			NewProgram = "";
 		}
-		else if (argc > 1) { // User provided a program file as argument, will run it automatically
+		else if (argc > 1) { // User provided a program file as argument
 			std::string programFile = argv[1];
 			if (File::Exists(programFile)) {
 				prog->Load(programFile);
@@ -40,7 +40,7 @@ int main(int argc, char* argv[]) {
 			if (File::Exists("autorun")) {
 				prog->Load("autorun");
 			}
-			else {
+			else { // No "autorun" found
 				MsgBox::Error(APP_NAME, Error.ProgramFileNotSpecified);
 				DestroyWindow();
 				delete prog;
@@ -54,17 +54,22 @@ int main(int argc, char* argv[]) {
 			DestroyInterpreter();
 			destroyWindowAndExit = !bootMenu && NewProgram.empty();
 		}
-		else {
+		else { // Program is invalid
 			DestroyWindow();
 			delete prog;
 			return EXIT_FAILURE;
 		}
 
+		// Normal exit point
 		if (destroyWindowAndExit) {
+			Wnd.Ptr->Hide();
+			SDL_Delay(100);
 			DestroyWindow();
 			return EXIT_SUCCESS;
 		}
 	}
-
-	return EXIT_SUCCESS;
+	
+	// Application should never reach this point
+	MsgBox::Error(APP_NAME, Error.UnexpectedError);
+	return EXIT_FAILURE;
 }
