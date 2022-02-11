@@ -229,8 +229,8 @@ void ShowIntro()
 	Delay(50);
 
 	std::string intro = APP_VERSION;
-	int x = Wnd.Ptr->Cols / 2 - intro.length() / 2;
-	int y = Wnd.Ptr->Rows / 2 - 1;
+	int x = Wnd.Ptr->GetCols() / 2 - intro.length() / 2;
+	int y = Wnd.Ptr->GetRows() / 2 - 1;
 
 	Print(intro, x, y);
 	Wnd.Ptr->Update();
@@ -508,9 +508,9 @@ void FLS()
 	auto fgc = ArgNumber();
 	auto bgc = ArgNumber();
 	auto transparent = ArgNumber() <= 0;
-
-	for (int y = 0; y < Wnd.Ptr->Rows; y++) {
-		for (int x = 0; x < Wnd.Ptr->Cols; x++) {
+	
+	for (int y = 0; y < Wnd.Ptr->GetRows(); y++) {
+		for (int x = 0; x < Wnd.Ptr->GetCols(); x++) {
 			Wnd.Ptr->DrawTile(tile, fgc, bgc, x * TChar::Width, y * TChar::Height, transparent, true);
 		}
 	}
