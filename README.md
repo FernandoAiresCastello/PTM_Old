@@ -9,8 +9,8 @@ For examples of PTM programs, please look inside the folder "Test" where you can
 
 Technologies used in this project:
 
-- [C/C++](https://en.wikipedia.org/wiki/C%2B%2B)
-- [Microsoft Visual Studio Community 2017](https://visualstudio.microsoft.com/vs/older-downloads/#visual-studio-2017-and-other-products) (Version 15.9.35)
+- [C++](https://en.wikipedia.org/wiki/C%2B%2B)
 - [SDL 2.0.8](https://www.libsdl.org/) (x86 DLL)
 - [TileGameLib](https://github.com/FernandoAiresCastello/TileGameToolkit) (by [Fernando Aires Castello](https://github.com/FernandoAiresCastello))
 - [CppUtils](https://github.com/FernandoAiresCastello/CppUtils) (by [Fernando Aires Castello](https://github.com/FernandoAiresCastello))
+- [Microsoft Visual Studio Community 2019](https://visualstudio.microsoft.com/vs/older-downloads/#visual-studio-2017-and-other-products) (Version 16.11.8)
