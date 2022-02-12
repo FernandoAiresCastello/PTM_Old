@@ -85,7 +85,9 @@
     </Link>
     <PostBuildEvent>
       <Command>del "$(SolutionDir)Binaries\$(TargetFileName)"
-copy "$(TargetPath)" "$(SolutionDir)Binaries\$(TargetFileName)"</Command>
+copy "$(TargetPath)" "$(SolutionDir)Binaries\$(TargetFileName)"
+del "$(SolutionDir)Test\$(TargetFileName)"
+copy "$(TargetPath)" "$(SolutionDir)Test\$(TargetFileName)"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">

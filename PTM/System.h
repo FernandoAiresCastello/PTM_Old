@@ -41,7 +41,7 @@ void SetSystemVar(std::string name, std::string value);
 void ResetSystem();
 void DestroySystem();
 void DestroyWindow();
-void CreateWindow(int width, int height, int pixelWidth, int pixelHeight);
+void CreateWindow(int pixelWidth, int pixelHeight, int cols, int rows);
 void ShowWindow();
 void HideWindow();
 void UpdateWindow();

@@ -16,10 +16,11 @@ PAL 0 0x000000
 PAL 1 0x808080
 PAL 2 0xffffff
 
-CLS 0
+VAR bgc 0x80
+CLS bgc
 
 ; Declare variables
-VAR key 0
+VAR key
 VAR x 0
 VAR y 0
 VAR fgc 1
@@ -53,19 +54,19 @@ reset_fgc:
 	
 key_up_handler:
 	DEC y
-	CLS 0
+	CLS bgc
 	RET
 key_down_handler:
 	INC y
-	CLS 0
+	CLS bgc
 	RET
 key_right_handler:
 	INC x
-	CLS 0
+	CLS bgc
 	RET
 key_left_handler:
 	DEC x
-	CLS 0
+	CLS bgc
 	RET
 
 reset:

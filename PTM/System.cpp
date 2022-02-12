@@ -1,5 +1,6 @@
 #include "System.h"
 
+std::string SrcCode = "";
 std::map<std::string, Variable> Vars;
 int KeyPressed = 0;
 int CmpResult = 0;
@@ -17,8 +18,8 @@ void InitSystem()
 
 void InitSystemVars()
 {
-	SetSystemVar("COLS", Wnd.Ptr->ScreenWidth / (Wnd.Ptr->GetPixelWidth() * 8));
-	SetSystemVar("ROWS", Wnd.Ptr->ScreenHeight / (Wnd.Ptr->GetPixelHeight() * 8));
+	SetSystemVar("COLS", Wnd.Ptr->GetCols());
+	SetSystemVar("ROWS", Wnd.Ptr->GetRows());
 	SetSystemVar("CHR_SIZE", Wnd.Ptr->GetCharset()->GetSize());
 	SetSystemVar("PAL_SIZE", Wnd.Ptr->GetPalette()->GetSize());
 
@@ -119,7 +120,7 @@ void ResetSystem()
 		Wnd.Chr->InitDefault();
 		Wnd.Ptr->SetTitle("");
 		Wnd.Ptr->SetBackColor(0);
-		Wnd.Ptr->SetPixelSize(DefaultPixelWidth, DefaultPixelHeight);
+		Wnd.Ptr->SetPixelSize(DefaultPixelWidth, DefaultPixelWidth);
 		Wnd.Ptr->Clear();
 		Wnd.Ptr->Update();
 	}
@@ -140,7 +141,7 @@ void DestroyWindow()
 	Wnd.Ptr = nullptr;
 }
 
-void CreateWindow(int width, int height, int pixelWidth, int pixelHeight)
+void CreateWindow(int pixelWidth, int pixelHeight, int cols, int rows)
 {
 	if (Wnd.Ptr) {
 		Abort(Error.WindowAlreadyOpen);
@@ -150,8 +151,7 @@ void CreateWindow(int width, int height, int pixelWidth, int pixelHeight)
 	DefaultPixelWidth = pixelWidth;
 	DefaultPixelHeight = pixelHeight;
 
-	Wnd.Ptr = new TWindow(width, height, width, height, false, true);
-	Wnd.Ptr->SetPixelSize(pixelWidth, pixelHeight);
+	Wnd.Ptr = TWindow::CreateWithPixelSizeAndTileGrid(pixelHeight, pixelHeight, cols, rows);
 	Wnd.Pal = Wnd.Ptr->GetPalette();
 	Wnd.Chr = Wnd.Ptr->GetCharset();
 }
@@ -258,6 +258,23 @@ void SYS()
 	auto fn = String::ToLower(ArgString());
 	Abort(Error.SystemFunctionNotFound);
 }
+void SRC()
+{
+	Argc(1);
+	auto file = ArgStringLiteral();
+	if (!File::Exists(file)) {
+		Abort(String::Format(Error.ProgramFileNotFound, file.c_str()));
+		return;
+	}
+	SrcCode += File::ReadText(file);
+}
+void COMPILE()
+{
+	Argc(1);
+	auto file = ArgStringLiteral();
+	File::WriteText(file, SrcCode);
+	SrcCode = "";
+}
 void EXIT()
 {
 	Argc(0);
@@ -290,20 +307,30 @@ void RESET()
 }
 void VAR()
 {
-	Argc(2);
+	Argc(1, 2);
 	auto id = ArgVariableName(false);
 	Variable var;
 	var.Type = VariableType::Number;
-	var.Number = ArgNumber();
+
+	if (Argc() == 1)
+		var.Number = 0;
+	else if (Argc() == 2)
+		var.Number = ArgNumber();
+
 	Vars[id] = var;
 }
 void VAR$()
 {
-	Argc(2);
+	Argc(1, 2);
 	auto id = ArgVariableName(false);
 	Variable var;
 	var.Type = VariableType::String;
-	var.String = ArgString();
+	
+	if (Argc() == 1)
+		var.String = "";
+	else if (Argc() == 2)
+		var.String = ArgString();
+
 	Vars[id] = var;
 }
 void VAR_A()
@@ -695,31 +722,16 @@ void FSCR()
 	Argc(1);
 	Wnd.FullScreenRequest = ArgNumber() > 0;
 }
-void GFXM()
+void PIXR()
 {
-	Argc(1);
-	int mode = ArgNumber();
-	int w = 0;
-	int h = 0;
-
-	switch (mode) {
-		case 6: w = 1; h = 1; break;
-		case 5: w = 2; h = 2; break;
-		case 4: w = 3; h = 3; break;
-		case 3: w = 4; h = 3; break;
-		case 2: w = 3; h = 5; break;
-		case 1: w = 5; h = 3; break;
-		case 0: w = 5; h = 5; break;
-
-		default:
-			Abort(String::Format(Error.InvalidGraphicsMode, mode));
-			return;
-	}
+	Argc(2);
+	int w = ArgNumber() + 1;
+	int h = ArgNumber() + 1;
 
 	Wnd.Ptr->SetPixelSize(w, h);
 
-	SetSystemVar("COLS", Wnd.Ptr->ScreenWidth / (Wnd.Ptr->GetPixelWidth() * 8));
-	SetSystemVar("ROWS", Wnd.Ptr->ScreenHeight / (Wnd.Ptr->GetPixelHeight() * 8));
+	SetSystemVar("COLS", Wnd.Ptr->GetCols());
+	SetSystemVar("ROWS", Wnd.Ptr->GetRows());
 }
 void CLS()
 {
@@ -1020,6 +1032,10 @@ void InitCommands()
 	Op["NOP"] = &NOP;			// No operation
 	Op["SYS"] = &SYS;			// Call internal system function
 
+	//=== COMPILER ===
+	Op["SRC"] = &SRC;			// Add PTML source code file
+	Op["COMPILE"] = &COMPILE;	// Compile source files
+
 	//=== DEBUG ===
 	Op["MSGB"] = &MSGB;			// Show message box
 
@@ -1075,7 +1091,7 @@ void InitCommands()
 	//=== GRAPHICS ===
 	Op["TITLE"] = &TITLE;		// Set window title
 	Op["FSCR"] = &FSCR;			// Enable/disable fullscreen mode
-	Op["GFXM"] = &GFXM;			// Set graphics mode
+	Op["PIXR"] = &PIXR;			// Set pixel resolution
 	Op["CLS"] = &CLS;			// Clear screen and set background color
 	Op["OUTM"] = &OUTM;			// Select output mode
 	Op["OUT"] = &OUT;			// Output tile to screen

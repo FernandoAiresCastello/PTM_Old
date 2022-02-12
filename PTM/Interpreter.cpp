@@ -177,10 +177,23 @@ void Return()
 	Branch = true;
 }
 
-void Argc(int expectedArgCount)
+void Argc(int argc)
 {
-	if (Args->size() != expectedArgCount) {
-		Abort(String::Format(Error.InvalidArgCount, expectedArgCount, Args->size()));
+	if (Args->size() != argc) {
+		Abort(String::Format(Error.InvalidArgCount, argc, Args->size()));
+		return;
+	}
+}
+
+int Argc()
+{
+	return Args->size();
+}
+
+void Argc(int minArgc, int maxArgc)
+{
+	if (Args->size() < minArgc || Args->size() > maxArgc) {
+		Abort(String::Format(Error.InvalidArgCountMinMax, minArgc, maxArgc, Args->size()));
 		return;
 	}
 }

@@ -8,14 +8,14 @@ void Program::Load(std::string path)
 {
 	FilePath = path;
 
-	auto file = File::ReadLines(path);
-	
+	auto lines = File::ReadLines(path);
+
 	Lines.clear();
 	Labels.clear();
 	Errors.clear();
 
-	for (int srcLineNr = 0; srcLineNr < file.size(); srcLineNr++) {
-		std::string srcLine = String::Trim(file[srcLineNr]);
+	for (int srcLineNr = 0; srcLineNr < lines.size(); srcLineNr++) {
+		std::string srcLine = String::Trim(lines[srcLineNr]);
 		bool quote = false;
 
 		for (int i = 0; i < srcLine.length(); i++) {
@@ -173,12 +173,12 @@ std::vector<std::string> Program::SplitArgs(std::string& args)
 
 bool Program::Validate()
 {
-	if (Lines.empty()) {
-		MsgBox::Error(APP_NAME, String::Format(Error.InvalidProgramFile, FilePath.c_str()));
-		return false;
-	}
 	if (!Errors.empty()) {
 		MsgBox::Error(APP_NAME, Errors[0]);
+		return false;
+	}
+	if (Lines.empty()) {
+		MsgBox::Error(APP_NAME, String::Format(Error.InvalidProgramFile, FilePath.c_str()));
 		return false;
 	}
 	return true;

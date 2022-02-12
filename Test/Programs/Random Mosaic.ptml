@@ -1,16 +1,15 @@
 
 init:
-	GFXM 1
 	CLS 0
 
-	VAR x 0
-	VAR y 0
+	VAR x
+	VAR y
 	VAR x_max SYS.COLS
 	VAR y_max SYS.ROWS
-	VAR border 0
-	VAR fgc 0
-	VAR bgc 0
-	VAR chr 0
+	VAR border
+	VAR fgc
+	VAR bgc
+	VAR chr
 
 	ADD x x border
 	SUB x_max x_max border

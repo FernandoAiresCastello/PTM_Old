@@ -11,10 +11,9 @@ VAR Player.PrevMissileY 0
 VAR Player.MissileDir 0
 VAR Player.MissileMoveCtr 0
 VAR Player.CanShoot 1
-VAR Key 0
+VAR Key
 VAR Screen.BackColor 0x80
 
-GFXM 0
 OUTM 0
 INPM 0
 CLS Screen.BackColor
@@ -39,7 +38,7 @@ Loop:
 	CMP Key SYS.KEY_SPACE
 	CALL= Player.TryShoot
 	JP Loop
-	
+
 Player.TryShoot:
 	CMP Player.CanShoot 1
 	CALL= Player.Shoot
@@ -71,7 +70,7 @@ Player.MissileMove:
 	CALL< Player.ResetCanShoot
 
 	RET
-	
+
 Player.ResetMissileMoveCtr:
 	SET Player.MissileMoveCtr 0
 	RET

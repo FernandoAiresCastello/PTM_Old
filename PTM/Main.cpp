@@ -9,10 +9,13 @@
 using namespace CppUtils;
 using namespace TileGameLib;
 
+#define AUTORUN_FILE1 "autorun.ptml"
+#define AUTORUN_FILE2 "Autorun.ptml"
+
 int main(int argc, char* argv[]) {
 	
 	InitCommands();
-	CreateWindow(960, 720, 3, 3);
+	CreateWindow(4, 4, 43, 24);
 	
 	bool bootMenu = false;
 	bool destroyWindowAndExit = false;
@@ -37,10 +40,13 @@ int main(int argc, char* argv[]) {
 			}
 		}
 		else { // User started machine without providing a program file
-			if (File::Exists("autorun")) {
-				prog->Load("autorun");
+			if (File::Exists(AUTORUN_FILE1)) {
+				prog->Load(AUTORUN_FILE1);
 			}
-			else { // No "autorun" found
+			if (File::Exists(AUTORUN_FILE2)) {
+				prog->Load(AUTORUN_FILE2);
+			}
+			else { // Autorun file not found
 				MsgBox::Error(APP_NAME, Error.ProgramFileNotSpecified);
 				DestroyWindow();
 				delete prog;

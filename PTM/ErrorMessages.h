@@ -4,13 +4,15 @@ typedef const char* cstr;
 
 struct ErrorMessages {
 	cstr UnexpectedError = "Unexpected error";
-	cstr ProgramFileNotSpecified = "Program file not specified";
+	cstr UnknownFileExtension = "Unknown file extension: \"%s\"";
+	cstr ProgramFileNotSpecified = "Program file not specified and \"autorun.ptml\" not found";
 	cstr ProgramFileNotFound = "Program file not found: \"%s\"";
 	cstr InvalidProgramFile = "Invalid program file: \"%s\"";
 	cstr FileNotFound = "File not found: \"%s\"";
 	cstr UnknownCommand = "Unknown command";
 	cstr ProgEndWithoutExit = "Program ended without EXIT";
 	cstr InvalidArgCount = "Expected %i arguments, got %i";
+	cstr InvalidArgCountMinMax = "Expected from %i to %i arguments, got %i";
 	cstr ArgIndexOutOfRange = "Argument index out of range";
 	cstr StringLiteralExpected = "String literal expected";
 	cstr NumberLiteralExpected = "Number literal expected";

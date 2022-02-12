@@ -1,0 +1,68 @@
+
+Player.ResetMissileMoveCtr:
+	SET Player.MissileMoveCtr 0
+	RET
+Player.MissileMoveRight:
+	SET Player.PrevMissileX Player.MissileX
+	SET Player.PrevMissileY Player.MissileY
+	INC Player.MissileX
+	RET
+Player.ResetCanShoot:
+	SET Player.CanShoot 1
+	RET
+Player.MissileMoveLeft:
+	SET Player.PrevMissileX Player.MissileX
+	SET Player.PrevMissileY Player.MissileY
+	DEC Player.MissileX
+	RET
+Player.MissileMoveUp:
+	SET Player.PrevMissileX Player.MissileX
+	SET Player.PrevMissileY Player.MissileY
+	DEC Player.MissileY
+	RET
+Player.MissileMoveDown:
+	SET Player.PrevMissileX Player.MissileX
+	SET Player.PrevMissileY Player.MissileY
+	INC Player.MissileY
+	RET
+Player.Draw:
+	OUT 2 Player.X Player.Y 0xfe 0 0
+	RET
+Player.ErasePrevPos:
+	OUT 0 Player.PrevX Player.PrevY 0 Screen.BackColor 1
+	RET
+Player.DrawMissile:
+	CALL Player.EraseMissilePrevPos
+	OUT 3 Player.MissileX Player.MissileY 0x47 0 0
+	RET
+Player.EraseMissilePrevPos:
+	OUT 0 Player.PrevMissileX Player.PrevMissileY 0 Screen.BackColor 1
+	RET
+Player.MoveRight:
+	SET Player.Dir 1
+	CALL Player.SaveXY
+	INC Player.X
+	CALL Player.ErasePrevPos
+	RET
+Player.MoveLeft:
+	SET Player.Dir 3
+	CALL Player.SaveXY
+	DEC Player.X
+	CALL Player.ErasePrevPos
+	RET
+Player.MoveUp:
+	SET Player.Dir 0
+	CALL Player.SaveXY
+	DEC Player.Y
+	CALL Player.ErasePrevPos
+	RET
+Player.MoveDown:
+	SET Player.Dir 2
+	CALL Player.SaveXY
+	INC Player.Y
+	CALL Player.ErasePrevPos
+	RET
+Player.SaveXY:
+	SET Player.PrevX Player.X
+	SET Player.PrevY Player.Y
+	RET

@@ -1,0 +1,27 @@
+VAR x
+VAR y
+VAR fgc
+VAR bgc
+VAR pw
+VAR ph
+VAR max
+VAR$ msg "Hello!"
+
+loop:
+	CLS 0x0f
+	SET max 50
+
+hello:
+	RND pw 0 10
+	RND ph 0 10
+	PIXR pw ph
+	RND x 0 SYS.COLS
+	RND y 0 SYS.ROWS
+	RND fgc 0 255
+	RND bgc 0 255
+	OUTS msg x y fgc bgc 0
+	DEC max
+	CMP max 0
+	JP!= hello
+	PAUSE 1000
+	JP loop

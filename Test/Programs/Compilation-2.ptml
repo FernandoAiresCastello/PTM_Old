@@ -1,0 +1,32 @@
+
+Player.TryShoot:
+	CMP Player.CanShoot 1
+	CALL= Player.Shoot
+	RET
+Player.Shoot:
+	BEEP 800 40
+	SET Player.CanShoot 0
+	SET Player.MissileX Player.X
+	SET Player.MissileY Player.Y
+	SET Player.MissileDir Player.Dir
+	RET
+Player.MissileMove:
+	CMP Player.MissileDir 0
+	CALL= Player.MissileMoveUp
+	CMP Player.MissileDir 1
+	CALL= Player.MissileMoveRight
+	CMP Player.MissileDir 2
+	CALL= Player.MissileMoveDown
+	CMP Player.MissileDir 3
+	CALL= Player.MissileMoveLeft
+
+	CMP Player.MissileX 200
+	CALL> Player.ResetCanShoot
+	CMP Player.MissileX 0
+	CALL< Player.ResetCanShoot
+	CMP Player.MissileY 150
+	CALL> Player.ResetCanShoot
+	CMP Player.MissileY 0
+	CALL< Player.ResetCanShoot
+
+	RET
