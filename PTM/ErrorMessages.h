@@ -7,7 +7,7 @@ struct ErrorMessages {
 	cstr UnknownFileExtension = "Unknown file extension: \"%s\"";
 	cstr ProgramFileNotSpecified = "Program file not specified and \"autorun.ptml\" not found";
 	cstr ProgramFileNotFound = "Program file not found: \"%s\"";
-	cstr InvalidProgramFile = "Invalid program file: \"%s\"";
+	cstr ProgramFileEmpty = "Empty program file: \"%s\"";
 	cstr FileNotFound = "File not found: \"%s\"";
 	cstr UnknownCommand = "Unknown command";
 	cstr ProgEndWithoutExit = "Program ended without EXIT";

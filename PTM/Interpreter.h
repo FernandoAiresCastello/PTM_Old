@@ -20,7 +20,6 @@ void RunInterpreter();
 int RunInterpreterThread(void* dummy);
 bool IsValidOpcode(std::string& opcode);
 void Abort(std::string msg, bool printInfo = true);
-void ProcessGlobalEvents();
 void Jump(int ixProgLine);
 void Call(int ixProgLine);
 void Return();

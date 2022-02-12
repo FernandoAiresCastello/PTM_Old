@@ -2,9 +2,10 @@
 
 std::string SrcCode = "";
 std::map<std::string, Variable> Vars;
-int KeyPressed = 0;
+std::stack<SDL_Keycode> KeyPressed;
 int CmpResult = 0;
 SystemWindow Wnd;
+SDL_Event Event = { 0 };
 TSound* Snd = nullptr;
 int DefaultPixelWidth = 0;
 int DefaultPixelHeight = 0;
@@ -110,8 +111,9 @@ void ResetSystem()
 {
 	Vars.clear();
 	InitSystemVars();
-	KeyPressed = 0;
+	ClearInputBuffer();
 	CmpResult = 0;
+	Event = { 0 };
 	Snd->StopMainSound();
 	Snd->StopSubSound();
 
@@ -124,6 +126,12 @@ void ResetSystem()
 		Wnd.Ptr->Clear();
 		Wnd.Ptr->Update();
 	}
+}
+
+void ClearInputBuffer()
+{
+	while (!KeyPressed.empty())
+		KeyPressed.pop();
 }
 
 void DestroySystem()
@@ -181,6 +189,45 @@ void UpdateWindow()
 	}
 
 	Wnd.Ptr->Update();
+}
+
+void ProcessGlobalEvents()
+{
+	if (Wnd.InMode == InputMode::Paused)
+		Event = { 0 };
+
+	SDL_PollEvent(&Event);
+
+	if (Event.type == SDL_QUIT) {
+		Exit = true;
+	}
+	else if (Event.type == SDL_KEYDOWN) {
+		SDL_Keycode key = Event.key.keysym.sym;
+
+		// System key events are a combination of ALT + key
+		if (TKey::Alt()) {
+			// Toggle fullscreen
+			if (key == SDLK_RETURN && Wnd.Ptr) {
+				Wnd.Ptr->ToggleFullscreen();
+				Wnd.Ptr->Update();
+			}
+			// Reset
+			else if (TKey::Ctrl() && key == SDLK_r) {
+				if (Prog && !Prog->GetFilePath().empty()) {
+					NewProgram = Prog->GetFilePath();
+					Exit = true;
+				}
+			}
+			// Force exit
+			else if (TKey::Ctrl() && key == SDLK_x) {
+				Exit = true;
+			}
+		}
+		// User key events
+		else {
+			KeyPressed.push(key);
+		}
+	}
 }
 
 void Print(std::string str, int x, int y)
@@ -824,8 +871,14 @@ void INP()
 	Argc(1);
 	auto id = ArgVariableName(true);
 	AssertVariableIsTypeNumber(id);
-	Vars[id].Number = KeyPressed;
-	KeyPressed = 0;
+
+	if (!KeyPressed.empty()) {
+		Vars[id].Number = KeyPressed.top();
+		KeyPressed.pop();
+	}
+	else {
+		Vars[id].Number = 0;
+	}
 }
 void SNDOFF()
 {

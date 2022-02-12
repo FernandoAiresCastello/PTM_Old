@@ -16,7 +16,6 @@ std::map<std::string, void(*)()> Op;
 std::vector<Parameter>* Args = nullptr;
 int IxArg = 0;
 bool Branch = false;
-SDL_Event Event = { 0 };
 std::stack<int> CallStack;
 std::string NewProgram = "";
 
@@ -39,7 +38,6 @@ void ResetInterpreter()
 	CurLine = &Prog->Lines[IxCurLine];
 	IxArg = 0;
 	Args = &CurLine->Cmd.Params;
-	Event = { 0 };
 
 	while (!CallStack.empty())
 		CallStack.pop();
@@ -114,43 +112,6 @@ void Abort(std::string msg, bool printInfo)
 
 	Exit = true;
 	exit(1);
-}
-
-void ProcessGlobalEvents()
-{
-	if (Wnd.InMode == InputMode::Paused)
-		Event = { 0 };
-
-	SDL_PollEvent(&Event);
-
-	if (Event.type == SDL_QUIT) {
-		Exit = true;
-	}
-	else if (Event.type == SDL_KEYDOWN) {
-		SDL_Keycode key = Event.key.keysym.sym;
-
-		// System key events are a combination of ALT + key
-		if (TKey::Alt()) {
-			// Toggle fullscreen
-			if (key == SDLK_RETURN && Wnd.Ptr) {
-				Wnd.Ptr->ToggleFullscreen();
-				Wnd.Ptr->Update();
-			}
-			// Reset
-			else if (TKey::Ctrl() && key == SDLK_r) {
-				NewProgram = Prog->GetFilePath();
-				Exit = true;
-			}
-			// Force exit
-			else if (TKey::Ctrl() && key == SDLK_x) {
-				Exit = true;
-			}
-		}
-		// User key events
-		else {
-			KeyPressed = key;
-		}
-	}
 }
 
 void Jump(int ixProgLine)

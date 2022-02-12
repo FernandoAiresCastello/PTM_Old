@@ -2,6 +2,7 @@
 #include <map>
 #include <vector>
 #include <string>
+#include <stack>
 #include <CppUtils.h>
 #include <TileGameLib.h>
 #include "GlobalDefs.h"
@@ -20,7 +21,7 @@ enum class OutputMode { Free, Tiled };
 enum class InputMode { Continuous, Paused };
 
 extern std::map<std::string, Variable> Vars;
-extern int KeyPressed;
+extern std::stack<SDL_Keycode> KeyPressed;
 
 struct SystemWindow {
 	std::string Title = "";
@@ -39,11 +40,13 @@ void InitSystemVars();
 void SetSystemVar(std::string name, int value);
 void SetSystemVar(std::string name, std::string value);
 void ResetSystem();
+void ClearInputBuffer();
 void DestroySystem();
 void DestroyWindow();
 void CreateWindow(int pixelWidth, int pixelHeight, int cols, int rows);
 void ShowWindow();
 void HideWindow();
 void UpdateWindow();
+void ProcessGlobalEvents();
 void ShowIntro();
 void InitCommands();

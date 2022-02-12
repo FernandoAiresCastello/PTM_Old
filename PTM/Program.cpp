@@ -178,7 +178,7 @@ bool Program::Validate()
 		return false;
 	}
 	if (Lines.empty()) {
-		MsgBox::Error(APP_NAME, String::Format(Error.InvalidProgramFile, FilePath.c_str()));
+		MsgBox::Error(APP_NAME, String::Format(Error.ProgramFileEmpty, FilePath.c_str()));
 		return false;
 	}
 	return true;
