@@ -143,7 +143,7 @@ void DestroySystem()
 void DestroyWindow()
 {
 	HideWindow();
-	SDL_Delay(100);
+	SDL_Delay(200);
 
 	delete Wnd.Ptr;
 	Wnd.Ptr = nullptr;

@@ -1,6 +1,6 @@
 
-VAR Player.X 100
-VAR Player.Y 100
+VAR Player.X 170
+VAR Player.Y 95
 VAR Player.PrevX Player.X
 VAR Player.PrevY Player.Y
 VAR Player.Dir 0
@@ -9,20 +9,24 @@ VAR Player.MissileY -100
 VAR Player.PrevMissileX 0
 VAR Player.PrevMissileY 0
 VAR Player.MissileDir 0
+VAR Player.MissileDist 0
 VAR Player.MissileMoveCtr 0
 VAR Player.CanShoot 1
+VAR Player.Shooting 0
 VAR Key
 VAR Screen.BackColor 0x80
 
-OUTM 0
-INPM 0
-CLS Screen.BackColor
-
-Loop:
-	CALL Player.DrawMissile
+Init:
+	VOL 2000
+	OUTM 0
+	INPM 0
+	CLS Screen.BackColor
+MainLoop:
+	CMP Player.Shooting 1
+	CALL= Player.DrawMissile
 	CALL Player.Draw
 	CMP Player.MissileMoveCtr 0
-	CALL= Player.MissileMove
+	CALL= Player.TryMissileMove
 	INC Player.MissileMoveCtr
 	CMP Player.MissileMoveCtr 30
 	CALL= Player.ResetMissileMoveCtr
@@ -37,18 +41,22 @@ Loop:
 	CALL= Player.MoveDown
 	CMP Key SYS.KEY_SPACE
 	CALL= Player.TryShoot
-	JP Loop
-
+	JP MainLoop
 Player.TryShoot:
 	CMP Player.CanShoot 1
 	CALL= Player.Shoot
 	RET
 Player.Shoot:
-	BEEP 800 40
+	PLAY "C6 D6 E6"
 	SET Player.CanShoot 0
 	SET Player.MissileX Player.X
 	SET Player.MissileY Player.Y
 	SET Player.MissileDir Player.Dir
+	SET Player.Shooting 1
+	RET
+Player.TryMissileMove:
+	CMP Player.Shooting 1
+	CALL= Player.MissileMove
 	RET
 Player.MissileMove:
 	CMP Player.MissileDir 0
@@ -59,18 +67,10 @@ Player.MissileMove:
 	CALL= Player.MissileMoveDown
 	CMP Player.MissileDir 3
 	CALL= Player.MissileMoveLeft
-
-	CMP Player.MissileX 200
-	CALL> Player.ResetCanShoot
-	CMP Player.MissileX 0
-	CALL< Player.ResetCanShoot
-	CMP Player.MissileY 150
-	CALL> Player.ResetCanShoot
-	CMP Player.MissileY 0
-	CALL< Player.ResetCanShoot
-
+	INC Player.MissileDist
+	CMP Player.MissileDist 50
+	CALL> Player.ResetMissile
 	RET
-
 Player.ResetMissileMoveCtr:
 	SET Player.MissileMoveCtr 0
 	RET
@@ -79,8 +79,11 @@ Player.MissileMoveRight:
 	SET Player.PrevMissileY Player.MissileY
 	INC Player.MissileX
 	RET
-Player.ResetCanShoot:
+Player.ResetMissile:
 	SET Player.CanShoot 1
+	SET Player.Shooting 0
+	SET Player.MissileDist 0
+	CALL Player.EraseMissilePrevPos
 	RET
 Player.MissileMoveLeft:
 	SET Player.PrevMissileX Player.MissileX

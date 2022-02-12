@@ -111,7 +111,7 @@ void Abort(std::string msg, bool printInfo)
 	}
 
 	Exit = true;
-	exit(1);
+	exit(EXIT_SUCCESS);
 }
 
 void Jump(int ixProgLine)
