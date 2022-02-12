@@ -7,7 +7,7 @@ Since this project is in a very early stage, the machine internal workings as we
 
 For examples of PTM programs, please look inside the folder "Test" where you can find some PTML source code files. If you just want the machine executable (PTM.exe) you can find the latest dev build in the folder "Binaries".
 
-Technologies used in this project:
+Dependencies:
 
 - [C++](https://en.wikipedia.org/wiki/C%2B%2B)
 - [SDL 2.0.8](https://www.libsdl.org/) (x86 DLL)
