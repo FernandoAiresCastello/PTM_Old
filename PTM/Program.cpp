@@ -69,10 +69,15 @@ ProgramLine Program::Parse(int srcLineNr, std::string& srcLine)
 		line.Cmd.Operation = srcLine;
 	}
 	
-	if (!IsValidOpcode(line.Cmd.Operation))
+	if (!IsValidOpcode(line.Cmd.Operation)) {
 		err = Error.UnknownCommand;
-	if (err != "")
-		Errors.push_back(String::Format("%s at line %i:\n\n%s", err.c_str(), srcLineNr, srcLine.c_str()));
+	}
+	if (err != "") {
+		std::string fmt = String::Format("Error at line %i:\n\n%s\n\n%s",
+			srcLineNr, err.c_str(), srcLine.c_str());
+
+		Errors.push_back(fmt);
+	}
 
 	return line;
 }

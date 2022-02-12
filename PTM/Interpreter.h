@@ -13,11 +13,12 @@ extern ErrorMessages Error;
 extern Program* Prog;
 extern std::string NewProgram;
 
+void RunMainThread();
+int RunMachineThread(void* dummy);
+
 void InitInterpreter(Program* prog);
 void ResetInterpreter();
 void DestroyInterpreter();
-void RunInterpreter();
-int RunInterpreterThread(void* dummy);
 bool IsValidOpcode(std::string& opcode);
 void Abort(std::string msg, bool printInfo = true);
 void Jump(int ixProgLine);
@@ -41,6 +42,7 @@ std::string GetStringFromVariable(std::string& identifier);
 std::string GetStringFromArrayAtIndex(std::string& identifier, int index);
 std::string GetStringFromArrayAtVarIndex(std::string& idVariable, std::string& idIndex);
 void AssertVariable(std::string& identifier, bool exists);
+void AssertVariableNotConst(std::string& identifier);
 void AssertVariableIsTypeNumber(std::string& identifier);
 void AssertVariableIsTypeString(std::string& identifier);
 void AssertVariableIsTypeNumberArray(std::string& identifier);

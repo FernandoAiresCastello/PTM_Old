@@ -1,9 +1,15 @@
 
+TITLE "Sprites"
+
+CONST Player.MoveDelay 30
+CONST Player.MissileMoveDelay 20
+
 VAR Player.X 170
 VAR Player.Y 95
 VAR Player.PrevX Player.X
 VAR Player.PrevY Player.Y
 VAR Player.Dir 0
+VAR Player.MoveCtr 0
 VAR Player.MissileX -100
 VAR Player.MissileY -100
 VAR Player.PrevMissileX 0
@@ -17,31 +23,52 @@ VAR Key
 VAR Screen.BackColor 0x80
 
 Init:
-	VOL 2000
-	OUTM 0
-	INPM 0
+	VOL 1000
 	CLS Screen.BackColor
+	
 MainLoop:
+	DRAW
+	
 	CMP Player.Shooting 1
 	CALL= Player.DrawMissile
 	CALL Player.Draw
 	CMP Player.MissileMoveCtr 0
 	CALL= Player.TryMissileMove
 	INC Player.MissileMoveCtr
-	CMP Player.MissileMoveCtr 30
+	CMP Player.MissileMoveCtr Player.MissileMoveDelay
 	CALL= Player.ResetMissileMoveCtr
-	INP Key
-	CMP Key SYS.KEY_RIGHT
-	CALL= Player.MoveRight
-	CMP Key SYS.KEY_LEFT
-	CALL= Player.MoveLeft
-	CMP Key SYS.KEY_UP
-	CALL= Player.MoveUp
-	CMP Key SYS.KEY_DOWN
-	CALL= Player.MoveDown
-	CMP Key SYS.KEY_SPACE
+	
+	CHK Key SYS.KEY_SPACE
+	CMP Key 1
 	CALL= Player.TryShoot
+
+	INC Player.MoveCtr
+	CMP Player.MoveCtr Player.MoveDelay
+	CALL>= Player.ResetMoveCtr
+	CMP Player.MoveCtr 0
+	JP!= MainLoop
+
+	CHK Key SYS.KEY_RIGHT
+	CMP Key 1
+	CALL= Player.MoveRight
+	
+	CHK Key SYS.KEY_LEFT
+	CMP Key 1
+	CALL= Player.MoveLeft
+	
+	CHK Key SYS.KEY_UP
+	CMP Key 1
+	CALL= Player.MoveUp
+	
+	CHK Key SYS.KEY_DOWN
+	CMP Key 1
+	CALL= Player.MoveDown
+	
 	JP MainLoop
+	
+Player.ResetMoveCtr:
+	SET Player.MoveCtr 0
+	RET
 Player.TryShoot:
 	CMP Player.CanShoot 1
 	CALL= Player.Shoot

@@ -19,6 +19,54 @@ bool Branch = false;
 std::stack<int> CallStack;
 std::string NewProgram = "";
 
+/*
+	WARNING!
+	This runs in the MAIN application thread
+	This is the ONLY function through which the window may be accessed directly
+*/
+void RunMainThread()
+{
+	SDL_Thread* machineThread = nullptr;
+
+	while (!Exit) {
+		ProcessGlobalEventsInMainThread();
+		UpdateWindow();
+		if (!machineThread)
+			machineThread = SDL_CreateThread(RunMachineThread, "MachineThread", nullptr);
+	}
+}
+
+/*
+	WARNING!
+	This runs in the MACHINE interpreter thread
+	The window MAY NOT be directly accessed through this function
+*/
+int RunMachineThread(void* dummy)
+{
+	while (!Exit) {
+		CurLine = &Prog->Lines[IxCurLine];
+		Args = &CurLine->Cmd.Params;
+		IxArg = 0;
+
+		if (Op.find(CurLine->Cmd.Operation) != Op.end())
+			Op[CurLine->Cmd.Operation]();
+		else
+			Abort(Error.UnknownCommand);
+
+		if (!Exit) {
+			if (Branch)
+				Branch = false;
+			else
+				IxCurLine++;
+
+			if (IxCurLine >= Prog->Lines.size())
+				Abort(Error.ProgEndWithoutExit);
+		}
+	}
+
+	return 0;
+}
+
 void InitInterpreter(Program* prog)
 {
 	if (prog != Prog)
@@ -47,50 +95,8 @@ void ResetInterpreter()
 
 void DestroyInterpreter()
 {
-	DestroySystem();
 	delete Prog;
 	Prog = nullptr;
-}
-
-void RunInterpreter()
-{
-	InitSystem();
-
-	SDL_Thread* thread = nullptr;
-
-	while (!Exit) {
-		ProcessGlobalEvents();
-		UpdateWindow();
-
-		if (!thread)
-			thread = SDL_CreateThread(RunInterpreterThread, "RunMachineThread", nullptr);
-	}
-}
-
-int RunInterpreterThread(void* dummy)
-{
-	while (!Exit) {
-		CurLine = &Prog->Lines[IxCurLine];
-		Args = &CurLine->Cmd.Params;
-		IxArg = 0;
-
-		if (Op.find(CurLine->Cmd.Operation) != Op.end())
-			Op[CurLine->Cmd.Operation]();
-		else
-			Abort(Error.UnknownCommand);
-
-		if (!Exit) {
-			if (Branch)
-				Branch = false;
-			else
-				IxCurLine++;
-
-			if (IxCurLine >= Prog->Lines.size())
-				Abort(Error.ProgEndWithoutExit);
-		}
-	}
-
-	return 0;
 }
 
 bool IsValidOpcode(std::string& opcode)
@@ -101,8 +107,8 @@ bool IsValidOpcode(std::string& opcode)
 void Abort(std::string msg, bool printInfo)
 {
 	if (printInfo) {
-		std::string fmt = String::Format("%s at line %i:\n\n%s",
-			msg.c_str(), CurLine->SrcLineNr, CurLine->SrcCode.c_str());
+		std::string fmt = String::Format("Error at line %i:\n\n%s\n\n%s",
+			CurLine->SrcLineNr, msg.c_str(), CurLine->SrcCode.c_str());
 
 		MsgBox::Error(Wnd.Title, fmt);
 	}
@@ -482,6 +488,18 @@ void AssertVariable(std::string& identifier, bool exists)
 		if (Vars.find(identifier) != Vars.end())
 			Abort(String::Format(Error.DuplicateVariableName, identifier.c_str()));
 	}
+}
+
+void AssertVariableNotConst(std::string& identifier)
+{
+	if (Vars.find(identifier) == Vars.end()) {
+		Abort(String::Format(Error.VariableNotDeclared, identifier.c_str()));
+	}
+	else {
+		if (Vars[identifier].Const)
+			Abort(String::Format(Error.ConstNotModifiable, identifier.c_str()));
+	}
+
 }
 
 void AssertVariableIsTypeNumber(std::string& identifier)

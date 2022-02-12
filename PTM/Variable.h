@@ -7,6 +7,7 @@ class Variable
 {
 public:
 	VariableType Type = VariableType::Invalid;
+	bool Const = false;
 	int Number = 0;
 	std::string String = "";
 	std::vector<int> NumberArray;

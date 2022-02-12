@@ -19,12 +19,12 @@ struct ErrorMessages {
 	cstr IdentifierExpected = "Identifier expected";
 	cstr SyntaxError = "Syntax error";
 	cstr MemoryAddrOutOfBounds = "Memory address out of bounds";
-	cstr VariableNotDeclared = "Variable %s is not declared";
-	cstr DuplicateVariableName = "Duplicate variable name: %s";
+	cstr VariableNotDeclared = "Variable \"%s\" is not declared";
+	cstr DuplicateVariableName = "Duplicate variable name: \"%s\"";
 	cstr LabelExpected = "Label name expected";
-	cstr LabelNotFound = "Label %s not found";
+	cstr LabelNotFound = "Label \"%s\" not found";
 	cstr CallStackEmpty = "Call stack empty";
-	cstr DuplicateLabel = "Duplicate label: %s";
+	cstr DuplicateLabel = "Duplicate label: \"%s\"";
 	cstr WindowAlreadyOpen = "Window already open";
 	cstr TypeMismatch = "Type mismatch";
 	cstr ArrayIndexOutOfBounds = "Array index (%i) out of bounds (0 to %i)";
@@ -35,6 +35,8 @@ struct ErrorMessages {
 	cstr IllegalVariableName = "Illegal variable name";
 	cstr InvalidGraphicsMode = "Invalid graphics mode: %i";
 	cstr StringIndexOutOfRange = "String index out of range";
+	cstr IllegalConstType = "Illegal type of constant";
+	cstr ConstNotModifiable = "Const variable \"%s\" is not modifiable";
 };
 
 extern ErrorMessages Error;

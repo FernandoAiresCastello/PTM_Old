@@ -2,7 +2,7 @@
 
 std::string SrcCode = "";
 std::map<std::string, Variable> Vars;
-std::stack<SDL_Keycode> KeyPressed;
+const Uint8* Keyboard = nullptr;
 int CmpResult = 0;
 SystemWindow Wnd;
 SDL_Event Event = { 0 };
@@ -24,69 +24,69 @@ void InitSystemVars()
 	SetSystemVar("CHR_SIZE", Wnd.Ptr->GetCharset()->GetSize());
 	SetSystemVar("PAL_SIZE", Wnd.Ptr->GetPalette()->GetSize());
 
-	SetSystemVar("KEY_UP", SDLK_UP);
-	SetSystemVar("KEY_DOWN", SDLK_DOWN);
-	SetSystemVar("KEY_LEFT", SDLK_LEFT);
-	SetSystemVar("KEY_RIGHT", SDLK_RIGHT);
-	SetSystemVar("KEY_SPACE", SDLK_SPACE);
-	SetSystemVar("KEY_RETURN", SDLK_RETURN);
-	SetSystemVar("KEY_ESC", SDLK_ESCAPE);
-	SetSystemVar("KEY_TAB", SDLK_TAB);
-	SetSystemVar("KEY_BS", SDLK_BACKSPACE);
-	SetSystemVar("KEY_INS", SDLK_INSERT);
-	SetSystemVar("KEY_DEL", SDLK_DELETE);
-	SetSystemVar("KEY_HOME", SDLK_HOME);
-	SetSystemVar("KEY_END", SDLK_END);
-	SetSystemVar("KEY_PGUP", SDLK_PAGEUP);
-	SetSystemVar("KEY_PGDN", SDLK_PAGEDOWN);
-	SetSystemVar("KEY_F1", SDLK_F1);
-	SetSystemVar("KEY_F2", SDLK_F2);
-	SetSystemVar("KEY_F3", SDLK_F3);
-	SetSystemVar("KEY_F4", SDLK_F4);
-	SetSystemVar("KEY_F5", SDLK_F5);
-	SetSystemVar("KEY_F6", SDLK_F6);
-	SetSystemVar("KEY_F7", SDLK_F7);
-	SetSystemVar("KEY_F8", SDLK_F8);
-	SetSystemVar("KEY_F9", SDLK_F9);
-	SetSystemVar("KEY_F10", SDLK_F10);
-	SetSystemVar("KEY_F11", SDLK_F11);
-	SetSystemVar("KEY_F12", SDLK_F12);
-	SetSystemVar("KEY_1", SDLK_1);
-	SetSystemVar("KEY_2", SDLK_2);
-	SetSystemVar("KEY_3", SDLK_3);
-	SetSystemVar("KEY_4", SDLK_4);
-	SetSystemVar("KEY_5", SDLK_5);
-	SetSystemVar("KEY_6", SDLK_6);
-	SetSystemVar("KEY_7", SDLK_7);
-	SetSystemVar("KEY_8", SDLK_8);
-	SetSystemVar("KEY_9", SDLK_9);
-	SetSystemVar("KEY_0", SDLK_0);
-	SetSystemVar("KEY_Q", SDLK_q);
-	SetSystemVar("KEY_U", SDLK_u);
-	SetSystemVar("KEY_E", SDLK_e);
-	SetSystemVar("KEY_R", SDLK_r);
-	SetSystemVar("KEY_T", SDLK_t);
-	SetSystemVar("KEY_Y", SDLK_y);
-	SetSystemVar("KEY_U", SDLK_u);
-	SetSystemVar("KEY_I", SDLK_i);
-	SetSystemVar("KEY_O", SDLK_o);
-	SetSystemVar("KEY_P", SDLK_p);
-	SetSystemVar("KEY_A", SDLK_a);
-	SetSystemVar("KEY_S", SDLK_s);
-	SetSystemVar("KEY_D", SDLK_d);
-	SetSystemVar("KEY_F", SDLK_f);
-	SetSystemVar("KEY_G", SDLK_g);
-	SetSystemVar("KEY_H", SDLK_h);
-	SetSystemVar("KEY_J", SDLK_j);
-	SetSystemVar("KEY_K", SDLK_k);
-	SetSystemVar("KEY_L", SDLK_l);
-	SetSystemVar("KEY_Z", SDLK_z);
-	SetSystemVar("KEY_X", SDLK_x);
-	SetSystemVar("KEY_C", SDLK_c);
-	SetSystemVar("KEY_V", SDLK_v);
-	SetSystemVar("KEY_B", SDLK_b);
-	SetSystemVar("KEY_N", SDLK_n);
-	SetSystemVar("KEY_M", SDLK_m);
+	SetSystemVar("KEY_UP", SDL_SCANCODE_UP);
+	SetSystemVar("KEY_DOWN", SDL_SCANCODE_DOWN);
+	SetSystemVar("KEY_LEFT", SDL_SCANCODE_LEFT);
+	SetSystemVar("KEY_RIGHT", SDL_SCANCODE_RIGHT);
+	SetSystemVar("KEY_SPACE", SDL_SCANCODE_SPACE);
+	SetSystemVar("KEY_RETURN", SDL_SCANCODE_RETURN);
+	SetSystemVar("KEY_ESC", SDL_SCANCODE_ESCAPE);
+	SetSystemVar("KEY_TAB", SDL_SCANCODE_TAB);
+	SetSystemVar("KEY_BS", SDL_SCANCODE_BACKSPACE);
+	SetSystemVar("KEY_INS", SDL_SCANCODE_INSERT);
+	SetSystemVar("KEY_DEL", SDL_SCANCODE_DELETE);
+	SetSystemVar("KEY_HOME", SDL_SCANCODE_HOME);
+	SetSystemVar("KEY_END", SDL_SCANCODE_END);
+	SetSystemVar("KEY_PGUP", SDL_SCANCODE_PAGEUP);
+	SetSystemVar("KEY_PGDN", SDL_SCANCODE_PAGEDOWN);
+	SetSystemVar("KEY_F1", SDL_SCANCODE_F1);
+	SetSystemVar("KEY_F2", SDL_SCANCODE_F2);
+	SetSystemVar("KEY_F3", SDL_SCANCODE_F3);
+	SetSystemVar("KEY_F4", SDL_SCANCODE_F4);
+	SetSystemVar("KEY_F5", SDL_SCANCODE_F5);
+	SetSystemVar("KEY_F6", SDL_SCANCODE_F6);
+	SetSystemVar("KEY_F7", SDL_SCANCODE_F7);
+	SetSystemVar("KEY_F8", SDL_SCANCODE_F8);
+	SetSystemVar("KEY_F9", SDL_SCANCODE_F9);
+	SetSystemVar("KEY_F10", SDL_SCANCODE_F10);
+	SetSystemVar("KEY_F11", SDL_SCANCODE_F11);
+	SetSystemVar("KEY_F12", SDL_SCANCODE_F12);
+	SetSystemVar("KEY_1", SDL_SCANCODE_1);
+	SetSystemVar("KEY_2", SDL_SCANCODE_2);
+	SetSystemVar("KEY_3", SDL_SCANCODE_3);
+	SetSystemVar("KEY_4", SDL_SCANCODE_4);
+	SetSystemVar("KEY_5", SDL_SCANCODE_5);
+	SetSystemVar("KEY_6", SDL_SCANCODE_6);
+	SetSystemVar("KEY_7", SDL_SCANCODE_7);
+	SetSystemVar("KEY_8", SDL_SCANCODE_8);
+	SetSystemVar("KEY_9", SDL_SCANCODE_9);
+	SetSystemVar("KEY_0", SDL_SCANCODE_0);
+	SetSystemVar("KEY_Q", SDL_SCANCODE_Q);
+	SetSystemVar("KEY_W", SDL_SCANCODE_W);
+	SetSystemVar("KEY_E", SDL_SCANCODE_E);
+	SetSystemVar("KEY_R", SDL_SCANCODE_R);
+	SetSystemVar("KEY_T", SDL_SCANCODE_T);
+	SetSystemVar("KEY_Y", SDL_SCANCODE_Y);
+	SetSystemVar("KEY_U", SDL_SCANCODE_U);
+	SetSystemVar("KEY_I", SDL_SCANCODE_I);
+	SetSystemVar("KEY_O", SDL_SCANCODE_O);
+	SetSystemVar("KEY_P", SDL_SCANCODE_P);
+	SetSystemVar("KEY_A", SDL_SCANCODE_A);
+	SetSystemVar("KEY_S", SDL_SCANCODE_S);
+	SetSystemVar("KEY_D", SDL_SCANCODE_D);
+	SetSystemVar("KEY_F", SDL_SCANCODE_F);
+	SetSystemVar("KEY_G", SDL_SCANCODE_G);
+	SetSystemVar("KEY_H", SDL_SCANCODE_H);
+	SetSystemVar("KEY_J", SDL_SCANCODE_J);
+	SetSystemVar("KEY_K", SDL_SCANCODE_K);
+	SetSystemVar("KEY_L", SDL_SCANCODE_L);
+	SetSystemVar("KEY_Z", SDL_SCANCODE_Z);
+	SetSystemVar("KEY_X", SDL_SCANCODE_X);
+	SetSystemVar("KEY_C", SDL_SCANCODE_C);
+	SetSystemVar("KEY_V", SDL_SCANCODE_V);
+	SetSystemVar("KEY_B", SDL_SCANCODE_B);
+	SetSystemVar("KEY_N", SDL_SCANCODE_N);
+	SetSystemVar("KEY_M", SDL_SCANCODE_M);
 }
 
 void SetSystemVar(std::string name, int value)
@@ -111,7 +111,6 @@ void ResetSystem()
 {
 	Vars.clear();
 	InitSystemVars();
-	ClearInputBuffer();
 	CmpResult = 0;
 	Event = { 0 };
 	Snd->StopMainSound();
@@ -126,12 +125,6 @@ void ResetSystem()
 		Wnd.Ptr->Clear();
 		Wnd.Ptr->Update();
 	}
-}
-
-void ClearInputBuffer()
-{
-	while (!KeyPressed.empty())
-		KeyPressed.pop();
 }
 
 void DestroySystem()
@@ -187,16 +180,17 @@ void UpdateWindow()
 		Wnd.Ptr->SetFullscreen(Wnd.FullScreenRequest);
 		Wnd.FullScreenRequest = -1;
 	}
-
-	Wnd.Ptr->Update();
+	if (Wnd.UpdateRequest > 0) {
+		Wnd.Ptr->Update();
+		Wnd.UpdateRequest = 0;
+	}
 }
 
-void ProcessGlobalEvents()
+void ProcessGlobalEventsInMainThread()
 {
-	if (Wnd.InMode == InputMode::Paused)
-		Event = { 0 };
-
 	SDL_PollEvent(&Event);
+
+	Keyboard = SDL_GetKeyboardState(nullptr);
 
 	if (Event.type == SDL_QUIT) {
 		Exit = true;
@@ -222,10 +216,6 @@ void ProcessGlobalEvents()
 			else if (TKey::Ctrl() && key == SDLK_x) {
 				Exit = true;
 			}
-		}
-		// User key events
-		else {
-			KeyPressed.push(key);
 		}
 	}
 }
@@ -254,39 +244,6 @@ void Print(std::string str, int x, int y)
 			x += TChar::Width;
 		}
 	}
-}
-
-void Delay(int cycles)
-{
-	for (int i = 0; i < cycles; i++) {
-		ProcessGlobalEvents();
-		Wnd.Ptr->Update();
-		if (Exit)
-			break;
-
-		SDL_Delay(1);
-	}
-}
-
-void ShowIntro()
-{
-	Wnd.Ptr->SetBackColor(0x00);
-	Wnd.Ptr->Clear();
-	Wnd.Ptr->Update();
-	Delay(50);
-
-	std::string intro = APP_VERSION;
-	int x = Wnd.Ptr->GetCols() / 2 - intro.length() / 2;
-	int y = Wnd.Ptr->GetRows() / 2 - 1;
-
-	Print(intro, x, y);
-	Wnd.Ptr->Update();
-	Snd->PlaySubSound("c6 50 d6 70 c6 80 d6 120");
-	Delay(256);
-
-	Wnd.Ptr->SetBackColor(0x00);
-	Wnd.Ptr->Clear();
-	Wnd.Ptr->Update();
 }
 
 /*#############################################################################
@@ -352,6 +309,35 @@ void RESET()
 	Exit = true;
 	NewProgram = Prog->GetFilePath();
 }
+void CONST()
+{
+	Argc(2);
+	auto id = ArgVariableName(false);
+	Variable var;
+	var.Const = true;
+
+	if (Arg(1)->Type == ParameterType::NumberLiteral) {
+		auto value = Arg(1)->NumberValue;
+		var.Type = VariableType::Number;
+		var.Number = value;
+	}
+	else if (Arg(1)->Type == ParameterType::StringLiteral) {
+		auto value = Arg(1)->StringValue;
+		var.Type = VariableType::String;
+		var.String = value;
+	}
+	else if (Arg(1)->Type == ParameterType::CharLiteral) {
+		auto value = Arg(1)->NumberValue;
+		var.Type = VariableType::Number;
+		var.Number = value;
+	}
+	else {
+		Abort(Error.IllegalConstType);
+		return;
+	}
+
+	Vars[id] = var;
+}
 void VAR()
 {
 	Argc(1, 2);
@@ -401,6 +387,7 @@ void SET()
 	Argc(2);
 	if (Arg(0)->Type == ParameterType::Identifier) {
 		auto id = ArgVariableName(true);
+		AssertVariableNotConst(id);
 		auto& var = Vars[id];
 		if (var.Type == VariableType::Number)
 			var.Number = ArgNumber();
@@ -522,10 +509,10 @@ void TITLE()
 	Argc(1);
 	Wnd.Title = ArgString();
 }
-void OUTM()
+void GRID()
 {
 	Argc(1);
-	Wnd.OutMode = (OutputMode)ArgNumber();
+	Wnd.Grid = ArgNumber();
 }
 void OUT()
 {
@@ -541,7 +528,7 @@ void OUT()
 	AssertPaletteIndex(fgc);
 	AssertPaletteIndex(bgc);
 
-	Wnd.Ptr->DrawTile(tile, fgc, bgc, x, y, transparent, Wnd.OutMode == OutputMode::Tiled);
+	Wnd.Ptr->DrawTile(tile, fgc, bgc, x, y, transparent, Wnd.Grid);
 }
 void OUTS()
 {
@@ -570,7 +557,7 @@ void OUTS()
 			}
 		}
 		else {
-			Wnd.Ptr->DrawTile(tile, fgc, bgc, x, y, transparent, Wnd.OutMode == OutputMode::Tiled);
+			Wnd.Ptr->DrawTile(tile, fgc, bgc, x, y, transparent, Wnd.Grid);
 			x++;
 		}
 	}
@@ -780,6 +767,11 @@ void PIXR()
 	SetSystemVar("COLS", Wnd.Ptr->GetCols());
 	SetSystemVar("ROWS", Wnd.Ptr->GetRows());
 }
+void DRAW()
+{
+	Argc(0);
+	Wnd.UpdateRequest = 1;
+}
 void CLS()
 {
 	Argc(1);
@@ -861,24 +853,13 @@ void RND()
 	AssertVariableIsTypeNumber(id);
 	Vars[id].Number = rnd;
 }
-void INPM()
+void CHK()
 {
-	Argc(1);
-	Wnd.InMode = (InputMode)ArgNumber();
-}
-void INP()
-{
-	Argc(1);
+	Argc(2);
 	auto id = ArgVariableName(true);
 	AssertVariableIsTypeNumber(id);
-
-	if (!KeyPressed.empty()) {
-		Vars[id].Number = KeyPressed.top();
-		KeyPressed.pop();
-	}
-	else {
-		Vars[id].Number = 0;
-	}
+	SDL_Keycode scancode = ArgNumber();
+	Vars[id].Number = Keyboard[scancode] ? 1 : 0;
 }
 void SNDOFF()
 {
@@ -1115,6 +1096,7 @@ void InitCommands()
 	Op["RUN"] = &RUN;			// Reset machine with a different program
 
 	//=== VARIABLES ===
+	Op["CONST"] = &CONST;		// Declare a constant
 	Op["VAR"] = &VAR;			// Declare variable as number
 	Op["VAR$"] = &VAR$;			// Declare variable as string
 	Op["VAR[]"] = &VAR_A;		// Declare variable as number array
@@ -1145,8 +1127,9 @@ void InitCommands()
 	Op["TITLE"] = &TITLE;		// Set window title
 	Op["FSCR"] = &FSCR;			// Enable/disable fullscreen mode
 	Op["PIXR"] = &PIXR;			// Set pixel resolution
+	Op["DRAW"] = &DRAW;			// Update the screen
 	Op["CLS"] = &CLS;			// Clear screen and set background color
-	Op["OUTM"] = &OUTM;			// Select output mode
+	Op["GRID"] = &GRID;			// Enable/disable snapping tiles to a grid
 	Op["OUT"] = &OUT;			// Output tile to screen
 	Op["OUTS"] = &OUTS;			// Output string of tiles to screen
 	Op["FLS"] = &FLS;			// Fill screen with same tile
@@ -1156,10 +1139,9 @@ void InitCommands()
 	Op["LDCHR"] = &LDCHR;		// Load charset data from image file
 	Op["LDPAL"] = &LDPAL;		// Load palette data from image file
 	Op["PRTSCN"] = &PRTSCN;		// Save screen image to file
-
+	
 	//=== INPUT ===
-	Op["INPM"] = &INPM;			// Set input mode
-	Op["INP"] = &INP;			// Get key pressed
+	Op["CHK"] = &CHK;			// Check if key is pressed
 
 	//=== SOUND ===
 	Op["SNDOFF"] = &SNDOFF;		// Stop all currently playing sounds

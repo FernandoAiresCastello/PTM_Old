@@ -17,19 +17,16 @@ using namespace TileGameLib;
 
 #define SYS_VAR_PREFIX "SYS."
 
-enum class OutputMode { Free, Tiled };
-enum class InputMode { Continuous, Paused };
-
 extern std::map<std::string, Variable> Vars;
-extern std::stack<SDL_Keycode> KeyPressed;
+extern const Uint8* Keyboard;
 
 struct SystemWindow {
 	std::string Title = "";
 	std::string OldTitle = "";
 	TWindow* Ptr = nullptr;
-	OutputMode OutMode = OutputMode::Tiled;
-	InputMode InMode = InputMode::Paused;
+	bool Grid = 0;
 	int FullScreenRequest = -1;
+	int UpdateRequest = 0;
 	TPalette* Pal = nullptr;
 	TCharset* Chr = nullptr;
 };
@@ -40,13 +37,11 @@ void InitSystemVars();
 void SetSystemVar(std::string name, int value);
 void SetSystemVar(std::string name, std::string value);
 void ResetSystem();
-void ClearInputBuffer();
 void DestroySystem();
 void DestroyWindow();
 void CreateWindow(int pixelWidth, int pixelHeight, int cols, int rows);
 void ShowWindow();
 void HideWindow();
 void UpdateWindow();
-void ProcessGlobalEvents();
-void ShowIntro();
+void ProcessGlobalEventsInMainThread();
 void InitCommands();

@@ -55,9 +55,11 @@ int main(int argc, char* argv[]) {
 		}
 
 		if (prog->Validate()) {
+			InitSystem();
 			InitInterpreter(prog);
-			RunInterpreter();
+			RunMainThread(); // Does NOT return until program execution ends
 			DestroyInterpreter();
+			DestroySystem();
 			destroyWindowAndExit = !bootMenu && NewProgram.empty();
 		}
 		else { // Program is invalid
