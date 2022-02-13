@@ -26,13 +26,13 @@ std::string NewProgram = "";
 */
 void RunMainThread()
 {
-	SDL_Thread* machineThread = nullptr;
+	MachineThread = nullptr;
 
 	while (!Exit) {
 		ProcessGlobalEventsInMainThread();
 		UpdateWindow();
-		if (!machineThread)
-			machineThread = SDL_CreateThread(RunMachineThread, "MachineThread", nullptr);
+		if (!MachineThread)
+			MachineThread = SDL_CreateThread(RunMachineThread, "MachineThread", nullptr);
 	}
 }
 
@@ -73,11 +73,7 @@ void InitInterpreter(Program* prog)
 		delete Prog;
 	
 	Prog = prog;
-	ResetInterpreter();
-}
 
-void ResetInterpreter()
-{
 	Util::Randomize();
 
 	Exit = false;
@@ -89,14 +85,6 @@ void ResetInterpreter()
 
 	while (!CallStack.empty())
 		CallStack.pop();
-
-	ResetSystem();
-}
-
-void DestroyInterpreter()
-{
-	delete Prog;
-	Prog = nullptr;
 }
 
 bool IsValidOpcode(std::string& opcode)

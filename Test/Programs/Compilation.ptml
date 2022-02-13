@@ -3,5 +3,4 @@ SRC "Programs/Compilation-1.ptml"
 SRC "Programs/Compilation-2.ptml"
 SRC "Programs/Compilation-3.ptml"
 
-COMPILE "Programs/Compilation-full.ptml"
-RUN "Programs/Compilation-full.ptml"
+COMPILE

@@ -1,4 +1,6 @@
 
+GRID 1
+
 OUTS "Program Menu" 1 1 8 0 0
 OUTS "1. Default Charset" 1 3 15 0 0
 OUTS "2. Default Palette" 1 4 15 0 0
@@ -7,13 +9,16 @@ OUTS "3. Directional Input" 1 5 15 0 0
 VAR key
 
 loop:
-	INP key
-	CMP		key SYS.KEY_1
-	CALL=	key_1_handler
-	CMP		key SYS.KEY_2
-	CALL=	key_2_handler
-	CMP		key SYS.KEY_3
-	CALL=	key_3_handler
+	DRAW
+	CHK	key SYS.KEY_1
+	CMP key 1
+	CALL= key_1_handler
+	CHK	key SYS.KEY_2
+	CMP key 1
+	CALL= key_2_handler
+	CHK key SYS.KEY_3
+	CMP key 1
+	CALL= key_3_handler
 	JP loop
 
 key_1_handler:

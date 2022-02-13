@@ -29,6 +29,10 @@ Init:
 MainLoop:
 	DRAW
 	
+	CHK Key SYS.KEY_ESC
+	CMP Key 1
+	CALL= Game.Reset
+	
 	CMP Player.Shooting 1
 	CALL= Player.DrawMissile
 	CALL Player.Draw
@@ -65,6 +69,9 @@ MainLoop:
 	CALL= Player.MoveDown
 	
 	JP MainLoop
+	
+Game.Reset:
+	RESET
 	
 Player.ResetMoveCtr:
 	SET Player.MoveCtr 0

@@ -17,8 +17,6 @@ void RunMainThread();
 int RunMachineThread(void* dummy);
 
 void InitInterpreter(Program* prog);
-void ResetInterpreter();
-void DestroyInterpreter();
 bool IsValidOpcode(std::string& opcode);
 void Abort(std::string msg, bool printInfo = true);
 void Jump(int ixProgLine);

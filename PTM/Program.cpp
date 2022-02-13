@@ -4,11 +4,16 @@
 #include "GlobalDefs.h"
 using namespace CppUtils;
 
-void Program::Load(std::string path)
+bool Program::Load(std::string path)
 {
 	FilePath = path;
 
-	auto lines = File::ReadLines(path);
+	if (!File::Exists(FilePath)) {
+		MsgBox::Error(APP_NAME, String::Format(Error.ProgramFileNotFound, FilePath.c_str()));
+		return false;
+	}
+
+	auto lines = File::ReadLines(FilePath);
 
 	Lines.clear();
 	Labels.clear();
@@ -42,11 +47,8 @@ void Program::Load(std::string path)
 			}
 		}
 	}
-}
 
-std::string Program::GetFilePath()
-{
-	return FilePath;
+	return true;
 }
 
 ProgramLine Program::Parse(int srcLineNr, std::string& srcLine)

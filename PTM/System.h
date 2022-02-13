@@ -17,6 +17,8 @@ using namespace TileGameLib;
 
 #define SYS_VAR_PREFIX "SYS."
 
+extern std::string BaseDir;
+extern SDL_Thread* MachineThread;
 extern std::map<std::string, Variable> Vars;
 extern const Uint8* Keyboard;
 
@@ -33,12 +35,11 @@ struct SystemWindow {
 extern SystemWindow Wnd;
 
 void InitSystem();
+void OnExit();
+void OnReset();
 void InitSystemVars();
 void SetSystemVar(std::string name, int value);
 void SetSystemVar(std::string name, std::string value);
-void ResetSystem();
-void DestroySystem();
-void DestroyWindow();
 void CreateWindow(int pixelWidth, int pixelHeight, int cols, int rows);
 void ShowWindow();
 void HideWindow();

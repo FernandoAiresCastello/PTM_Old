@@ -1,40 +1,7 @@
 
-VAR Player.X 100
-VAR Player.Y 100
-VAR Player.PrevX Player.X
-VAR Player.PrevY Player.Y
-VAR Player.Dir 0
-VAR Player.MissileX -100
-VAR Player.MissileY -100
-VAR Player.PrevMissileX 0
-VAR Player.PrevMissileY 0
-VAR Player.MissileDir 0
-VAR Player.MissileMoveCtr 0
-VAR Player.CanShoot 1
-VAR Key
-VAR Screen.BackColor 0x80
+VAR y 1
 
-OUTM 0
-INPM 0
-CLS Screen.BackColor
-
-Loop:
-	CALL Player.DrawMissile
-	CALL Player.Draw
-	CMP Player.MissileMoveCtr 0
-	CALL= Player.MissileMove
-	INC Player.MissileMoveCtr
-	CMP Player.MissileMoveCtr 30
-	CALL= Player.ResetMissileMoveCtr
-	INP Key
-	CMP Key SYS.KEY_RIGHT
-	CALL= Player.MoveRight
-	CMP Key SYS.KEY_LEFT
-	CALL= Player.MoveLeft
-	CMP Key SYS.KEY_UP
-	CALL= Player.MoveUp
-	CMP Key SYS.KEY_DOWN
-	CALL= Player.MoveDown
-	CMP Key SYS.KEY_SPACE
-	CALL= Player.TryShoot
-	JP Loop
+CLS 0
+GRID 1
+OUTS "Compilation-1.ptml" 1 y 15 0 0
+INC y

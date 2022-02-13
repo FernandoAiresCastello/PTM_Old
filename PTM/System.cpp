@@ -1,6 +1,9 @@
 #include "System.h"
 
-std::string SrcCode = "";
+std::string BaseDir = "";
+SDL_Thread* MachineThread = nullptr;
+std::string TempSrcCode = "";
+std::string TempSrcCodeFile = "";
 std::map<std::string, Variable> Vars;
 const Uint8* Keyboard = nullptr;
 int CmpResult = 0;
@@ -17,6 +20,46 @@ void InitSystem()
 	ShowWindow();
 }
 
+void OnExit()
+{
+	delete Snd;
+	Snd = nullptr;
+	delete Prog;
+	Prog = nullptr;
+
+	HideWindow();
+	SDL_Delay(200);
+	delete Wnd.Ptr;
+	Wnd.Ptr = nullptr;
+
+	File::Delete(TempSrcCodeFile);
+}
+
+void OnReset()
+{
+	delete Snd;
+	Snd = nullptr;
+	delete Prog;
+	Prog = nullptr;
+
+	Vars.clear();
+	InitSystemVars();
+	CmpResult = 0;
+	Event = { 0 };
+	Snd->StopMainSound();
+	Snd->StopSubSound();
+
+	if (Wnd.Ptr) {
+		Wnd.Pal->InitDefault();
+		Wnd.Chr->InitDefault();
+		Wnd.Ptr->SetTitle("");
+		Wnd.Ptr->SetBackColor(0);
+		Wnd.Ptr->SetPixelSize(DefaultPixelWidth, DefaultPixelWidth);
+		Wnd.Ptr->Clear();
+		Wnd.Ptr->Update();
+	}
+}
+
 void InitSystemVars()
 {
 	SetSystemVar("COLS", Wnd.Ptr->GetCols());
@@ -24,6 +67,7 @@ void InitSystemVars()
 	SetSystemVar("CHR_SIZE", Wnd.Ptr->GetCharset()->GetSize());
 	SetSystemVar("PAL_SIZE", Wnd.Ptr->GetPalette()->GetSize());
 
+	// Keyboard
 	SetSystemVar("KEY_UP", SDL_SCANCODE_UP);
 	SetSystemVar("KEY_DOWN", SDL_SCANCODE_DOWN);
 	SetSystemVar("KEY_LEFT", SDL_SCANCODE_LEFT);
@@ -107,41 +151,6 @@ void SetSystemVar(std::string name, std::string value)
 	Vars[SYS_VAR_PREFIX + String::ToUpper(name)] = var;
 }
 
-void ResetSystem()
-{
-	Vars.clear();
-	InitSystemVars();
-	CmpResult = 0;
-	Event = { 0 };
-	Snd->StopMainSound();
-	Snd->StopSubSound();
-
-	if (Wnd.Ptr) {
-		Wnd.Pal->InitDefault();
-		Wnd.Chr->InitDefault();
-		Wnd.Ptr->SetTitle("");
-		Wnd.Ptr->SetBackColor(0);
-		Wnd.Ptr->SetPixelSize(DefaultPixelWidth, DefaultPixelWidth);
-		Wnd.Ptr->Clear();
-		Wnd.Ptr->Update();
-	}
-}
-
-void DestroySystem()
-{
-	delete Snd;
-	Snd = nullptr;
-}
-
-void DestroyWindow()
-{
-	HideWindow();
-	SDL_Delay(200);
-
-	delete Wnd.Ptr;
-	Wnd.Ptr = nullptr;
-}
-
 void CreateWindow(int pixelWidth, int pixelHeight, int cols, int rows)
 {
 	if (Wnd.Ptr) {
@@ -189,10 +198,11 @@ void UpdateWindow()
 void ProcessGlobalEventsInMainThread()
 {
 	SDL_PollEvent(&Event);
-
+	
 	Keyboard = SDL_GetKeyboardState(nullptr);
 
 	if (Event.type == SDL_QUIT) {
+		NewProgram = "";
 		Exit = true;
 	}
 	else if (Event.type == SDL_KEYDOWN) {
@@ -207,41 +217,13 @@ void ProcessGlobalEventsInMainThread()
 			}
 			// Reset
 			else if (TKey::Ctrl() && key == SDLK_r) {
-				if (Prog && !Prog->GetFilePath().empty()) {
-					NewProgram = Prog->GetFilePath();
-					Exit = true;
-				}
+				Exit = true;
 			}
 			// Force exit
 			else if (TKey::Ctrl() && key == SDLK_x) {
+				NewProgram = "";
 				Exit = true;
 			}
-		}
-	}
-}
-
-void Print(std::string str, int x, int y)
-{
-	x *= TChar::Width;
-	y *= TChar::Height;
-
-	const auto px = x;
-	auto tile = 0;
-
-	for (int i = 0; i < str.length(); i++) {
-		tile = str[i];
-		AssertTileIndex(tile);
-
-		if (i < str.length() - 1 && tile == '\\') {
-			i++;
-			if (str[i] == 'n') {
-				x = px;
-				y += TChar::Height;
-			}
-		}
-		else {
-			Wnd.Ptr->DrawTile(tile, 15, 0, x, y, true, true);
-			x += TChar::Width;
 		}
 	}
 }
@@ -265,19 +247,23 @@ void SYS()
 void SRC()
 {
 	Argc(1);
-	auto file = ArgStringLiteral();
+	auto file = BaseDir + ArgString();
 	if (!File::Exists(file)) {
 		Abort(String::Format(Error.ProgramFileNotFound, file.c_str()));
 		return;
 	}
-	SrcCode += File::ReadText(file);
+	TempSrcCode += File::ReadText(file);
 }
 void COMPILE()
 {
-	Argc(1);
-	auto file = ArgStringLiteral();
-	File::WriteText(file, SrcCode);
-	SrcCode = "";
+	Argc(0);
+	auto filename = Util::RandomHex(8);
+	TempSrcCodeFile = BaseDir + filename;
+	File::WriteText(TempSrcCodeFile, TempSrcCode);
+
+	TempSrcCode = "";
+	NewProgram = filename;
+	Exit = true;
 }
 void EXIT()
 {
@@ -292,22 +278,13 @@ void HALT()
 void RUN()
 {
 	Argc(1);
-	std::string file = ArgString();
-	
-	if (File::Exists(file)) {
-		NewProgram = file;
-		Exit = true;
-	}
-	else {
-		NewProgram = "";
-		Abort(String::Format(Error.ProgramFileNotFound, file.c_str()));
-	}
+	NewProgram = ArgString();
+	Exit = true;
 }
 void RESET()
 {
 	Argc(0);
 	Exit = true;
-	NewProgram = Prog->GetFilePath();
 }
 void CONST()
 {

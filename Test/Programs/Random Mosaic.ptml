@@ -1,25 +1,26 @@
 
-init:
-	CLS 0
+VAR x
+VAR y
+VAR x_max SYS.COLS
+VAR y_max SYS.ROWS
+VAR border
+VAR fgc
+VAR bgc
+VAR chr
 
-	VAR x
-	VAR y
-	VAR x_max SYS.COLS
-	VAR y_max SYS.ROWS
-	VAR border
-	VAR fgc
-	VAR bgc
-	VAR chr
+ADD x x border
+SUB x_max x_max border
+ADD y y border
+SUB y_max y_max border
 
-	ADD x x border
-	SUB x_max x_max border
-	ADD y y border
-	SUB y_max y_max border
-	
-	VAR x_init x
-	VAR y_init y
+VAR x_init x
+VAR y_init y
+
+GRID 1
+CLS 0
 
 loop:
+	DRAW
 	RND fgc 0 255
 	RND bgc 0 255
 	RND chr 0 255

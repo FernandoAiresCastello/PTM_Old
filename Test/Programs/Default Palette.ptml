@@ -1,8 +1,10 @@
 
-OUTS "Default Palette" 0 0 10 0 0
 VAR c 0
 VAR x 0
 VAR y 2
+
+GRID 1
+OUTS "Default Palette" 0 0 10 0 0
 
 loop:
 	OUT 0 x y c c 1
@@ -19,4 +21,5 @@ loop:
 	JP loop
 
 end:
+	DRAW
 	HALT

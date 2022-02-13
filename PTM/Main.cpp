@@ -14,42 +14,43 @@ using namespace TileGameLib;
 
 int main(int argc, char* argv[]) {
 	
+	std::string ptmExePath = argv[0];
+	int ixLastBackslash = String::FindLast(ptmExePath, '\\');
+	BaseDir = String::GetFirstChars(ptmExePath, ixLastBackslash + 1);
+	
 	InitCommands();
 	CreateWindow(4, 4, 43, 24);
 	
-	bool bootMenu = false;
-	bool destroyWindowAndExit = false;
+	bool shouldExit = false;
 
 	while (true) {
 		Program* prog = new Program();
 
 		if (!NewProgram.empty()) { // A program has requested to run a different program
-			prog->Load(NewProgram);
-			NewProgram = "";
+			bool loadOk = prog->Load(BaseDir + NewProgram);
+			if (!loadOk) {
+				OnExit();
+				return EXIT_FAILURE;
+			}
 		}
 		else if (argc > 1) { // User provided a program file as argument
 			std::string programFile = argv[1];
-			if (File::Exists(programFile)) {
-				prog->Load(programFile);
-			}
-			else {
-				MsgBox::Error(APP_NAME, String::Format(Error.ProgramFileNotFound, programFile.c_str()));
-				DestroyWindow();
-				delete prog;
+			bool loadOk = prog->Load(BaseDir + programFile);
+			if (!loadOk) {
+				OnExit();
 				return EXIT_FAILURE;
 			}
 		}
 		else { // User started machine without providing a program file
-			if (File::Exists(AUTORUN_FILE1)) {
-				prog->Load(AUTORUN_FILE1);
+			if (File::Exists(BaseDir + AUTORUN_FILE1)) {
+				prog->Load(BaseDir + AUTORUN_FILE1);
 			}
-			if (File::Exists(AUTORUN_FILE2)) {
-				prog->Load(AUTORUN_FILE2);
+			if (File::Exists(BaseDir + AUTORUN_FILE2)) {
+				prog->Load(BaseDir + AUTORUN_FILE2);
 			}
 			else { // Autorun file not found
 				MsgBox::Error(APP_NAME, Error.ProgramFileNotSpecified);
-				DestroyWindow();
-				delete prog;
+				OnExit();
 				return EXIT_FAILURE;
 			}
 		}
@@ -58,24 +59,24 @@ int main(int argc, char* argv[]) {
 			InitSystem();
 			InitInterpreter(prog);
 			RunMainThread(); // Does NOT return until program execution ends
-			DestroyInterpreter();
-			DestroySystem();
-			destroyWindowAndExit = !bootMenu && NewProgram.empty();
+			shouldExit = NewProgram.empty();
 		}
 		else { // Program is invalid
-			DestroyWindow();
-			delete prog;
+			OnExit();
 			return EXIT_FAILURE;
 		}
 
 		// Normal exit point
-		if (destroyWindowAndExit) {
-			DestroyWindow();
+		if (shouldExit) {
+			OnExit();
 			return EXIT_SUCCESS;
 		}
+
+		OnReset();
 	}
 	
 	// Application should never reach this point
 	MsgBox::Error(APP_NAME, Error.UnexpectedError);
+	OnExit();
 	return EXIT_FAILURE;
 }
