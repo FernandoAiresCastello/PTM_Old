@@ -1,5 +1,18 @@
 
-RUN "Programs/Directional Input.ptml"
+;RUN "Programs/Directional Input.ptml"
 ;RUN "Programs/Program Menu.ptml"
-;RUN "Programs/Sprites.ptml"
+RUN "Programs/Sprites.ptml"
 ;RUN "Programs/Compilation.ptml"
+
+VAR key
+
+loop:
+	OUTS "autorun" 1 1 15 0 0
+	DRAW
+	CHK key SYS.KEY_ESC
+	CMP key 1
+	JP= reset
+	JP loop
+
+reset:
+	RESET

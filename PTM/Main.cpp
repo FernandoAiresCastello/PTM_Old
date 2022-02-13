@@ -59,7 +59,7 @@ int main(int argc, char* argv[]) {
 			InitSystem();
 			InitInterpreter(prog);
 			RunMainThread(); // Does NOT return until program execution ends
-			shouldExit = NewProgram.empty();
+			shouldExit = !Reset && NewProgram.empty();
 		}
 		else { // Program is invalid
 			OnExit();

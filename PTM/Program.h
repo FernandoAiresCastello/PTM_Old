@@ -8,6 +8,7 @@ class Program
 {
 public:
 	bool Load(std::string path);
+	std::string GetFilePath();
 
 	std::vector<ProgramLine> Lines;
 	std::map<std::string, int> Labels;

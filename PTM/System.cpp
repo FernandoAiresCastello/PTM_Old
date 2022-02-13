@@ -37,6 +37,8 @@ void OnExit()
 
 void OnReset()
 {
+	Reset = false;
+
 	delete Snd;
 	Snd = nullptr;
 	delete Prog;
@@ -207,19 +209,15 @@ void ProcessGlobalEventsInMainThread()
 	}
 	else if (Event.type == SDL_KEYDOWN) {
 		SDL_Keycode key = Event.key.keysym.sym;
-
-		// System key events are a combination of ALT + key
 		if (TKey::Alt()) {
-			// Toggle fullscreen
 			if (key == SDLK_RETURN && Wnd.Ptr) {
 				Wnd.Ptr->ToggleFullscreen();
 				Wnd.Ptr->Update();
 			}
-			// Reset
 			else if (TKey::Ctrl() && key == SDLK_r) {
-				Exit = true;
+				Reset = true;
+				SDL_Delay(100);
 			}
-			// Force exit
 			else if (TKey::Ctrl() && key == SDLK_x) {
 				NewProgram = "";
 				Exit = true;
@@ -230,7 +228,9 @@ void ProcessGlobalEventsInMainThread()
 
 /*#############################################################################
  
-							COMMAND IMPLEMENTATION
+						  - COMMAND IMPLEMENTATION -
+
+				 WARNING! All commands run in the MACHINE thread
 
 #############################################################################*/
 
@@ -273,7 +273,9 @@ void EXIT()
 void HALT()
 {
 	Argc(0);
-	while (!Exit);
+	while (!Exit && !Reset) {
+		Wnd.UpdateRequest = 1;
+	}
 }
 void RUN()
 {
@@ -284,7 +286,7 @@ void RUN()
 void RESET()
 {
 	Argc(0);
-	Exit = true;
+	Reset = true;
 }
 void CONST()
 {
@@ -534,7 +536,7 @@ void OUTS()
 			}
 		}
 		else {
-			Wnd.Ptr->DrawTile(tile, fgc, bgc, x, y, transparent, Wnd.Grid);
+			Wnd.Ptr->DrawTile(tile, fgc, bgc, x, y, transparent, true);
 			x++;
 		}
 	}

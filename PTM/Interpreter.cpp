@@ -12,6 +12,7 @@ Program* Prog = nullptr;
 ProgramLine* CurLine = nullptr;
 int IxCurLine = 0;
 bool Exit = false;
+bool Reset = false;
 std::map<std::string, void(*)()> Op;
 std::vector<Parameter>* Args = nullptr;
 int IxArg = 0;
@@ -28,7 +29,7 @@ void RunMainThread()
 {
 	MachineThread = nullptr;
 
-	while (!Exit) {
+	while (!Exit && !Reset) {
 		ProcessGlobalEventsInMainThread();
 		UpdateWindow();
 		if (!MachineThread)
@@ -38,12 +39,12 @@ void RunMainThread()
 
 /*
 	WARNING!
-	This runs in the MACHINE interpreter thread
+	This runs in the MACHINE thread
 	The window MAY NOT be directly accessed through this function
 */
 int RunMachineThread(void* dummy)
 {
-	while (!Exit) {
+	while (!Exit && !Reset) {
 		CurLine = &Prog->Lines[IxCurLine];
 		Args = &CurLine->Cmd.Params;
 		IxArg = 0;
@@ -53,7 +54,7 @@ int RunMachineThread(void* dummy)
 		else
 			Abort(Error.UnknownCommand);
 
-		if (!Exit) {
+		if (!Exit && !Reset) {
 			if (Branch)
 				Branch = false;
 			else

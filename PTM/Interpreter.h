@@ -8,6 +8,7 @@ using namespace CppUtils;
 using namespace TileGameLib;
 
 extern bool Exit;
+extern bool Reset;
 extern std::map<std::string, void(*)()> Op;
 extern ErrorMessages Error;
 extern Program* Prog;
