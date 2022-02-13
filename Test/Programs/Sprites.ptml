@@ -81,7 +81,7 @@ Player.TryShoot:
 	CALL= Player.Shoot
 	RET
 Player.Shoot:
-	PLAY "C6 D6 E6"
+	PLAY "L50-O5-C-D-E"
 	SET Player.CanShoot 0
 	SET Player.MissileX Player.X
 	SET Player.MissileY Player.Y
