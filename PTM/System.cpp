@@ -899,22 +899,22 @@ void PAUSE()
 	auto ms = ArgNumber();
 	SDL_Delay(ms);
 }
-void READ()
+void LOAD()
 {
 	Argc(2);
 	auto id = ArgVariableName(true);
 	AssertVariableIsTypeString(id);
-	auto path = ArgString();
+	auto path = BaseDir + ArgString();
 	AssertFileExists(path);
 	auto data = File::ReadText(path);
 	Vars[id].String = data;
 }
-void READ_A()
+void BLOAD()
 {
 	Argc(2);
 	auto id = ArgVariableName(true);
 	AssertVariableIsTypeNumberArray(id);
-	auto path = ArgString();
+	auto path = BaseDir + ArgString();
 	AssertFileExists(path);
 	auto data = File::ReadBytes(path);
 	Vars[id].NumberArray.clear();
@@ -922,19 +922,19 @@ void READ_A()
 	for (auto value : data)
 		Vars[id].NumberArray.push_back((int)value);
 }
-void WRITE()
+void SAVE()
 {
 	Argc(2);
 	auto data = ArgString();
-	auto filePath = ArgString();
+	auto filePath = BaseDir + ArgString();
 	File::WriteText(filePath, data);
 }
-void WRITE_A()
+void BSAVE()
 {
 	Argc(2);
 	auto id = ArgVariableName(true);
 	AssertVariableIsTypeNumberArray(id);
-	auto path = ArgString();
+	auto path = BaseDir + ArgString();
 	File::WriteBytes(path, Vars[id].NumberArray);
 }
 void CMPS()
@@ -1135,10 +1135,10 @@ void InitCommands()
 	Op["LPLAY"] = &LPLAY;		// Play notes from a sound string (loop)
 
 	//=== FILESYSTEM ===
-	Op["READ"] = &READ;			// Read file into string
-	Op["READ[]"] = &READ_A;		// Read file bytes into number array
-	Op["WRITE"] = &WRITE;		// Write string to file
-	Op["WRIT[]"] = &WRITE_A;	// Write bytes from number array to file
+	Op["LOAD"] = &LOAD;			// Read file into string
+	Op["BLOAD"] = &BLOAD;		// Read file bytes into number array
+	Op["SAVE"] = &SAVE;			// Write string to file
+	Op["BSAVE"] = &BSAVE;		// Write bytes from number array to file
 
 	//=== STRINGS ===
 	Op["CMPS"] = &CMPS;			// Compare strings
