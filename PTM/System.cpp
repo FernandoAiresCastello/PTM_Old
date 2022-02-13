@@ -166,6 +166,10 @@ void CreateWindow(int pixelWidth, int pixelHeight, int cols, int rows)
 	Wnd.Ptr = TWindow::CreateWithPixelSizeAndTileGrid(pixelHeight, pixelHeight, cols, rows);
 	Wnd.Pal = Wnd.Ptr->GetPalette();
 	Wnd.Chr = Wnd.Ptr->GetCharset();
+	
+	Wnd.Ptr->SetBackColor(0);
+	Wnd.Ptr->Clear();
+	Wnd.Ptr->Update();
 }
 
 void ShowWindow()
@@ -252,7 +256,7 @@ void SRC()
 		Abort(String::Format(Error.ProgramFileNotFound, file.c_str()));
 		return;
 	}
-	TempSrcCode += File::ReadText(file);
+	TempSrcCode += File::ReadText(file) + "\n";
 }
 void COMPILE()
 {
