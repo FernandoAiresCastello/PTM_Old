@@ -27,8 +27,6 @@ Init:
 	CLS Screen.BackColor
 	
 MainLoop:
-	DRAW
-	
 	CHK Key SYS.KEY_ESC
 	CMP Key 1
 	CALL= Game.Reset
@@ -36,6 +34,8 @@ MainLoop:
 	CMP Player.Shooting 1
 	CALL= Player.DrawMissile
 	CALL Player.Draw
+	DRAW
+	
 	CMP Player.MissileMoveCtr 0
 	CALL= Player.TryMissileMove
 	INC Player.MissileMoveCtr

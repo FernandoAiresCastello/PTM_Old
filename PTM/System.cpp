@@ -545,20 +545,6 @@ void OUTS()
 		}
 	}
 }
-void FLS()
-{
-	Argc(4);
-	auto tile = ArgNumber();
-	auto fgc = ArgNumber();
-	auto bgc = ArgNumber();
-	auto transparent = ArgNumber() <= 0;
-	
-	for (int y = 0; y < Wnd.Ptr->GetRows(); y++) {
-		for (int x = 0; x < Wnd.Ptr->GetCols(); x++) {
-			Wnd.Ptr->DrawTile(tile, fgc, bgc, x * TChar::Width, y * TChar::Height, transparent, true);
-		}
-	}
-}
 void ADD()
 {
 	Argc(3);
@@ -826,6 +812,20 @@ void PRTSCN()
 	auto file = ArgString();
 	Wnd.Ptr->SaveScreenshot(file);
 }
+void CLIP()
+{
+	Argc(4);
+	auto x1 = ArgNumber();
+	auto y1 = ArgNumber();
+	auto x2 = ArgNumber();
+	auto y2 = ArgNumber();
+	Wnd.Ptr->SetClip(x1, y1, x2, y2);
+}
+void RCLIP()
+{
+	Argc(0);
+	Wnd.Ptr->RemoveClip();
+}
 void RND()
 {
 	Argc(3);
@@ -1050,8 +1050,8 @@ void InitCommands()
 	Op["SYS"] = &SYS;			// Call internal system function
 
 	//=== COMPILER ===
-	Op["SRC"] = &SRC;			// Add PTML source code file
-	Op["COMPILE"] = &COMPILE;	// Compile source files
+	Op["SRC"] = &SRC;			// Add PTML source code file for compilation
+	Op["COMPILE"] = &COMPILE;	// Compile added source files and execute
 
 	//=== DEBUG ===
 	Op["MSGB"] = &MSGB;			// Show message box
@@ -1115,13 +1115,14 @@ void InitCommands()
 	Op["GRID"] = &GRID;			// Enable/disable snapping tiles to a grid
 	Op["OUT"] = &OUT;			// Output tile to screen
 	Op["OUTS"] = &OUTS;			// Output string of tiles to screen
-	Op["FLS"] = &FLS;			// Fill screen with same tile
 	Op["PAL"] = &PAL;			// Set palette color
 	Op["CHR"] = &CHR;			// Set charset data
 	Op["CHRL"] = &CHRL;			// Set charset data line
 	Op["LDCHR"] = &LDCHR;		// Load charset data from image file
 	Op["LDPAL"] = &LDPAL;		// Load palette data from image file
 	Op["PRTSCN"] = &PRTSCN;		// Save screen image to file
+	Op["CLIP"] = &CLIP;			// Set drawing area bounds
+	Op["RCLIP"] = &RCLIP;		// Remove drawing area bounds
 	
 	//=== INPUT ===
 	Op["CHK"] = &CHK;			// Check if key is pressed
