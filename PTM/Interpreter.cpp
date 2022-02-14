@@ -105,8 +105,8 @@ void Abort(std::string msg, bool printInfo)
 		MsgBox::Error(Wnd.Title, msg);
 	}
 
+	NewProgram = "";
 	Exit = true;
-	exit(EXIT_SUCCESS);
 }
 
 void Jump(int ixProgLine)

@@ -272,6 +272,7 @@ void COMPILE()
 void EXIT()
 {
 	Argc(0);
+	NewProgram = "";
 	Exit = true;
 }
 void HALT()
@@ -394,31 +395,18 @@ void SET()
 			Abort(Error.TypeMismatch);
 	}
 	else if (Arg(0)->Type == ParameterType::ArrayIndexVariable) {
-		auto* arg0 = Arg(0);
-		auto* arg1 = Arg(1);
-		auto& id = arg0->StringValue;
+		auto* arg = Arg();
+		auto& id = arg->StringValue;
 		AssertVariable(id, true);
 		auto& var = Vars[id];
-		auto& arrIxId = arg1->StringValue;
+		auto& varIndex = arg->VariableArrayIndex;
+		auto index = GetNumberFromVariable(varIndex);
 
-		if (Vars[arrIxId].Type != VariableType::NumberArray && Vars[arrIxId].Type != VariableType::StringArray) {
-			Abort(Error.TypeMismatch);
-			return;
-		}
-		if (Vars[arg0->VariableArrayIndex].Type != VariableType::Number) {
-			Abort(Error.TypeMismatch);
-			return;
-		}
-
-		auto index0 = Vars[arg0->VariableArrayIndex].Number;
-		AssertArrayIndex(id, index0);
-		auto index1 = Vars[arg1->VariableArrayIndex].Number;
-		AssertArrayIndex(id, index1);
-
+		AssertArrayIndex(id, index);
 		if (var.Type == VariableType::NumberArray)
-			var.NumberArray[index0] = var.NumberArray[index1];
+			var.NumberArray[index] = ArgNumber();
 		else if (var.Type == VariableType::StringArray)
-			var.StringArray[index0] = var.StringArray[index1];
+			var.StringArray[index] = ArgString();
 		else
 			Abort(Error.TypeMismatch);
 	}
