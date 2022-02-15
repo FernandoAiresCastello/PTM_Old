@@ -1,7 +1,7 @@
 
 ;RUN "Programs/Directional Input.ptml"
 ;RUN "Programs/Program Menu.ptml"
-RUN "Programs/Sprites.ptml"
+;RUN "Programs/Sprites.ptml"
 ;RUN "Programs/Compilation.ptml"
 
 VAR key
